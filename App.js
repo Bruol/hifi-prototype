@@ -11,7 +11,7 @@ import {
 const App = () => { 
 	const [task, setTask] = useState(""); 
 	const [tasks, setTasks] = useState([]); 
-  const [donetasks, setDone] = useState([]); 
+  	const [donetasks, setDone] = useState([]); 
 	const [editIndex, setEditIndex] = useState(-1); 
 
 	const handleAddTask = () => { 
@@ -36,54 +36,54 @@ const App = () => {
 		setEditIndex(index); 
 	}; 
   
-  const handleDeleteTask = (index) => { 
-    const updatedTasks = [...tasks]; 
-    const [deletedTask] = updatedTasks.splice(index, 1); 
-    setTasks(updatedTasks); 
-    setDone([...donetasks,deletedTask]);
-  }; 
+  	const handleDeleteTask = (index) => { 
+    	const updatedTasks = [...tasks]; 
+    	const [deletedTask] = updatedTasks.splice(index, 1); 
+    	setTasks(updatedTasks); 
+    	setDone([...donetasks,deletedTask]);
+  	}; 
 
-  const handleUndoTask = (index) => { 
-    const updatedTasks = [...donetasks]; 
-    const [undoneTask] = updatedTasks.splice(index, 1); 
-    setDone(updatedTasks); 
-    setTasks([...tasks,undoneTask])
-  }; 
+	const handleUndoTask = (index) => { 
+		const updatedTasks = [...donetasks]; 
+		const [undoneTask] = updatedTasks.splice(index, 1); 
+		setDone(updatedTasks); 
+		setTasks([...tasks,undoneTask])
+	}; 
   
 
 	const renderItem = ({ item, index }) => ( 
-    <View style={styles.task}> 
-        <Text 
-            style={styles.itemList}>{item}</Text> 
-        <View 
-            style={styles.taskButtons}> 
-            <TouchableOpacity 
-                onPress={() => handleEditTask(index)}> 
-                <Text 
-                    style={styles.editButton}>Edit</Text> 
-            </TouchableOpacity> 
-            <TouchableOpacity 
-                onPress={() => handleDeleteTask(index)}> 
-                <Text 
-                    style={styles.deleteButton}>Done</Text> 
-            </TouchableOpacity> 
-        </View> 
-    </View> 
-); 
-const renderDoneItem = ({ item, index }) => ( 
-  <View style={styles.task}> 
-      <Text 
-          style={styles.itemList}>{item}</Text> 
-      <View 
-          style={styles.taskButtons}> 
-          <TouchableOpacity 
-              onPress={() => handleUndoTask(index)}> 
-              <Text 
-                  style={styles.deleteButton}>Undo</Text> 
-          </TouchableOpacity> 
-      </View> 
-  </View> 
-); 
+		<View style={styles.task}> 
+			<Text 
+				style={styles.itemList}>{item}</Text> 
+			<View 
+				style={styles.taskButtons}> 
+				<TouchableOpacity 
+					onPress={() => handleEditTask(index)}> 
+					<Text 
+						style={styles.editButton}>Edit</Text> 
+				</TouchableOpacity> 
+				<TouchableOpacity 
+					onPress={() => handleDeleteTask(index)}> 
+					<Text 
+						style={styles.deleteButton}>Done</Text> 
+				</TouchableOpacity> 
+			</View> 
+		</View> 
+	); 
+	const renderDoneItem = ({ item, index }) => ( 
+	<View style={styles.task}> 
+		<Text 
+			style={styles.itemList}>{item}</Text> 
+		<View 
+			style={styles.taskButtons}> 
+			<TouchableOpacity 
+				onPress={() => handleUndoTask(index)}> 
+				<Text 
+					style={styles.deleteButton}>Undo</Text> 
+			</TouchableOpacity> 
+		</View> 
+	</View> 
+	); 
 
 	return ( 
 		<View style={styles.container}> 
@@ -178,17 +178,17 @@ const styles = StyleSheet.create({
 		fontWeight: "bold", 
 		fontSize: 18, 
 	}, 
-  deletedTask: {
-    backgroundColor: 'red',
-  },
-  deletedText: {
-    color: 'white',
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
+	deletedTask: {
+		backgroundColor: 'red',
+	},
+	deletedText: {
+		color: 'white',
+	},
+	sectionTitle: {
+		fontSize: 20,
+		fontWeight: "bold",
+		marginBottom: 10,
+	},
 }); 
 
 export default App;
