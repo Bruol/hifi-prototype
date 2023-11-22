@@ -2,7 +2,7 @@
 // fabiusg@student.ethz.ch
 
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Alert, View, Text } from 'react-native';
 import { Button, Icon } from '@ui-kitten/components';
 import Modal from 'react-native-modal';
 import PropTypes from 'prop-types';
@@ -36,7 +36,7 @@ const ConfirmationModal = ({ isVisible, confirmText, handleConfirm, handleCancel
         <View style={{ width: "100%", height: 1, backgroundColor: "#E4E9F2", marginVertical: 10 }} />
 
         {/* Settings Button */}
-        <Button appearance="ghost" accessoryLeft={<Icon name='settings-outline' />} onPress={() => alert("Settings are not part of the prototype.")}>Settings</Button>
+        <Button appearance="ghost" accessoryLeft={<Icon name='settings-outline' />} onPress={() => Alert.alert("Not Implemented", "Settings are not part of the prototype.")}>Settings</Button>
       </View>
     </Modal>
   );

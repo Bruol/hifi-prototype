@@ -2,7 +2,7 @@
 // fabiusg@student.ethz.ch
 
 import React, { useRef } from "react";
-import { StatusBar, TouchableOpacity} from 'react-native';
+import { Alert, StatusBar, TouchableOpacity } from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as eva from '@eva-design/eva';
@@ -21,7 +21,7 @@ const Stack = createStackNavigator();
 const CalendarIcon = () => (
   <TouchableOpacity
     style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", marginRight: 10 }}
-    onPress={() => alert('Date selection is not part of the prototype!')}
+    onPress={() => Alert.alert("Not Implemented", 'Date selection is not part of the prototype!')}
   >
     <Text style={{ marginRight: 5, color: "#3366FF" }}>Today</Text>
     <Icon name='calendar-outline' fill='#3366FF' style={{ width: 24, height: 24 }} />
@@ -32,13 +32,33 @@ const CalendarIcon = () => (
 const BackIcon = () => {
   const navigation = useNavigation();
 
-  return (<TouchableOpacity
-    style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", marginLeft: 10 }}
-    onPress={() => navigation.navigate("Dashboard Selection")}
-  >
-    <Icon name='arrow-back-outline' fill='#3366FF' style={{ width: 24, height: 24 }} />
-    <Text style={{ marginLeft: 5, color: "#3366FF" }}>Back</Text>
-  </TouchableOpacity>
+  // Handle back button press and ask for confirmation
+  const handleBackPress = () => {
+    Alert.alert(
+      'Are you sure…',
+      '…that you want to go back?\n\nAll progress will be lost.',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => navigation.navigate('Dashboard Selection'),
+        },
+      ],
+      { cancelable: false },
+    );
+  };
+
+  return (
+    <TouchableOpacity
+      style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginLeft: 10 }}
+      onPress={handleBackPress}
+    >
+      <Icon name='arrow-back-outline' fill='#3366FF' style={{ width: 24, height: 24 }} />
+      <Text style={{ marginLeft: 5, color: "#3366FF" }}>Back</Text>
+    </TouchableOpacity>
   );
 }
 

@@ -2,7 +2,7 @@
 // fabiusg@student.ethz.ch
 
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { Alert, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Icon } from '@ui-kitten/components';
 
 /**
@@ -13,7 +13,7 @@ const Footer = () => {
   return (
     <View style={styles.wrapper}>
       {/* Button to add a new habit */}
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => Alert.alert("Not Implemented", "Adding a new habit is not part of the prototype!")}>
         <View style={styles.button}>
           <Icon style={styles.icon} name="plus-outline" fill="#FFF" />
         </View>
