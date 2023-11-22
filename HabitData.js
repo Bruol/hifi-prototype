@@ -1,6 +1,7 @@
-// Fabius Grünhagen, fabiusg@student.ethz.ch, 21.09.2023
+// Code by Fabius Grünhagen
+// fabiusg@student.ethz.ch
 
-/* State containing list of pending habits */
+/** List of pending habit data */
 const pendingData = [
   {
     id: 0,
@@ -39,7 +40,7 @@ const pendingData = [
   },
 ];
 
-/* State containing list of completed habits */
+/** List of completed habit data */
 const completedData = [
   {
     id: 1,
