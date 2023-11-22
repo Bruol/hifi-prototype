@@ -7,7 +7,7 @@ import { Text, Card } from '@ui-kitten/components';
 import PropTypes from 'prop-types';
 
 import { pendingData, completedData } from '../HabitData';
-import ListCard from '../components/ListCard';
+import ListHabitCard from '../components/ListHabitCard';
 import ConfirmationModal from '../components/ConfirmationModal';
 
 /**
@@ -15,7 +15,7 @@ import ConfirmationModal from '../components/ConfirmationModal';
  * @param {object} confettiRef - Reference to confetti cannon component
  * @returns {JSX.Element}
  */
-const ViewA = ({ confettiRef }) => {
+const ViewSun = ({ confettiRef }) => {
     // State containing list of pending habits 
     const [pendingHabits, setPendingHabits] = useState(pendingData);
     // State containing list of completed habits 
@@ -108,7 +108,7 @@ const ViewA = ({ confettiRef }) => {
 
                 {(pendingHabits && pendingHabits.length > 0) ? (
                     // List of pending habits
-                    pendingHabits.map((habit) => <ListCard key={habit.id} habit={habit} status="warning" onPress={() => completeHabit(habit.id)} />)
+                    pendingHabits.map((habit) => <ListHabitCard key={habit.id} habit={habit} status="warning" onPress={() => completeHabit(habit.id)} />)
                 ) : (
                     <Card style={{ marginTop: 10, alignSelf: "stretch" }}>
                         <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", marginVertical: 10 }}>
@@ -132,7 +132,7 @@ const ViewA = ({ confettiRef }) => {
                 </View>
 
                 {/* List of completed habits */}
-                {completedHabits.map((habit) => <ListCard key={habit.id} habit={habit} status="success" onPress={() => uncompleteHabit(habit.id)} />)}
+                {completedHabits.map((habit) => <ListHabitCard key={habit.id} habit={habit} status="success" onPress={() => uncompleteHabit(habit.id)} />)}
 
                 {/* Modal for confirming checking/unchecking habits */}
                 <ConfirmationModal
@@ -147,7 +147,7 @@ const ViewA = ({ confettiRef }) => {
 };
 
 // Property types for this component
-ViewA.propTypes = {
+ViewSun.propTypes = {
     confettiRef: PropTypes.object.isRequired
 };
 
@@ -193,4 +193,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ViewA;
+export default ViewSun;

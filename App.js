@@ -10,9 +10,9 @@ import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { ApplicationProvider, Text, IconRegistry, Icon } from '@ui-kitten/components';
 import ConfettiCannon from 'react-native-confetti-cannon';
 
-import ViewA from "./screens/ViewA";
-import ViewB from "./screens/ViewB";
-import ViewSelection from "./screens/ViewSelection";
+import ViewSun from "./views/ViewSun";
+import ViewMoon from "./views/ViewMoon";
+import ViewSelection from "./views/ViewSelection";
 import Footer from './components/Footer';
 
 const Stack = createStackNavigator();
@@ -91,16 +91,16 @@ const App = () => {
               component={ViewSelection}
             />
             <Stack.Screen
-              name="Dashboard A"
-              children={(props) => <ViewA {...props} confettiRef={confettiRef} />}
+              name="Dashboard Sun"
+              children={(props) => <ViewSun {...props} confettiRef={confettiRef} />}
               options={{
                 headerLeft: () => (<BackIcon />),
                 headerRight: () => (<CalendarIcon />),
               }}
             />
             <Stack.Screen
-              name="Dashboard B"
-              children={(props) => <ViewB {...props} confettiRef={confettiRef} />}
+              name="Dashboard Moon"
+              children={(props) => <ViewMoon {...props} confettiRef={confettiRef} />}
               options={{
                 headerLeft: () => (<BackIcon />),
                 headerRight: () => (<CalendarIcon />),

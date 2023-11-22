@@ -3,7 +3,7 @@
 
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
-import { Text, Button } from '@ui-kitten/components'
+import { Text, Button, Icon } from '@ui-kitten/components'
 import { useNavigation } from '@react-navigation/native'
 
 /**
@@ -19,11 +19,17 @@ const ViewSelection = () => {
       <Text style={styles.space_bottom} category='h1'>
         Development Dashboard
       </Text>
-      <Button style={styles.space_bottom} onPress={() => navigation.navigate('Dashboard A')}>
-        <Text>Dashboard A</Text>
+      <Button
+        style={styles.space_bottom} onPress={() => navigation.navigate('Dashboard Sun')}
+        accessoryRight={<Icon name='sun-outline' fill='#FFF' style={{ width: 24, height: 24 }} />}
+      >
+        <Text>Dashboard</Text>
       </Button>
-      <Button onPress={() => navigation.navigate('Dashboard B')}>
-        <Text>Dashboard B</Text>
+      <Button
+        onPress={() => navigation.navigate('Dashboard Moon')}
+        accessoryRight={<Icon name='moon-outline' fill='#FFF' style={{ width: 24, height: 24 }} />}
+      >
+        <Text>Dashboard</Text>
       </Button>
     </View >
   );

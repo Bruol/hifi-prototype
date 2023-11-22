@@ -8,60 +8,18 @@ import { LinearGradient } from 'expo-linear-gradient';
 import PropTypes from 'prop-types';
 
 import { pendingData, completedData } from '../HabitData';
-import MainCard from '../components/MainCard';
+import BigHabitCard from '../components/BigHabitCard';
 import ConfirmationModal from '../components/ConfirmationModal';
+import SmallHabitCard from '../components/SmallHabitCard';
 
-// Card component for pending habits
-const SmallCard = ({ habit, status, onPress }) => {
-  // Calculate progress
-  const progress = (habit.streak / habit.goal);
-
-  // Calculate color of progress bar
-  let color;
-  if (progress < 0.33) {
-    color = '#FFC107'; // Yellow
-  } else if (progress < 0.66) {
-    color = '#CDDC39'; // Lime
-  } else {
-    color = '#4CAF50'; // Green
-  }
-
-  return (
-    <Card status={status} style={{ margin: 10, width: 150 }} onPress={onPress}>
-      {/* First Row containing icon and title */}
-      <View style={{ flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Icon name={habit.icon} style={{ width: 32, height: 32 }} />
-        <Text category='h6' style={{ textAlign: 'center' }}>{habit.title}</Text>
-
-        {/* Progress bar */}
-        <View style={{ width: 50, height: 8, backgroundColor: "#E4E9F2", borderRadius: 4, overflow: "hidden", marginTop: 5 }}>
-          <View style={{ width: 50 * progress, height: 8, backgroundColor: color, borderRadius: 4 }} />
-        </View>
-      </View>
-    </Card>
-  );
-};
-
-// Property types for small card component
-SmallCard.propTypes = {
-  habit: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    title: PropTypes.string.isRequired,
-    icon: PropTypes.string.isRequired,
-    streak: PropTypes.number.isRequired,
-    goal: PropTypes.number.isRequired,
-  }).isRequired,
-  status: PropTypes.string.isRequired,
-  onPress: PropTypes.func.isRequired,
-};
 
 // Vertical scroll component for pending & completed habits
 const VerticalScroll = ({ habits, status, onPress }) => (
   <View style={{ overflow: 'hidden' }}>
-    <ScrollView horizontal showsHorizontalScrollIndicator="no">
+    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       {/* Add more one small card component per pending habit */}
       {habits.map((habit) => (
-        <SmallCard key={habit.id} habit={habit} status={status} onPress={() => { console.log("vertical scroll: " + habit.id); onPress(habit.id); }} />
+        <SmallHabitCard key={habit.id} habit={habit} status={status} onPress={() => { console.log("vertical scroll: " + habit.id); onPress(habit.id); }} />
       ))}
     </ScrollView>
     <LinearGradient
@@ -107,7 +65,7 @@ VerticalScroll.propTypes = {
  * @param {object} confettiRef Reference to confetti cannon component
  * @returns {object} JSX for this component
  */
-const ViewB = ({ confettiRef }) => {
+const ViewMoon = ({ confettiRef }) => {
   // State containing list of pending habits except the next one
   const [pendingHabits, setPendingHabits] = useState(pendingData.slice(1));
   // State containing next pending habit
@@ -140,29 +98,22 @@ const ViewB = ({ confettiRef }) => {
   });
 
   const completeNextPendingHabit = useCallback(() => {
-    // Set the pending action
-    setPendingAction(() => () => {
-      // Add the habit to the completed list 
-      setCompletedHabits([{ ...nextPendingHabit, streak: nextPendingHabit.streak + 1 }, ...completedHabits]);
+    // Add the habit to the completed list 
+    setCompletedHabits([{ ...nextPendingHabit, streak: nextPendingHabit.streak + 1 }, ...completedHabits]);
 
-      // Get first pending habit
-      const habit = pendingHabits[0];
+    // Get first pending habit
+    const habit = pendingHabits[0];
 
-      // Set new next pending habit
-      setNextPendingHabit(habit);
+    // Set new next pending habit
+    setNextPendingHabit(habit);
 
-      // Remove the habit from the pending list 
-      setPendingHabits(pendingHabits.slice(1));
+    // Remove the habit from the pending list 
+    setPendingHabits(pendingHabits.slice(1));
 
-      // Start confetti if last habit
-      if (pendingHabits.length === 0) {
-        confettiRef.current.start();
-      }
-    });
-
-    // Show confirmation modal
-    setConfirmText('Do you want to check the habit "' + nextPendingHabit.title + '"?');
-    toggleModal();
+    // Start confetti if last habit
+    if (pendingHabits.length === 0) {
+      confettiRef.current.start();
+    }
   });
 
   // Function to uncomplete a habit 
@@ -214,7 +165,7 @@ const ViewB = ({ confettiRef }) => {
       <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
         {/* Subheader for pending habits */}
         <View style={styles.cardView}>
-          <Text category="h5">Pending Habits</Text>
+          <Text category="h4">Pending Habits</Text>
 
           {/* Text to explain checking */}
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -227,7 +178,7 @@ const ViewB = ({ confettiRef }) => {
 
         {/* Card for next pending habit or completion message */}
         {nextPendingHabit ? (
-          <MainCard habit={nextPendingHabit} status='warning' onPress={() => completeNextPendingHabit()} />
+          <BigHabitCard habit={nextPendingHabit} status='warning' onConfirm={() => completeNextPendingHabit()} />
         ) : (
           <Card style={{ marginTop: 10 }}>
             <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", marginVertical: 10 }}>
@@ -242,7 +193,7 @@ const ViewB = ({ confettiRef }) => {
 
         {/* Subheader for completed habits */}
         <View style={styles.cardView}>
-          <Text category="h5">Completed Habits</Text>
+          <Text category="h4">Completed Habits</Text>
 
           {/* Text to explain checking */}
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -261,7 +212,7 @@ const ViewB = ({ confettiRef }) => {
 };
 
 // Property types for main component
-ViewB.propTypes = {
+ViewMoon.propTypes = {
   confettiRef: PropTypes.object.isRequired,
 };
 
@@ -282,4 +233,4 @@ const styles = StyleSheet.create(
   }
 );
 
-export default ViewB;
+export default ViewMoon;

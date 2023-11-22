@@ -17,11 +17,21 @@ import PropTypes from 'prop-types';
  */
 const ConfirmationModal = ({ isVisible, confirmText, handleConfirm, handleCancel }) => {
   return (
-    <Modal isVisible={isVisible} style={{ justifyContent: 'flex-end', margin: 0 }}>
-      <View style={{ backgroundColor: 'white', padding: 22, borderRadius: 4, borderColor: 'rgba(0, 0, 0, 0.1)' }}>
+    <Modal
+      isVisible={isVisible}
+      style={{ justifyContent: 'flex-end', margin: 0 }}
+      onSwipeComplete={handleCancel}
+      onBackdropPress={handleCancel}
+      swipeDirection="down"
+      backdropColor='transparent' // Add this line
+    >
+      <View style={{ backgroundColor: 'white', padding: 20, borderTopWidth: 1, borderTopColor: "#E4E9F2" }}>
+
+        {/* Swipe bar */}
+        <View style={{ width: 40, height: 4, backgroundColor: "#E4E9F2", borderRadius: 2, alignSelf: 'center', marginBottom: 20 }} />
 
         {/* Confirmation Text */}
-        <Text category="p1">{confirmText}</Text>
+        <Text category="h5">{confirmText}</Text>
 
         {/* Divider */}
         <View style={{ width: "100%", height: 1, backgroundColor: "#E4E9F2", marginVertical: 20 }} />
