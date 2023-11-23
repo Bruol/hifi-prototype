@@ -3,13 +3,13 @@
 
 import React, { useState, useCallback } from 'react';
 import { ScrollView, View, StyleSheet } from 'react-native';
-import { Card, Text, Icon } from '@ui-kitten/components';
+import { Card, Text } from '@ui-kitten/components';
 import { LinearGradient } from 'expo-linear-gradient';
 import PropTypes from 'prop-types';
 
 import { pendingData, completedData } from '../HabitData';
 import BigHabitCard from '../components/BigHabitCard';
-import ConfirmationModal from '../components/ConfirmationModal';
+import UncheckModal from '../components/UncheckModal';
 import SmallHabitCard from '../components/SmallHabitCard';
 
 
@@ -69,43 +69,44 @@ const ViewMoon = ({ confettiRef }) => {
   // State containing list of pending habits except the next one
   const [pendingHabits, setPendingHabits] = useState(pendingData.slice(1));
   // State containing next pending habit
-  const [nextPendingHabit, setNextPendingHabit] = useState(pendingData[0]);
+  const [focusedHabit, setFocusedHabit] = useState(pendingData[0]);
+  // State containing active habit
+  const [activeHabit, setActiveHabit] = useState(focusedHabit);
   // State containing list of completed habits 
   const [completedHabits, setCompletedHabits] = useState(completedData);
+
   // State for modal visibility 
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [isUncheckModalVisible, setUncheckModalVisible] = useState(false);
   // State for pending action 
   const [pendingAction, setPendingAction] = useState(null);
-  // State for confirmation text
-  const [confirmText, setConfirmText] = useState("");
 
-  const completeHabit = useCallback((id) => {
-    // Find the habit 
-    let habit = pendingHabits.find((habit) => habit.id === id);
+  const checkHabit = useCallback((id) => {
+    // Find the habit to focus
+    let newFocusedHabit = pendingHabits.find((habit) => habit.id === id);
 
-    // Set the pending action
-    setPendingAction(() => () => {
-      // Remove the habit from the pending list 
-      setPendingHabits(pendingHabits.filter((habit) => habit.id !== id));
-
-      // Add the habit to the completed list 
-      setCompletedHabits([{ ...habit, streak: habit.streak + 1 }, ...completedHabits]);
+    // 1. Remove the pressed habit from the pending list
+    // 2. Add the previous focused habit to the pending list
+    // 3. Sort the list
+    setPendingHabits((prevPendingHabits) => {
+      const newPendingHabits = prevPendingHabits.filter((habit) => habit.id !== id);
+      newPendingHabits.push(focusedHabit);
+      newPendingHabits.sort((a, b) => a.id - b.id);
+      return newPendingHabits;
     });
 
-    // Show confirmation modal
-    setConfirmText('Do you want to check the habit "' + habit.title + '"?');
-    toggleModal();
+    // Set new next focused habit
+    setFocusedHabit(newFocusedHabit);
   });
 
-  const completeNextPendingHabit = useCallback(() => {
-    // Add the habit to the completed list 
-    setCompletedHabits([{ ...nextPendingHabit, streak: nextPendingHabit.streak + 1 }, ...completedHabits]);
+  const checkFocusedHabit = useCallback(() => {
+    // Add the focused habit to the completed list 
+    setCompletedHabits([{ ...focusedHabit, streak: focusedHabit.streak + 1 }, ...completedHabits]);
 
     // Get first pending habit
     const habit = pendingHabits[0];
 
     // Set new next pending habit
-    setNextPendingHabit(habit);
+    setFocusedHabit(habit);
 
     // Remove the habit from the pending list 
     setPendingHabits(pendingHabits.slice(1));
@@ -116,97 +117,103 @@ const ViewMoon = ({ confettiRef }) => {
     }
   });
 
-  // Function to uncomplete a habit 
-  const uncompleteHabit = useCallback((id) => {
+  const uncheckHabit = useCallback((id) => {
     // Find the habit 
     const habit = completedHabits.find((habit) => habit.id === id);
+
+    // Set the active habit
+    setActiveHabit(habit);
 
     // Set the pending action
     setPendingAction(() => () => {
       // Remove the habit from the completed list 
       setCompletedHabits(completedHabits.filter((habit) => habit.id !== id));
 
-      if (nextPendingHabit) {
+      if (focusedHabit) {
         // Add the habit to the pending list 
         setPendingHabits([{ ...habit, streak: habit.streak - 1 }, ...pendingHabits]);
       } else {
-        setNextPendingHabit({ ...habit, streak: habit.streak - 1 });
+        // Set the habit as the next focused habit
+        setFocusedHabit({ ...habit, streak: habit.streak - 1 });
       }
     });
 
     // Show confirmation modal
-    setConfirmText('Do you want to uncheck the habit "' + habit.title + '"?');
-    toggleModal();
+    setUncheckModalVisible(true);
   });
 
-  // Modal for checking/unchecking habits
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
-
-  const handleCancel = () => {
-    // Handle the cancellation of checking/unchecking habits here
+  const handleClose = () => {
+    // Handle the cancellation of unchecking habits here
     setPendingAction(null);
-    toggleModal();
+    setUncheckModalVisible(false);
   };
 
-  // Confirm button for checking/unchecking habits 
-  const handleConfirm = () => {
-    // Handle the confirmation of checking/unchecking habits here
+  const handleUncheck = () => {
+    // Handle the confirmation of unchecking habits here
     if (pendingAction) {
       pendingAction();
       setPendingAction(null);
     }
-    toggleModal();
+    setUncheckModalVisible(false);
   };
 
   return (
-    <View style={{ flexDirection: "column", justifyContent: "space-between", alignContent: "stretch" }}>
-      <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
-        {/* Subheader for pending habits */}
-        <View style={styles.cardView}>
-          <Text category="h4">Pending Habits</Text>
+    <View style={styles.wrapper}>
 
-          {/* Text to explain checking */}
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text category="c1">Tap to check</Text>
-          </View>
+      {/* Header for pending habits */}
+      <View style={styles.cardView}>
+        <Text category="h4">Pending Habits</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text category="c1">Tap to focus</Text>
         </View>
-
-        {/* Horizontal scroll for pending habits */}
-        <VerticalScroll habits={pendingHabits} status="warning" onPress={(id) => completeHabit(id)} />
-
-        {/* Card for next pending habit or completion message */}
-        {nextPendingHabit ? (
-          <BigHabitCard habit={nextPendingHabit} status='warning' onConfirm={() => completeNextPendingHabit()} />
-        ) : (
-          <Card style={{ marginTop: 10 }}>
-            <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", marginVertical: 10 }}>
-              <Text style={{ textAlign: "center" }} category='h3'>You have completed all habits for today!</Text>
-              <Text category='h1'>🎉</Text>
-            </View>
-          </Card>
-        )}
-
-        {/* Divider */}
-        <View style={styles.divider} />
-
-        {/* Subheader for completed habits */}
-        <View style={styles.cardView}>
-          <Text category="h4">Completed Habits</Text>
-
-          {/* Text to explain checking */}
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text category="c1">Tap to uncheck</Text>
-          </View>
-        </View>
-
-        {/* Horizontal scroll for completed habits */}
-        <VerticalScroll habits={completedHabits} status="success" onPress={(id) => uncompleteHabit(id)} />
       </View>
 
+      {/* Horizontal scroll for pending habits */}
+      <VerticalScroll
+        habits={pendingHabits}
+        status="warning"
+        onPress={(id) => checkHabit(id)}
+      />
+
+      {/* Card for either focused habit or completion message */}
+      {focusedHabit ? (
+        <BigHabitCard habit={focusedHabit} status='warning' onConfirm={() => checkFocusedHabit()} />
+      ) : (
+        <Card style={{ marginTop: 10 }}>
+          <View style={styles.finishedContent}>
+            <Text style={{ textAlign: "center" }} category='h3'>You have completed all habits for today!</Text>
+            <Text category='h1'>🎉</Text>
+          </View>
+        </Card>
+      )}
+
+      {/* Divider */}
+      <View style={styles.divider} />
+
+      {/* Subheader for completed habits */}
+      <View style={styles.cardView}>
+        <Text category="h4">Completed Habits</Text>
+
+        {/* Text to explain checking */}
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text category="c1">Tap to view</Text>
+        </View>
+      </View>
+
+      {/* Horizontal scroll for completed habits */}
+      <VerticalScroll
+        habits={completedHabits}
+        status="success"
+        onPress={(id) => uncheckHabit(id)}
+      />
+
       {/* Modal for confirming checking/unchecking habits */}
-      <ConfirmationModal isVisible={isModalVisible} confirmText={confirmText} handleConfirm={handleConfirm} handleCancel={handleCancel} />
+      <UncheckModal
+        habit={activeHabit}
+        isVisible={isUncheckModalVisible}
+        handleUncheck={handleUncheck}
+        handleClose={handleClose}
+      />
     </View>
   );
 };
@@ -216,21 +223,31 @@ ViewMoon.propTypes = {
   confettiRef: PropTypes.object.isRequired,
 };
 
-const styles = StyleSheet.create(
-  {
-    cardView: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      width: "100%",
-    },
-    divider: {
-      width: "100%",
-      height: 1,
-      backgroundColor: "#E4E9F2",
-      marginVertical: 20
-    },
-  }
-);
+const styles = StyleSheet.create({
+  wrapper: {
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignContent: "stretch",
+    padding: 20
+  },
+  cardView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: "100%",
+  },
+  divider: {
+    width: "100%",
+    height: 1,
+    backgroundColor: "#E4E9F2",
+    marginVertical: 20
+  },
+  finishedContent: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 10
+  },
+});
 
 export default ViewMoon;

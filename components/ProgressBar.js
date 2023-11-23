@@ -40,9 +40,9 @@ const ProgressBar = ({ range, value, isShowingNumbers = true, width = 50 }) => {
     return (
         <View style={{ display: "flex", flexDirection: 'column', justifyContent: "center", alignItems: 'center' }}>
 
-            {/* Streak and goal value */}
+            {/* Streak and goal value (Only show if enabled) */}
             {
-                isShowingNumbers && // Only show if enabled
+                isShowingNumbers &&
                 <View style={{ flexDirection: 'row', alignItems: 'flex-end', marginBottom: 2 }}>
                     <Text category="h5">{value}</Text>
                     <Text category="p1" style={{ color: "#8F9BB3" }}>/{range[1]}</Text>
@@ -61,6 +61,7 @@ ProgressBar.propTypes = {
     range: PropTypes.arrayOf(PropTypes.number, PropTypes.number).isRequired,
     value: PropTypes.number.isRequired,
     isShowingNumbers: PropTypes.bool,
+    width: PropTypes.number
 };
 
 export default ProgressBar;

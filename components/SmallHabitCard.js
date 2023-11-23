@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Card, Icon, Text } from '@ui-kitten/components';
 import PropTypes from 'prop-types';
 
@@ -14,13 +14,31 @@ import ProgressBar from './ProgressBar';
  * @returns {JSX.Element}
  */
 const SmallHabitCard = ({ habit, status, onPress }) => (
-    <Card status={status} style={{ margin: 10, width: 150 }} onPress={onPress}>
-        {/* First Row containing icon and title */}
-        <View style={{ flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Icon name={habit.icon} style={{ width: 32, height: 32 }} />
-            <Text category='h6' style={{ textAlign: 'center' }}>{habit.title}</Text>
-            <ProgressBar range={[0, habit.goal]} isShowingNumbers={false} value={habit.streak} width={100} />
+    <Card status={status} style={styles.card} onPress={onPress}>
+        {/* Habit icon and title */}
+        <View style={styles.content}>
+            <Icon 
+                name={habit.icon}
+                style={{ width: 32, height: 32 }}
+                fill="#666666"
+            />
+            <Text
+                category='s1'
+                style={styles.title}
+                numberOfLines={2}
+                ellipsizeMode='middle'
+            >
+                {habit.title}
+            </Text>
         </View>
+        
+        {/* Habit progress bar */}
+        <ProgressBar
+            range={[0, habit.goal]}
+            isShowingNumbers={false}
+            value={habit.streak}
+            width={100} 
+        />
     </Card>
 );
 
@@ -36,5 +54,26 @@ SmallHabitCard.propTypes = {
     status: PropTypes.string.isRequired,
     onPress: PropTypes.func.isRequired,
 };
+
+// Component styles
+const styles = StyleSheet.create({
+    card: {
+        margin: 10,
+        width: 140,
+        padding: 0
+    },
+    content: {
+        height: 75,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    title: {
+        flex: 1,
+        textAlign: 'center',
+        marginBottom: 5,
+        color: "#666666"
+    }
+});
 
 export default SmallHabitCard;

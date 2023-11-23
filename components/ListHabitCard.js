@@ -1,7 +1,7 @@
 // Code by Fabius Grünhagen
 // fabiusg@student.ethz.ch
 
-import React, { useState } from "react";
+import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Card, Icon, Text } from "@ui-kitten/components";
 import PropTypes from 'prop-types';

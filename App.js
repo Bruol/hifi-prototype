@@ -1,7 +1,7 @@
 // Code by Fabius Grünhagen
 // fabiusg@student.ethz.ch
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Alert, StatusBar, TouchableOpacity } from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -29,31 +29,46 @@ const CalendarIcon = () => (
 );
 
 // Back navigation icon
+
 const BackIcon = () => {
   const navigation = useNavigation();
+  const [pressCount, setPressCount] = useState(0);
 
   // Handle back button press and ask for confirmation
   const handleBackPress = () => {
-    Alert.alert(
-      'Are you sure…',
-      '…that you want to go back?\n\nAll progress will be lost.',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'OK',
-          onPress: () => navigation.navigate('Dashboard Selection'),
-        },
-      ],
-      { cancelable: false },
-    );
+    setPressCount(pressCount + 1);
+
+    // Reset press count after 2 seconds
+    if (pressCount === 0) {
+      setTimeout(() => setPressCount(0), 2000);
+    }
+
+    if (pressCount >= 4) {
+      Alert.alert(
+        'Are you sure…',
+        '…that you want to go back?\n\nAll progress will be lost.',
+        [
+          {
+            text: 'Cancel',
+            onPress: () => setPressCount(0),
+            style: 'cancel',
+          },
+          {
+            text: 'OK',
+            onPress: () => {
+              navigation.navigate('Dashboard Selection');
+              setPressCount(0);
+            },
+          },
+        ],
+        { cancelable: false },
+      );
+    }
   };
 
   return (
     <TouchableOpacity
-      style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginLeft: 10 }}
+      style={{ opacity: 0, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginLeft: 10 }}
       onPress={handleBackPress}
     >
       <Icon name='arrow-back-outline' fill='#3366FF' style={{ width: 24, height: 24 }} />
