@@ -26,38 +26,58 @@ const UncheckModal = ({ habit, isVisible, handleUncheck, handleClose }) => {
       onBackdropPress={handleClose}
       swipeDirection="down"
     >
-      <View style={{ backgroundColor: 'white', paddingHorizontal: 30, paddingTop: 10, paddingBottom: 30, borderTopWidth: 1, borderTopColor: "#E4E9F2", borderTopRightRadius: 20, borderTopLeftRadius: 20 }}>
+      <View style={styles.wrapper}>
 
         {/* Swipe bar */}
-        <View style={{ width: 80, height: 4, backgroundColor: "#E4E9F2", borderRadius: 2, alignSelf: 'center', marginBottom: 20 }} />
+        <View style={styles.swipeBar} />
 
         {/* Habit title and icon */}
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <View style={styles.flexRow}>
           <Text category='h5'>{habit.title}</Text>
           <Icon name={habit.icon} style={{ width: 32, height: 32 }} />
         </View>
 
         {/* Progress bar */}
         <View style={{ marginTop: 10, marginBottom: 20 }}>
-          <ProgressBar range={[0, habit.goal]} value={habit.streak} width={353} />
+          <ProgressBar
+            range={[0, habit.goal]}
+            value={habit.streak}
+            width={353} />
         </View>
 
         {/* Small centered text explaining that habit is already checked */}
         <Text category='s1' style={{ textAlign: 'center', marginBottom: 20 }}>You already completed this habit! 🎉</Text>
 
-
         {/* Uncheck and edit buttons next to each other */}
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Button appearance="ghost" status="info" accessoryLeft={<Icon name='settings-outline' />} onPress={() => Alert.alert("Not Implemented", "Editing habits is not part of the prototype.")}>Edit Habit</Button>
-        <Button appearance="ghost" status="danger" accessoryLeft={<Icon name='close-circle-outline' />} onPress={handleUncheck}>Uncheck Habit</Button>
-          </View>
+        <View style={styles.flexRow}>
+          <Button
+            appearance="ghost"
+            status="info"
+            accessoryLeft={<Icon name='settings-outline' />}
+            onPress={() => Alert.alert("Not Implemented", "Editing habits is not part of the prototype.")}
+          >
+            Edit Habit
+          </Button>
+          <Button
+            appearance="ghost"
+            status="danger"
+            accessoryLeft={<Icon name='close-circle-outline' />}
+            onPress={handleUncheck}
+          >
+            Uncheck Habit
+          </Button>
+        </View>
 
         {/* Divider */}
-        <View style={{ width: "100%", height: 1, backgroundColor: "#E4E9F2", marginVertical: 10 }} />
+        <View style={styles.divider} />
 
         {/* Close button */}
-        <Button accessoryLeft={<Icon name='corner-down-right-outline' style={{ width: 24, height: 24 }} />} onPress={handleClose}>Close Dialog</Button>
-
+        <Button
+          accessoryLeft={<Icon name='corner-down-right-outline' style={{ width: 24, height: 24 }} />}
+          onPress={handleClose}
+        >
+          Close Dialog
+        </Button>
       </View>
     </Modal>
   );
@@ -76,5 +96,36 @@ UncheckModal.propTypes = {
   handleUncheck: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
 };
+
+// Component styling
+const styles = {
+  wrapper: {
+    backgroundColor: 'white',
+    paddingHorizontal: 30,
+    paddingTop: 10,
+    paddingBottom: 30,
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20
+  },
+  swipeBar: {
+    width: 80,
+    height: 4,
+    backgroundColor: "#E4E9F2",
+    borderRadius: 2,
+    alignSelf: 'center',
+    marginBottom: 20
+  },
+  flexRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  divider: {
+    width: "100%",
+    height: 1,
+    backgroundColor: "#E4E9F2",
+    marginVertical: 10
+  }
+}
 
 export default UncheckModal;

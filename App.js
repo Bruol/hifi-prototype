@@ -85,60 +85,62 @@ const App = () => {
   // Reference to confetti cannon component
   const confettiRef = useRef();
 
-  return (
-    <>
-      {/* Necessary for icons */}
-      <IconRegistry icons={EvaIconsPack} />
 
-      {/* Set dark mode for status bar */}
-      <StatusBar barStyle="dark-content" />
+  /* Set dark mode for status bar */
+  StatusBar.setBarStyle('dark-content');
 
-      {/* Main component */}
-      <ApplicationProvider {...eva} theme={eva.light}>
-        <NavigationContainer initialRouteName="Dashboard A">
-          <Stack.Navigator
-            screenOptions={{
-              cardStyle: { backgroundColor: "#F7F9FC" }
-            }}
-          >
-            <Stack.Screen
-              name="Dashboard Selection"
-              component={ViewSelection}
-            />
-            <Stack.Screen
-              name="Dashboard Sun"
-              children={(props) => <ViewSun {...props} confettiRef={confettiRef} />}
-              options={{
-                headerLeft: () => (<BackIcon />),
-                headerRight: () => (<CalendarIcon />),
+    return (
+      <>
+        {/* Necessary for icons */}
+        <IconRegistry icons={EvaIconsPack} />
+
+
+        {/* Main component */}
+        <ApplicationProvider {...eva} theme={eva.light}>
+          <NavigationContainer initialRouteName="Dashboard A">
+            <Stack.Navigator
+              screenOptions={{
+                cardStyle: { backgroundColor: "#F7F9FC" }
               }}
-            />
-            <Stack.Screen
-              name="Dashboard Moon"
-              children={(props) => <ViewMoon {...props} confettiRef={confettiRef} />}
-              options={{
-                headerLeft: () => (<BackIcon />),
-                headerRight: () => (<CalendarIcon />),
-              }}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
+            >
+              <Stack.Screen
+                name="Dashboard Selection"
+                component={ViewSelection}
+              />
+              <Stack.Screen
+                name="Dashboard Sun"
+                children={(props) => <ViewSun {...props} confettiRef={confettiRef} />}
+                options={{
+                  headerLeft: () => (<BackIcon />),
+                  headerRight: () => (<CalendarIcon />),
+                }}
+              />
+              <Stack.Screen
+                name="Dashboard Moon"
+                children={(props) => <ViewMoon {...props} confettiRef={confettiRef} />}
+                options={{
+                  headerLeft: () => (<BackIcon />),
+                  headerRight: () => (<CalendarIcon />),
+                }}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
 
-        {/* Footer */}
-        <Footer />
+          {/* Footer */}
+          <Footer />
 
-        {/* Confetti cannon */}
-        <ConfettiCannon
-          count={200}
-          origin={{ x: 207, y: -20 }}
-          colors={confettiColors}
-          autoStart={false}
-          fadeOut={true}
-          ref={confettiRef}
-        />
-      </ApplicationProvider >
-    </>
-  );
+          {/* Confetti cannon */}
+          <ConfettiCannon
+            count={200}
+            origin={{ x: 207, y: -20 }}
+            colors={confettiColors}
+            autoStart={false}
+            fadeOut={true}
+            ref={confettiRef}
+          />
+        </ApplicationProvider >
+      </>
+    );
 };
 
 // Colors for confetti cannon

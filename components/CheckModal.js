@@ -113,8 +113,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 30,
         paddingTop: 10,
         paddingBottom: 30,
-        borderTopWidth: 1,
-        borderTopColor: "#E4E9F2",
         borderTopRightRadius: 20,
         borderTopLeftRadius: 20
     },
@@ -137,6 +135,11 @@ const styles = StyleSheet.create({
         backgroundColor: "#E4E9F2",
         marginVertical: 10
     },
+    titleWrapper: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    }
 });
 
 export default CheckModal;

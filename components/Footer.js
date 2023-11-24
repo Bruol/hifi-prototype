@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { Alert, View, TouchableOpacity, StyleSheet } from 'react-native';
-import { Icon } from '@ui-kitten/components';
+import { Icon, Text } from '@ui-kitten/components';
 
 /**
  * This component renders the footer of the dashboards.
@@ -12,11 +12,26 @@ import { Icon } from '@ui-kitten/components';
 const Footer = () => {
   return (
     <View style={styles.wrapper}>
+
+      {/* Button to view the statistics */}
+      <TouchableOpacity style={styles.buttonWrapper} onPress={() => Alert.alert("Not Implemented", "Viewing statistics is not part of the prototype!")}>
+        <Icon style={styles.icon} name="bar-chart-outline" fill="#8F9BB3" />
+        <Text appearance="hint" category="s2">Statistics</Text>
+      </TouchableOpacity>
+
       {/* Button to add a new habit */}
-      <TouchableOpacity onPress={() => Alert.alert("Not Implemented", "Adding a new habit is not part of the prototype!")}>
-        <View style={styles.button}>
+      <TouchableOpacity style={styles.buttonWrapper} onPress={() => Alert.alert("Not Implemented", "Adding a new habit is not part of the prototype!")}>
+        <View style={styles.centralButton}>
           <Icon style={styles.icon} name="plus-outline" fill="#FFF" />
         </View>
+        <Text style={{marginTop: 5}} status="primary" category="s1">New Habit</Text>
+      </TouchableOpacity>
+
+      {/* Button to view the settings */}
+      <TouchableOpacity style={styles.buttonWrapper} onPress={() => Alert.alert("Not Implemented", "Viewing settings is not part of the prototype!")}>
+        
+        <Icon style={styles.icon} name="settings-outline" fill="#8F9BB3" />
+        <Text appearance="hint" category="s2">Settings</Text>
       </TouchableOpacity>
     </View>
   );
@@ -28,17 +43,25 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 80,
     borderTopWidth: 1,
-    borderTopColor: "#E4E9F2"
+    borderTopColor: "#E4E9F2",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center"
   },
-  button: {
+  buttonWrapper: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  centralButton: {
     width: 60,
     height: 60,
     position: "absolute",
-    top: -30,
-    left: 177,
+    top: -60,
+    // left: 177,
     borderRadius: 30,
     backgroundColor: "#3366FF",
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center"
   },
