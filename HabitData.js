@@ -19,7 +19,7 @@ const pendingData = [
   },
   {
     id: 4,
-    title: "Read",
+    title: "Read 10 Pages",
     icon: "book-outline",
     streak: 6,
     goal: 16,
@@ -33,7 +33,7 @@ const pendingData = [
   },
   {
     id: 7,
-    title: "Sleep Early",
+    title: "Sleep at 10",
     icon: "moon-outline",
     streak: 0,
     goal: 9,
@@ -44,23 +44,30 @@ const pendingData = [
 const completedData = [
   {
     id: 1,
-    title: "Wake Up Early",
+    title: "Get Up at 7",
     icon: "sun-outline",
-    streak: 1,
+    streak: 4,
     goal: 15,
   },
   {
     id: 2,
-    title: "Eat Healthy",
+    title: "Journal",
     icon: "heart-outline",
-    streak: 1,
+    streak: 23,
     goal: 24,
   },
   {
     id: 6,
-    title: "Learn Something New",
+    title: "Study German",
     icon: "bulb-outline",
-    streak: 1,
+    streak: 41,
+    goal: 51,
+  },
+  {
+    id: 8,
+    title: "Take Iron",
+    icon: "activity-outline",
+    streak: 39,
     goal: 51,
   },
 ];
