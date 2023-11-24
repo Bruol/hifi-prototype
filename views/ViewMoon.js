@@ -19,7 +19,7 @@ const VerticalScroll = ({ habits, status, onPress }) => (
     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       {/* Add more one small card component per pending habit */}
       {habits.map((habit) => (
-        <SmallHabitCard key={habit.id} habit={habit} status={status} onPress={() => { console.log("vertical scroll: " + habit.id); onPress(habit.id); }} />
+        <SmallHabitCard key={habit.id} habit={habit} status={status} onPress={() => onPress(habit.id)} />
       ))}
     </ScrollView>
     <LinearGradient
