@@ -2,22 +2,29 @@
 // fabiusg@student.ethz.ch
 
 import React from 'react';
-import { Alert, View } from 'react-native';
-import { Button, Icon, Text } from '@ui-kitten/components';
+import { Alert, View, StyleSheet } from 'react-native';
+import { Button, Icon, Text, useStyleSheet, useTheme } from '@ui-kitten/components';
 import Modal from 'react-native-modal';
 import PropTypes from 'prop-types';
 
 import ProgressBar from './ProgressBar';
 
 /**
- * This component is used for the confirmation modal.
- * @param {Boolean} isVisible - Whether the modal is visible or not
- * @param {String} confirmText - The text to display at the top of the modal
- * @param {Function} handleUncheck - The function to execute when the habit is unchecked
- * @param {Function} handleClose - The function to execute when the modal is closed
- * @returns {JSX.Element}
- */
+* This component is used for the confirmation modal.
+* @param {Boolean} isVisible - Whether the modal is visible or not
+* @param {String} confirmText - The text to display at the top of the modal
+* @param {Function} handleUncheck - The function to execute when the habit is unchecked
+* @param {Function} handleClose - The function to execute when the modal is closed
+* @returns {JSX.Element}
+*/
 const UncheckModal = ({ habit, isVisible, handleUncheck, handleClose }) => {
+  // Get themed styles
+  const styles = useStyleSheet(themedStyles);
+
+  // Get theme colors
+  const theme = useTheme();
+  const iconColor = theme['text-basic-color'];
+
   return (
     <Modal
       isVisible={isVisible}
@@ -34,11 +41,11 @@ const UncheckModal = ({ habit, isVisible, handleUncheck, handleClose }) => {
         {/* Habit title and icon */}
         <View style={styles.flexRow}>
           <Text category='h5'>{habit.title}</Text>
-          <Icon name={habit.icon} style={{ width: 32, height: 32 }} />
+          <Icon name={habit.icon} style={styles.icon} fill={iconColor} />
         </View>
 
         {/* Progress bar */}
-        <View style={{ marginTop: 10, marginBottom: 20 }}>
+        <View style={styles.progressBarWrapper}>
           <ProgressBar
             range={[0, habit.goal]}
             value={habit.streak}
@@ -73,7 +80,7 @@ const UncheckModal = ({ habit, isVisible, handleUncheck, handleClose }) => {
 
         {/* Close button */}
         <Button
-          accessoryLeft={<Icon name='corner-down-right-outline' style={{ width: 24, height: 24 }} />}
+          accessoryLeft={<Icon name='corner-down-right-outline' />}
           onPress={handleClose}
         >
           Close Dialog
@@ -98,34 +105,44 @@ UncheckModal.propTypes = {
 };
 
 // Component styling
-const styles = {
-  wrapper: {
-    backgroundColor: 'white',
-    paddingHorizontal: 30,
-    paddingTop: 10,
-    paddingBottom: 30,
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20
-  },
-  swipeBar: {
-    width: 80,
-    height: 4,
-    backgroundColor: "#E4E9F2",
-    borderRadius: 2,
-    alignSelf: 'center',
-    marginBottom: 20
-  },
-  flexRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  divider: {
-    width: "100%",
-    height: 1,
-    backgroundColor: "#E4E9F2",
-    marginVertical: 10
+const themedStyles = StyleSheet.create(
+  {
+    wrapper: {
+      backgroundColor: "background-basic-color-1",
+      paddingHorizontal: 30,
+      paddingTop: 10,
+      paddingBottom: 30,
+      borderTopRightRadius: 20,
+      borderTopLeftRadius: 20
+    },
+    swipeBar: {
+      width: 80,
+      height: 4,
+      backgroundColor: "border-basic-color-4",
+      borderRadius: 2,
+      alignSelf: 'center',
+      marginBottom: 20
+    },
+    flexRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    },
+    divider: {
+      width: "100%",
+      height: 1,
+      backgroundColor: "border-basic-color-4",
+      marginVertical: 10
+    },
+    progressBarWrapper: {
+      marginTop: 10,
+      marginBottom: 20
+    },
+    icon: {
+      width: 30,
+      height: 30,
+    }
   }
-}
+);
 
 export default UncheckModal;

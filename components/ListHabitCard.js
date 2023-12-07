@@ -3,7 +3,7 @@
 
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { Card, Icon, Text } from "@ui-kitten/components";
+import { Card, Icon, Text, useTheme } from "@ui-kitten/components";
 import PropTypes from 'prop-types';
 
 import ProgressBar from "./ProgressBar";
@@ -15,22 +15,27 @@ import ProgressBar from "./ProgressBar";
  * @param {Function} onPress - The function to execute when the card is pressed
  * @returns {JSX.Element}
  */
-const ListHabitCard = ({ habit, status, onPress }) => (
-  <Card key={habit.id} style={styles.card} status={status} onPress={onPress}>
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+const ListHabitCard = ({ habit, status, onPress }) => {
+  // Get theme colors
+  const theme = useTheme();
+  const iconColor = theme['text-hint-color'];
+  return (
+    <Card key={habit.id} style={styles.card} status={status} onPress={onPress}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
 
-      {/* Icon */}
-      <Icon name={habit.icon} fill="#8F9BB3" style={styles.icon} />
+        {/* Icon */}
+        <Icon name={habit.icon} fill={iconColor} style={styles.icon} />
 
-      {/* Habit title */}
-      <Text category="h6">{habit.title}</Text>
+        {/* Habit title */}
+        <Text category="h6">{habit.title}</Text>
 
-      {/* Progress */}
-      <ProgressBar range={[0, habit.goal]} value={habit.streak} isShowingNumbers={true} />
+        {/* Progress */}
+        <ProgressBar range={[0, habit.goal]} value={habit.streak} isShowingNumbers={true} />
 
-    </View>
-  </Card>
-);
+      </View>
+    </Card>
+  );
+}
 
 // Property typed of ListCard
 ListHabitCard.propTypes = {

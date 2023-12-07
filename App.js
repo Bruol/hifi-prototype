@@ -3,11 +3,11 @@
 
 import React, { useRef, useState } from "react";
 import { Alert, StatusBar, TouchableOpacity } from 'react-native';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { DarkTheme, DefaultTheme, NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as eva from '@eva-design/eva';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
-import { ApplicationProvider, Text, IconRegistry, Icon } from '@ui-kitten/components';
+import { ApplicationProvider, Text, IconRegistry, Icon, useTheme, View } from '@ui-kitten/components';
 import ConfettiCannon from 'react-native-confetti-cannon';
 
 import ViewSun from "./views/ViewSun";
@@ -15,24 +15,35 @@ import ViewMoon from "./views/ViewMoon";
 import ViewSelection from "./views/ViewSelection";
 import Footer from './components/Footer';
 
+// TODO: Currently only used for consistency testing, maybe remove later... :)
+const isDarkMode = false; 
+
 const Stack = createStackNavigator();
 
 // Date selection icon
-const CalendarIcon = () => (
-  <TouchableOpacity
-    style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", marginRight: 10 }}
-    onPress={() => Alert.alert("Not Implemented", 'Date selection is not part of the prototype!')}
-  >
-    <Text style={{ marginRight: 5, color: "#3366FF" }}>Today</Text>
-    <Icon name='calendar-outline' fill='#3366FF' style={{ width: 24, height: 24 }} />
-  </TouchableOpacity>
-);
+const CalendarIcon = () => {
+  // Get theme
+  const theme = useTheme();
+
+  return (
+    <TouchableOpacity
+      style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", marginRight: 10 }}
+      onPress={() => Alert.alert("Not Implemented", 'Date selection is not part of the prototype!')}
+    >
+      <Text style={{ marginRight: 5, color: theme["text-info-color"] }}>Today</Text>
+      <Icon name='calendar-outline' fill={theme["text-info-color"]} style={{ width: 24, height: 24 }} />
+    </TouchableOpacity>
+  );
+}
 
 // Back navigation icon
 
 const BackIcon = () => {
   const navigation = useNavigation();
   const [pressCount, setPressCount] = useState(0);
+
+  // Get theme
+  const theme = useTheme();
 
   // Handle back button press and ask for confirmation
   const handleBackPress = () => {
@@ -71,11 +82,53 @@ const BackIcon = () => {
       style={{ opacity: 0, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginLeft: 10 }}
       onPress={handleBackPress}
     >
-      <Icon name='arrow-back-outline' fill='#3366FF' style={{ width: 24, height: 24 }} />
-      <Text style={{ marginLeft: 5, color: "#3366FF" }}>Back</Text>
+      <Icon name='arrow-back-outline' fill={theme["text-info-color"]} style={{ width: 24, height: 24 }} />
+      <Text style={{ marginLeft: 5, color: theme["text-info-color"] }}>Back</Text>
     </TouchableOpacity>
   );
 }
+
+const Navigator = ({ confettiRef }) => {
+  const theme = useTheme();
+
+  const screenOptions = {
+    headerStyle: {
+      backgroundColor: theme["background-basic-color-1"],
+      borderBottomWidth: 1,
+      borderBottomColor: theme["border-basic-color-4"],
+    },
+    cardStyle: { backgroundColor: theme["background-basic-color-2"] }
+  };
+
+  console.log(confettiRef);
+
+  return (
+    <Stack.Navigator
+      screenOptions={screenOptions}
+    >
+      <Stack.Screen
+        name="Dashboard Selection"
+        component={ViewSelection}
+      />
+      <Stack.Screen
+        name="Dashboard Sun"
+        children={(props) => <ViewSun {...props} confettiRef={confettiRef} />}
+        options={{
+          headerLeft: () => (<BackIcon />),
+          headerRight: () => (<CalendarIcon />),
+        }}
+      />
+      <Stack.Screen
+        name="Dashboard Moon"
+        children={(props) => <ViewMoon {...props} confettiRef={confettiRef} />}
+        options={{
+          headerLeft: () => (<BackIcon />),
+          headerRight: () => (<CalendarIcon />),
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
 
 /**
  * This is the main component of the app. It contains the navigation, the header, the footer and the confetti cannon component.
@@ -87,60 +140,33 @@ const App = () => {
 
 
   /* Set dark mode for status bar */
-  StatusBar.setBarStyle('dark-content');
+  StatusBar.setBarStyle(isDarkMode ? 'light-content' : 'dark-content');
 
-    return (
-      <>
-        {/* Necessary for icons */}
-        <IconRegistry icons={EvaIconsPack} />
+  return (
+    <>
+      {/* Necessary for icons */}
+      <IconRegistry icons={EvaIconsPack} />
 
 
-        {/* Main component */}
-        <ApplicationProvider {...eva} theme={eva.light}>
-          <NavigationContainer initialRouteName="Dashboard A">
-            <Stack.Navigator
-              screenOptions={{
-                cardStyle: { backgroundColor: "#F7F9FC" }
-              }}
-            >
-              <Stack.Screen
-                name="Dashboard Selection"
-                component={ViewSelection}
-              />
-              <Stack.Screen
-                name="Dashboard Sun"
-                children={(props) => <ViewSun {...props} confettiRef={confettiRef} />}
-                options={{
-                  headerLeft: () => (<BackIcon />),
-                  headerRight: () => (<CalendarIcon />),
-                }}
-              />
-              <Stack.Screen
-                name="Dashboard Moon"
-                children={(props) => <ViewMoon {...props} confettiRef={confettiRef} />}
-                options={{
-                  headerLeft: () => (<BackIcon />),
-                  headerRight: () => (<CalendarIcon />),
-                }}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
-
-          {/* Footer */}
-          <Footer />
-
-          {/* Confetti cannon */}
-          <ConfettiCannon
-            count={200}
-            origin={{ x: 207, y: -20 }}
-            colors={confettiColors}
-            autoStart={false}
-            fadeOut={true}
-            ref={confettiRef}
-          />
-        </ApplicationProvider >
-      </>
-    );
+      {/* Main component */}
+      <ApplicationProvider {...eva} theme={isDarkMode ? eva.dark : eva.light}>
+        <NavigationContainer initialRouteName="Dashboard A" theme={isDarkMode ? DarkTheme : DefaultTheme}>
+          <Navigator confettiRef={confettiRef} />
+        </NavigationContainer>
+        {/* Confetti cannon */}
+        <ConfettiCannon
+          count={200}
+          origin={{ x: 207, y: -20 }}
+          colors={confettiColors}
+          autoStart={false}
+          fadeOut={true}
+          ref={confettiRef}
+        />
+        {/* Footer */}
+        <Footer />
+      </ApplicationProvider >
+    </>
+  );
 };
 
 // Colors for confetti cannon

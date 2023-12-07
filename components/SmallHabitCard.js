@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Card, Icon, Text } from '@ui-kitten/components';
+import { Card, Icon, Text, useTheme, useStyleSheet } from '@ui-kitten/components';
 import PropTypes from 'prop-types';
 
 import ProgressBar from './ProgressBar';
@@ -13,27 +13,35 @@ import ProgressBar from './ProgressBar';
  * @param {Function} onPress - The function to execute when the card is pressed
  * @returns {JSX.Element}
  */
-const SmallHabitCard = ({ habit, status, onPress }) => (
-    <Card status={status} style={styles.card} onPress={onPress}>
-        {/* Habit icon and title */}
-        <View style={styles.content}>
-            <Icon 
-                name={habit.icon}
-                style={{ width: 32, height: 32 }}
-                fill="#666666"
-            />
-            <Text
-                category='s1'
-                style={styles.title}
-                numberOfLines={2}
-                ellipsizeMode='middle'
-            >
-                {habit.title}
-            </Text>
-        </View>
-        
-        {/* Habit progress bar */}
-        <ProgressBar
+const SmallHabitCard = ({ habit, status, onPress }) => {
+    // Get theme colors
+    const theme = useTheme();
+    const iconColor = theme['text-hint-color'];
+
+    // Get themed styles
+    const styles = useStyleSheet(themedStyles);
+
+    return (
+        <Card status={status} style={styles.card} onPress={onPress}>
+            {/* Habit icon and title */}
+            <View style={styles.content}>
+                <Icon
+                    name={habit.icon}
+                    style={styles.icon}
+                    fill={iconColor}
+                />
+                <Text
+                    category='s1'
+                    style={styles.title}
+                    numberOfLines={2}
+                    ellipsizeMode='middle'
+                >
+                    {habit.title}
+                </Text>
+            </View>
+
+            {/* Habit progress bar */}
+            <ProgressBar
             range={[0, habit.goal]}
             isShowingNumbers={false}
             value={habit.streak}
@@ -41,6 +49,7 @@ const SmallHabitCard = ({ habit, status, onPress }) => (
         />
     </Card>
 );
+}
 
 // Property types for small card component
 SmallHabitCard.propTypes = {
@@ -56,7 +65,7 @@ SmallHabitCard.propTypes = {
 };
 
 // Component styles
-const styles = StyleSheet.create({
+const themedStyles = StyleSheet.create({
     card: {
         margin: 10,
         width: 140,
@@ -68,11 +77,15 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center'
     },
+    icon: {
+        width: 32,
+        height: 32
+    },
     title: {
         flex: 1,
         textAlign: 'center',
         marginBottom: 5,
-        color: "#666666"
+        color: 'text-hint-color'
     }
 });
 

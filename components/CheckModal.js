@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { Alert, View, StyleSheet } from 'react-native';
-import { Button, Icon, Text } from '@ui-kitten/components';
+import { Button, Icon, Text, useStyleSheet, useTheme } from '@ui-kitten/components';
 import Modal from 'react-native-modal';
 import PropTypes from 'prop-types';
 
@@ -18,6 +18,13 @@ import ProgressBar from './ProgressBar';
  * @returns {JSX.Element}
  */
 const CheckModal = ({ habit, isVisible, handleCheck, handleClose }) => {
+    // Get themed styles
+    const styles = useStyleSheet(themedStyles);
+
+    // Get theme colors
+    const theme = useTheme();
+    const iconColor = theme['text-basic-color'];
+
     return (
         <Modal
             isVisible={isVisible}
@@ -34,7 +41,7 @@ const CheckModal = ({ habit, isVisible, handleCheck, handleClose }) => {
                 {/* Habit title and icon */}
                 <View style={styles.titleWrapper}>
                     <Text category='h5'>{habit.title}</Text>
-                    <Icon name={habit.icon} style={{ width: 32, height: 32 }} />
+                    <Icon name={habit.icon} style={{ width: 32, height: 32 }} fill={iconColor} />
                 </View>
 
                 {/* Progress bar */}
@@ -107,9 +114,9 @@ CheckModal.propTypes = {
 };
 
 // Component styling
-const styles = StyleSheet.create({
+const themedStyles = StyleSheet.create({
     card: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: 'background-basic-color-1',
         paddingHorizontal: 30,
         paddingTop: 10,
         paddingBottom: 30,
@@ -119,7 +126,7 @@ const styles = StyleSheet.create({
     swipeBar: {
         width: 80,
         height: 4,
-        backgroundColor: "#E4E9F2",
+        backgroundColor: "border-basic-color-4",
         borderRadius: 2,
         alignSelf: 'center',
         marginBottom: 20
@@ -132,7 +139,7 @@ const styles = StyleSheet.create({
     divider: {
         width: "100%",
         height: 1,
-        backgroundColor: "#E4E9F2",
+        backgroundColor: "border-basic-color-4",
         marginVertical: 10
     },
     titleWrapper: {

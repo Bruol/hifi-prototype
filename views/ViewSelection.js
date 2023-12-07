@@ -3,7 +3,7 @@
 
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
-import { Text, Button, Icon } from '@ui-kitten/components'
+import { Text, Button, Icon, useStyleSheet } from '@ui-kitten/components'
 import { useNavigation } from '@react-navigation/native'
 
 /**
@@ -13,6 +13,9 @@ import { useNavigation } from '@react-navigation/native'
 const ViewSelection = () => {
   // Get navigation object
   const navigation = useNavigation();
+
+  // Get themed styles
+  const styles = useStyleSheet(themedStyles);
 
   return (
     <View style={styles.wrapper}>
@@ -78,7 +81,7 @@ const ViewSelection = () => {
 }
 
 // Component styling
-const styles = StyleSheet.create({
+const themedStyles = StyleSheet.create({
   wrapper: {
     flexDirection: "column",
     justifyContent: "flex-start",
@@ -90,7 +93,7 @@ const styles = StyleSheet.create({
   divider: {
     width: "100%",
     height: 1,
-    backgroundColor: "#E4E9F2",
+    backgroundColor: "border-basic-color-4",
     marginVertical: 20
   },
   space_bottom: {

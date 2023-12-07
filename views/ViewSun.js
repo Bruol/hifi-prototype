@@ -3,7 +3,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
-import { Text, Card } from '@ui-kitten/components';
+import { Text, Card, useStyleSheet } from '@ui-kitten/components';
 import PropTypes from 'prop-types';
 
 import { pendingData, completedData } from '../HabitData';
@@ -17,6 +17,9 @@ import CheckModal from '../components/CheckModal';
  * @returns {JSX.Element}
  */
 const ViewSun = ({ confettiRef }) => {
+    console.log("ViewSun.js: ViewSun()");
+    console.log(confettiRef)
+
     // State containing list of pending habits 
     const [pendingHabits, setPendingHabits] = useState(pendingData);
     // State containing list of completed habits 
@@ -31,6 +34,8 @@ const ViewSun = ({ confettiRef }) => {
     const [isCheckModalVisible, setCheckModalVisible] = useState(false);
     // Async function to complete a habit 
     const checkHabit = useCallback((id) => {
+        console.log("ViewSun.js: checkHabit()");
+        console.log(confettiRef);
         // Find the habit
         const habit = pendingHabits.find((habit) => habit.id === id);
         // Set focus to the habit
@@ -38,6 +43,10 @@ const ViewSun = ({ confettiRef }) => {
 
         // Set the pending action
         setPendingAction(() => () => {
+            console.log("--------------------------------------------------------------------------------");
+            console.log("ViewSun.js: pendingAction()");
+            console.log(confettiRef);
+
             // Remove the habit from the pending list 
             setPendingHabits(pendingHabits.filter((habit) => habit.id !== id));
 
@@ -98,6 +107,9 @@ const ViewSun = ({ confettiRef }) => {
         setCheckModalVisible(false);
         setUncheckModalVisible(false);
     };
+
+    // Get themed styles
+    const styles = useStyleSheet(themedStyles);
 
     return (
         <View style={styles.wrapper}>
@@ -188,7 +200,7 @@ const horizontalFlex = {
     justifyContent: 'space-between',
     alignItems: 'center'
 }
-const styles = StyleSheet.create({
+const themedStyles = StyleSheet.create({
     wrapper: {
         alignItems: 'stretch',
         justifyContent: 'center',
@@ -211,32 +223,9 @@ const styles = StyleSheet.create({
     divider: {
         width: "100%",
         height: 1,
-        backgroundColor: "#E4E9F2",
+        backgroundColor: "border-basic-color-4",
         marginVertical: 20
     },
-    header: {
-        ...horizontalFlex,
-        paddingHorizontal: 20,
-        paddingTop: 10,
-        paddingBottom: 10,
-        backgroundColor: "#F7F9FC",
-        borderBottomColor: "#E4E9F2",
-        borderBottomWidth: 1
-    },
-    dateSelector: {
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: "#F7F9FC"
-    },
-    footer: {
-        ...horizontalFlex,
-        paddingHorizontal: 20,
-        paddingBottom: 20,
-        backgroundColor: "#F7F9FC",
-        borderTopColor: "#E4E9F2",
-        borderTopWidth: 1
-    }
 });
 
 export default ViewSun;

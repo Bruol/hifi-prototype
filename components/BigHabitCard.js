@@ -3,7 +3,7 @@
 
 import React, { useRef, useEffect } from "react";
 import { View, StyleSheet, Alert, Animated } from "react-native";
-import { Card, Icon, Text, Button } from "@ui-kitten/components";
+import { Card, Icon, Text, Button, useStyleSheet, useTheme } from "@ui-kitten/components";
 import PropTypes from 'prop-types';
 
 import ProgressBar from "./ProgressBar";
@@ -33,15 +33,22 @@ const BigHabitCard = ({ habit, onConfirm }) => {
     ]).start();
   }, [habit]);
 
+  // Get themed styles
+  const styles = useStyleSheet(themedStyles);
+
+  // Get theme colors
+  const theme = useTheme();
+  const iconColor = theme['text-basic-color'];
+
   return (
-    <Animated.View style={{transform: [{scale: scaleValue}]}}>
+    <Animated.View style={{ transform: [{ scale: scaleValue }] }}>
       <Card key={habit.id} style={styles.card} status="warning">
         <View style={styles.wrapper}>
 
           {/* Title Row */}
           <View style={styles.titleRow}>
             <Text category="h5">{habit.title}</Text>
-            <Icon name={habit.icon} style={styles.icon} />
+            <Icon name={habit.icon} style={styles.icon} fill={iconColor} />
           </View>
 
           {/* Progress bar */}
@@ -51,10 +58,10 @@ const BigHabitCard = ({ habit, onConfirm }) => {
 
           {/* Confirmation Button */}
           <Button status="success" accessoryLeft={<Icon name='checkmark-circle' />} onPress={onConfirm}>Check Habit</Button>
-          
+
           {/* Divider */}
-          <View style={{ width: "100%", height: 1, backgroundColor: "#E4E9F2", marginVertical: 10 }} />
-          
+          <View style={styles.divider} />
+
           {/* Settings Button */}
           <Button size="small" appearance="ghost" status="info" accessoryLeft={<Icon name='settings-outline' />} onPress={() => Alert.alert("Not Implemented", "Editing habits is not part of the prototype.")}>Edit Habit</Button>
         </View>
@@ -76,7 +83,7 @@ BigHabitCard.propTypes = {
 };
 
 // Component styling
-const styles = StyleSheet.create({
+const themedStyles = StyleSheet.create({
   card: {
     marginVertical: 10,
     marginHorizontal: 10
@@ -94,6 +101,16 @@ const styles = StyleSheet.create({
   icon: {
     width: 30,
     height: 30
+  },
+  progressBarWrapper: {
+    marginTop: 10,
+    marginBottom: 20
+  },
+  divider: {
+    width: "100%",
+    height: 1,
+    backgroundColor: "border-basic-color-4",
+    marginVertical: 10
   },
 });
 

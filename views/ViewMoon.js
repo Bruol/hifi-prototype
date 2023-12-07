@@ -3,7 +3,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { ScrollView, View, StyleSheet } from 'react-native';
-import { Card, Text } from '@ui-kitten/components';
+import { Card, Text, useStyleSheet, useTheme } from '@ui-kitten/components';
 import { LinearGradient } from 'expo-linear-gradient';
 import PropTypes from 'prop-types';
 
@@ -14,38 +14,44 @@ import SmallHabitCard from '../components/SmallHabitCard';
 
 
 // Vertical scroll component for pending & completed habits
-const VerticalScroll = ({ habits, status, onPress }) => (
-  <View style={{ overflow: 'hidden' }}>
-    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-      {/* Add more one small card component per pending habit */}
-      {habits.map((habit) => (
-        <SmallHabitCard key={habit.id} habit={habit} status={status} onPress={() => { console.log("vertical scroll: " + habit.id); onPress(habit.id); }} />
-      ))}
-    </ScrollView>
-    <LinearGradient
-      colors={["#F7F9FC00", "#F7F9FCFF"]}
-      start={{ x: 0.98, y: 0 }}
-      end={{ x: 1, y: 0 }}
-      style={{
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-      }}
-      pointerEvents='none'
-    />
-    <LinearGradient
-      colors={["#F7F9FC00", "#F7F9FCFF"]}
-      start={{ x: 0.02, y: 0 }}
-      end={{ x: 0, y: 0 }}
-      style={{
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-      }}
-      pointerEvents='none'
-    />
-  </View>
-);
+const VerticalScroll = ({ habits, status, onPress }) => {
+  // Get theme colors
+  const theme = useTheme();
+  const backgoundLowOpacity = theme['background-basic-color-2'] + "00";  // Set alpha to 0.0
+  const backgoundHighOpacity = theme['background-basic-color-2'] + "FF"; // Set alpha to 1.0
+  return (
+    <View style={{ overflow: 'hidden' }}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        {/* Add more one small card component per pending habit */}
+        {habits.map((habit) => (
+          <SmallHabitCard key={habit.id} habit={habit} status={status} onPress={() => onPress(habit.id)} />
+        ))}
+      </ScrollView>
+      <LinearGradient
+        colors={[backgoundLowOpacity, backgoundHighOpacity]}
+        start={{ x: 0.98, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        style={{
+          position: 'absolute',
+          width: '100%',
+          height: '100%',
+        }}
+        pointerEvents='none'
+      />
+      <LinearGradient
+        colors={[backgoundLowOpacity, backgoundHighOpacity]}
+        start={{ x: 0.02, y: 0 }}
+        end={{ x: 0, y: 0 }}
+        style={{
+          position: 'absolute',
+          width: '100%',
+          height: '100%',
+        }}
+        pointerEvents='none'
+      />
+    </View>
+  );
+}
 
 // Property types for vertical scroll component
 VerticalScroll.propTypes = {
@@ -157,6 +163,9 @@ const ViewMoon = ({ confettiRef }) => {
     setUncheckModalVisible(false);
   };
 
+  // Get themed styles
+  const styles = useStyleSheet(themedStyles);
+
   return (
     <View style={styles.wrapper}>
 
@@ -223,7 +232,7 @@ ViewMoon.propTypes = {
   confettiRef: PropTypes.object.isRequired,
 };
 
-const styles = StyleSheet.create({
+const themedStyles = StyleSheet.create({
   wrapper: {
     flexDirection: "column",
     justifyContent: "space-between",
@@ -239,7 +248,7 @@ const styles = StyleSheet.create({
   divider: {
     width: "100%",
     height: 1,
-    backgroundColor: "#E4E9F2",
+    backgroundColor: "border-basic-color-4",
     marginVertical: 20
   },
   finishedContent: {

@@ -3,7 +3,7 @@
 
 import React from "react";
 import { View } from "react-native";
-import { Text } from "@ui-kitten/components";
+import { Text, useTheme } from "@ui-kitten/components";
 import PropTypes from 'prop-types';
 
 function lerpColor(color1, color2, factor) {
@@ -31,11 +31,18 @@ function lerpColor(color1, color2, factor) {
  */
 const ProgressBar = ({ range, value, isShowingNumbers = true, width = 50 }) => {
 
+    // Get theme colors
+    const theme = useTheme();
+    const warningColor = theme['color-warning-500'];
+    const successColor = theme['color-success-500'];
+    const secondaryTextColor = theme['text-hint-color'];
+    const barBackgroundColor = theme['background-basic-color-3'];
+
     // Calculate progress
     const progress = (value - range[0]) / (range[1] - range[0]);
 
     // Calculate color of progress bar
-    let color = lerpColor('#FFC107', '#00E096', progress);
+    let color = lerpColor(warningColor, successColor, progress);
 
     return (
         <View style={{ display: "flex", flexDirection: 'column', justifyContent: "center", alignItems: 'center' }}>
@@ -45,12 +52,12 @@ const ProgressBar = ({ range, value, isShowingNumbers = true, width = 50 }) => {
                 isShowingNumbers &&
                 <View style={{ flexDirection: 'row', alignItems: 'flex-end', marginBottom: 2 }}>
                     <Text category="h5">{value}</Text>
-                    <Text category="p1" style={{ color: "#8F9BB3" }}>/{range[1]}</Text>
+                    <Text category="p1" style={{ color: secondaryTextColor }}>/{range[1]}</Text>
                 </View>
             }
 
             {/* Progress bar */}
-            <View style={{ width: width, height: 8, backgroundColor: "#E4E9F2", borderRadius: 4, overflow: "hidden" }}>
+            <View style={{ width: width, height: 8, backgroundColor: barBackgroundColor, borderRadius: 4, overflow: "hidden" }}>
                 <View style={{ width: width * progress, height: 8, backgroundColor: color, borderRadius: 4 }} />
             </View>
         </View>);
