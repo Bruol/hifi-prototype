@@ -1,9 +1,7 @@
-// Code by Fabius Grünhagen
-// fabiusg@student.ethz.ch
-
 import React from 'react';
 import { Alert, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Icon, Text, useStyleSheet, useTheme } from '@ui-kitten/components';
+import { useNavigation } from '@react-navigation/native';
 
 /**
  * This component renders the footer of the dashboards.
@@ -14,6 +12,8 @@ const Footer = () => {
   const theme = useTheme();
   const iconColorDark = theme['text-hint-color'];
   const iconColorLight = theme['text-control-color'];
+
+  const navigation = useNavigation();
 
   // Get themed styles
   const styles = useStyleSheet(themedStyles);
@@ -28,7 +28,7 @@ const Footer = () => {
       </TouchableOpacity>
 
       {/* Button to add a new habit */}
-      <TouchableOpacity style={styles.buttonWrapper} onPress={() => Alert.alert("Not Implemented", "Adding a new habit is not part of the prototype!")}>
+      <TouchableOpacity style={styles.buttonWrapper} onPress={() => navigation.navigate("Habit Creation")}>
         <View style={styles.centralButton}>
           <Icon style={styles.icon} name="plus-outline" fill={iconColorLight} />
         </View>

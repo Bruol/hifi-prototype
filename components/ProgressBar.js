@@ -6,7 +6,7 @@ import { View } from "react-native";
 import { Text, useTheme } from "@ui-kitten/components";
 import PropTypes from 'prop-types';
 
-function lerpColor(color1, color2, factor) {
+function lerpHexColors(color1, color2, factor) {
     const weight1 = 1 - factor;
     const r1 = parseInt(color1.substring(1, 3), 16);
     const g1 = parseInt(color1.substring(3, 5), 16);
@@ -31,6 +31,13 @@ function lerpColor(color1, color2, factor) {
  */
 const ProgressBar = ({ range, value, isShowingNumbers = true, width = 50 }) => {
 
+    // TODO: Remove debug logs
+    // console.log("ProgressBar:");
+    // console.log("> range: " + range);
+    // console.log("> value: " + value);
+    // console.log("> isShowingNumbers: " + isShowingNumbers);
+    // console.log("> width: " + width);
+
     // Get theme colors
     const theme = useTheme();
     const warningColor = theme['color-warning-500'];
@@ -42,7 +49,7 @@ const ProgressBar = ({ range, value, isShowingNumbers = true, width = 50 }) => {
     const progress = (value - range[0]) / (range[1] - range[0]);
 
     // Calculate color of progress bar
-    let color = lerpColor(warningColor, successColor, progress);
+    let color = lerpHexColors(warningColor, successColor, progress);
 
     return (
         <View style={{ display: "flex", flexDirection: 'column', justifyContent: "center", alignItems: 'center' }}>

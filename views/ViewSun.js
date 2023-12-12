@@ -1,65 +1,54 @@
-// Code by Fabius Grünhagen
-// fabiusg@student.ethz.ch
-
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { Text, Card, useStyleSheet } from '@ui-kitten/components';
+import { useFocusEffect } from '@react-navigation/native';
 import PropTypes from 'prop-types';
+import ConfettiCannon from 'react-native-confetti-cannon';
 
-import { pendingData, completedData } from '../HabitData';
+import { DataHandler } from '../data/DataHandler';
 import ListHabitCard from '../components/ListHabitCard';
-import UncheckModal from '../components/UncheckModal';
-import CheckModal from '../components/CheckModal';
+import UncheckModal from '../modals/UncheckModal';
+import CheckModal from '../modals/CheckModal';
+import Footer from '../components/Footer';
 
 /**
  * This component renders the view for prototype A.
  * @param {object} confettiRef - Reference to confetti cannon component
  * @returns {JSX.Element}
  */
-const ViewSun = ({ confettiRef }) => {
-    console.log("ViewSun.js: ViewSun()");
-    console.log(confettiRef)
+const ViewSun = () => {
+    // Reference to confetti cannon component
+    const confettiRef = useRef();
 
-    // State containing list of pending habits 
-    const [pendingHabits, setPendingHabits] = useState(pendingData);
-    // State containing list of completed habits 
-    const [completedHabits, setCompletedHabits] = useState(completedData);
+    const dataHandler = new DataHandler();
+    const [pendingHabitIds, setPendingHabitIds] = useState(dataHandler.getPendingDataIds());
+    const [completedHabitIds, setCompletedHabitIds] = useState(dataHandler.getCompletedDataIds());
+    const updateHabitIds = () => {
+        setPendingHabitIds(dataHandler.getPendingDataIds());
+        setCompletedHabitIds(dataHandler.getCompletedDataIds());
+    }
+    dataHandler.addOnAddHabitListener(updateHabitIds);
+    dataHandler.addOnRemoveHabitListener(updateHabitIds);
 
     // State for pending action 
     const [pendingAction, setPendingAction] = useState(null);
     // State for focus habit
-    const [focusHabit, setFocusHabit] = useState(pendingData[0]);
+    const [focusHabitId, setFocusHabitId] = useState(1);
 
     // State for check modal visibility
     const [isCheckModalVisible, setCheckModalVisible] = useState(false);
     // Async function to complete a habit 
     const checkHabit = useCallback((id) => {
-        console.log("ViewSun.js: checkHabit()");
-        console.log(confettiRef);
-        // Find the habit
-        const habit = pendingHabits.find((habit) => habit.id === id);
-        // Set focus to the habit
-        setFocusHabit(habit);
-
-        // Set the pending action
+        // Set states for confirmation modal
+        setFocusHabitId(id);
         setPendingAction(() => () => {
-            console.log("--------------------------------------------------------------------------------");
-            console.log("ViewSun.js: pendingAction()");
-            console.log(confettiRef);
-
-            // Remove the habit from the pending list 
-            setPendingHabits(pendingHabits.filter((habit) => habit.id !== id));
-
-            // Add the habit to the completed list and sort by id
-            setCompletedHabits((completedHabits) => [...completedHabits, { ...habit, streak: habit.streak + 1 }].sort((a, b) => a.id - b.id));
-
-            // Start confetti if last habit
-            if (pendingHabits.length === 1) {
+            dataHandler.setHabitCompleted(id);
+            if (dataHandler.getPendingDataIds().length === 0) {
                 confettiRef.current.start();
             }
         });
 
-        // Show check modal
+        // Show confirmation modal
         setCheckModalVisible(true);
     });
     // Confirm button for checking habits 
@@ -75,18 +64,13 @@ const ViewSun = ({ confettiRef }) => {
     const [isUncheckModalVisible, setUncheckModalVisible] = useState(false);
     // Function to uncomplete a habit 
     const uncheckHabit = useCallback((id) => {
-        // Find the habit 
-        const habit = completedHabits.find((habit) => habit.id === id);
         // Set focus to the habit
-        setFocusHabit(habit);
+        setFocusHabitId(id);
 
         // Set the pending action
         setPendingAction(() => () => {
-            // Remove the habit from the completed list 
-            setCompletedHabits(completedHabits.filter((habit) => habit.id !== id));
-
-            // Add the habit to the pending list and sort by id
-            setPendingHabits((pendingHabits) => [...pendingHabits, { ...habit, streak: habit.streak - 1 }].sort((a, b) => a.id - b.id));
+            // Set the habit to pending
+            dataHandler.setHabitCompleted(id, false);
         });
 
         // Show uncheck modal
@@ -112,79 +96,97 @@ const ViewSun = ({ confettiRef }) => {
     const styles = useStyleSheet(themedStyles);
 
     return (
-        <View style={styles.wrapper}>
-            {/* Page content */}
-            <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'spread', paddingHorizontal: 20, paddingTop: 20 }}>
+        <View>
 
-                {/* Subheader for pending habits */}
-                <View style={styles.cardView}>
-                    <Text category="h5">Pending Habits</Text>
-
-                    {/* Text to explain checking */}
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Text category="c1">Tap to view</Text>
-                    </View>
-                </View>
-
-                {(pendingHabits && pendingHabits.length > 0) ? (
-                    // List of pending habits
-                    pendingHabits.map(
-                        (habit) =>
-                            <ListHabitCard
-                                key={habit.id}
-                                habit={habit}
-                                status="warning"
-                                onPress={() => checkHabit(habit.id)}
-                            />
-                    )
-                ) : (
-                    <Card style={styles.finishedCard}>
-                        <View style={styles.finishedContent}>
-                            <Text style={{ textAlign: "center" }} category='h3'>You have completed all habits for today!</Text>
-                            <Text category='h1'>🎉</Text>
+            <View style={styles.contentWrapper}>
+                {/* Page content */}
+                <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'spread', paddingHorizontal: 20, paddingTop: 20 }}>
+                    {/* Subheader for pending habits */}
+                    <View style={styles.cardView}>
+                        <Text category="h5">Pending Habits</Text>
+                        {/* Text to explain checking */}
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Text category="c1">Tap to view</Text>
                         </View>
-                    </Card>
-                )}
-
-                {/* Divider */}
-                <View style={styles.divider} />
-
-                {/* Subheader for complete habits */}
-                <View style={styles.cardView}>
-                    <Text category="h5">Completed Habits</Text>
-
-                    {/* Text to explain unchecking */}
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Text category="c1">Tap to view</Text>
                     </View>
-                </View>
+                    {(pendingHabitIds.length > 0) ? (
+                        // List of pending habits
+                        pendingHabitIds.map(
+                            (habitId) => <ListHabitCard
+                                key={habitId}
+                                habit={dataHandler.getHabitById(habitId)}
+                                status="warning"
+                                onPress={() => checkHabit(habitId)}
+                            />
+                        )
+                    ) : (
+                        <Card style={styles.finishedCard}>
+                            <View style={styles.finishedContent}>
+                                <Text style={{ textAlign: "center" }} category='h3'>You have completed all habits for today!</Text>
+                                <Text category='h1'>🎉</Text>
+                            </View>
+                        </Card>
+                    )}
+                    {/* Divider */}
+                    <View style={styles.divider} />
+                    {/* Subheader for complete habits */}
+                    <View style={styles.cardView}>
+                        <Text category="h5">Completed Habits</Text>
+                        {/* Text to explain unchecking */}
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Text category="c1">Tap to view</Text>
+                        </View>
+                    </View>
+                    {/* List of completed habits */}
+                    {(completedHabitIds.length > 0) ? (
+                        completedHabitIds.map(
+                            (habitId) =>
+                                <ListHabitCard
+                                    key={habitId}
+                                    habit={dataHandler.getHabitById(habitId)}
+                                    status="success"
+                                    onPress={() => uncheckHabit(habitId)}
+                                />
+                        )
+                    ) : (
+                        <Card style={styles.finishedCard}>
+                            <View style={styles.finishedContent}>
+                                <Text style={{ textAlign: "center" }} category='h3'>You have not completed any habits yet!</Text>
+                                <Text category='h1'>🥹</Text>
+                            </View>
+                        </Card>
+                    )}
+                    {/* Modal for confirming checking habits */}
+                    <CheckModal
+                        isVisible={isCheckModalVisible}
+                        habitId={focusHabitId}
+                        handleCheck={handleCheck}
+                        handleClose={handleClose}
+                    />
+                    {/* Modal for confirming unchecking habits */}
+                    <UncheckModal
+                        isVisible={isUncheckModalVisible}
+                        habitId={focusHabitId}
+                        handleUncheck={handleUncheck}
+                        handleClose={handleClose}
+                    />
+                </ScrollView>
+            </View>
 
-                {/* List of completed habits */}
-                {completedHabits.map(
-                    (habit) =>
-                        <ListHabitCard
-                            key={habit.id}
-                            habit={habit}
-                            status="success"
-                            onPress={() => uncheckHabit(habit.id)}
-                        />
-                )}
+            {/* Confetti cannon */}
+            <ConfettiCannon
+                count={200}
+                origin={{ x: 207, y: -20 }}
+                colors={confettiColors}
+                autoStart={false}
+                fadeOut={true}
+                ref={confettiRef}
+            />
 
-                {/* Modal for confirming checking habits */}
-                <CheckModal
-                    isVisible={isCheckModalVisible}
-                    habit={focusHabit}
-                    handleCheck={handleCheck}
-                    handleClose={handleClose}
-                />
-                {/* Modal for confirming unchecking habits */}
-                <UncheckModal
-                    isVisible={isUncheckModalVisible}
-                    habit={focusHabit}
-                    handleUncheck={handleUncheck}
-                    handleClose={handleClose}
-                />
-            </ScrollView>
+            {/* Footer */}
+            <View style={styles.footerWrapper}>
+                <Footer />
+            </View>
         </View>
     );
 };
@@ -201,10 +203,15 @@ const horizontalFlex = {
     alignItems: 'center'
 }
 const themedStyles = StyleSheet.create({
-    wrapper: {
+    contentWrapper: {
         alignItems: 'stretch',
         justifyContent: 'center',
-        marginVertical: 2
+        paddingBottom: 80,
+    },
+    footerWrapper: {
+        width: "100%",
+        position: 'absolute',
+        bottom: 0,
     },
     finishedCard: {
         marginTop: 10,
@@ -227,5 +234,8 @@ const themedStyles = StyleSheet.create({
         marginVertical: 20
     },
 });
+
+// Colors for confetti cannon
+const confettiColors = ["#3366FF", "#4CAF50", "#FFC107", "#FF5722", "#9C27B0"];
 
 export default ViewSun;

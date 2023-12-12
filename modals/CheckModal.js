@@ -1,13 +1,11 @@
-// Code by Fabius Grünhagen
-// fabiusg@student.ethz.ch
-
 import React from 'react';
 import { Alert, View, StyleSheet } from 'react-native';
 import { Button, Icon, Text, useStyleSheet, useTheme } from '@ui-kitten/components';
 import Modal from 'react-native-modal';
 import PropTypes from 'prop-types';
 
-import ProgressBar from './ProgressBar';
+import { DataHandler } from '../data/DataHandler';
+import ProgressBar from '../components/ProgressBar';
 
 /**
  * This component is used for the confirmation modal.
@@ -17,13 +15,17 @@ import ProgressBar from './ProgressBar';
  * @param {Function} handleClose - The function to execute when the modal is closed
  * @returns {JSX.Element}
  */
-const CheckModal = ({ habit, isVisible, handleCheck, handleClose }) => {
+const CheckModal = ({ habitId, isVisible, handleCheck, handleClose }) => {
     // Get themed styles
     const styles = useStyleSheet(themedStyles);
 
     // Get theme colors
     const theme = useTheme();
     const iconColor = theme['text-basic-color'];
+
+    // Get habit data
+    const dataHandler = new DataHandler();
+    const habit = dataHandler.getHabitById(habitId);
 
     return (
         <Modal
@@ -41,14 +43,14 @@ const CheckModal = ({ habit, isVisible, handleCheck, handleClose }) => {
                 {/* Habit title and icon */}
                 <View style={styles.titleWrapper}>
                     <Text category='h5'>{habit.title}</Text>
-                    <Icon name={habit.icon} style={{ width: 32, height: 32 }} fill={iconColor} />
+                    <Icon name={habit.iconName} style={{ width: 32, height: 32 }} fill={iconColor} />
                 </View>
 
                 {/* Progress bar */}
                 <View style={{ marginTop: 10, marginBottom: 20 }}>
                     <ProgressBar
-                        range={[0, habit.goal]}
-                        value={habit.streak}
+                        range={[0, habit.getTodaysGoal()]}
+                        value={habit.getTodaysProgress()}
                         width={353}
                     />
                 </View>
@@ -101,13 +103,7 @@ const CheckModal = ({ habit, isVisible, handleCheck, handleClose }) => {
 
 // Property types of ConfirmationModal
 CheckModal.propTypes = {
-    habit: PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        icon: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
-        streak: PropTypes.number.isRequired,
-        goal: PropTypes.number.isRequired,
-    }).isRequired,
+    habitId: PropTypes.number.isRequired,
     isVisible: PropTypes.bool.isRequired,
     handleCheck: PropTypes.func.isRequired,
     handleClose: PropTypes.func.isRequired,

@@ -19,18 +19,34 @@ const ListHabitCard = ({ habit, status, onPress }) => {
   // Get theme colors
   const theme = useTheme();
   const iconColor = theme['text-hint-color'];
+
+  // TODO: Remove debug logs
+  // console.log("ListHabitCard:");
+  // console.log("> habit: {");
+  // console.log(">   title: " + habit.title);
+  // console.log(">   iconName: " + habit.iconName);
+  // console.log(">   goal: " + habit.getTodaysGoal());
+  // console.log(">   progress: " + habit.getTodaysProgress());
+  // console.log("> }");
+  // console.log("> status: " + status);
+  // console.log("> onPress: " + onPress);
+
   return (
     <Card key={habit.id} style={styles.card} status={status} onPress={onPress}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
 
         {/* Icon */}
-        <Icon name={habit.icon} fill={iconColor} style={styles.icon} />
+        <Icon name={habit.iconName} fill={iconColor} style={styles.icon} />
 
         {/* Habit title */}
         <Text category="h6">{habit.title}</Text>
 
         {/* Progress */}
-        <ProgressBar range={[0, habit.goal]} value={habit.streak} isShowingNumbers={true} />
+        <ProgressBar
+          range={[0, habit.getTodaysGoal()]}
+          value={habit.getTodaysProgress()}
+          isShowingNumbers={true}
+        />
 
       </View>
     </Card>
@@ -39,13 +55,7 @@ const ListHabitCard = ({ habit, status, onPress }) => {
 
 // Property typed of ListCard
 ListHabitCard.propTypes = {
-  habit: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    icon: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    streak: PropTypes.number.isRequired,
-    goal: PropTypes.number.isRequired,
-  }).isRequired,
+  habit: PropTypes.object.isRequired,
   status: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
 };

@@ -1,13 +1,11 @@
-// Code by Fabius Grünhagen
-// fabiusg@student.ethz.ch
-
 import React from 'react';
 import { Alert, View, StyleSheet } from 'react-native';
 import { Button, Icon, Text, useStyleSheet, useTheme } from '@ui-kitten/components';
 import Modal from 'react-native-modal';
 import PropTypes from 'prop-types';
 
-import ProgressBar from './ProgressBar';
+import { DataHandler } from '../data/DataHandler';
+import ProgressBar from '../components/ProgressBar';
 
 /**
 * This component is used for the confirmation modal.
@@ -17,13 +15,17 @@ import ProgressBar from './ProgressBar';
 * @param {Function} handleClose - The function to execute when the modal is closed
 * @returns {JSX.Element}
 */
-const UncheckModal = ({ habit, isVisible, handleUncheck, handleClose }) => {
+const UncheckModal = ({ habitId, isVisible, handleUncheck, handleClose }) => {
   // Get themed styles
   const styles = useStyleSheet(themedStyles);
 
   // Get theme colors
   const theme = useTheme();
   const iconColor = theme['text-basic-color'];
+
+  // Get habit
+  const dataHandler = new DataHandler();
+  const habit = dataHandler.getHabitById(habitId);
 
   return (
     <Modal
@@ -41,14 +43,14 @@ const UncheckModal = ({ habit, isVisible, handleUncheck, handleClose }) => {
         {/* Habit title and icon */}
         <View style={styles.flexRow}>
           <Text category='h5'>{habit.title}</Text>
-          <Icon name={habit.icon} style={styles.icon} fill={iconColor} />
+          <Icon name={habit.iconName} style={styles.icon} fill={iconColor} />
         </View>
 
         {/* Progress bar */}
         <View style={styles.progressBarWrapper}>
           <ProgressBar
-            range={[0, habit.goal]}
-            value={habit.streak}
+            range={[0, habit.getTodaysGoal()]}
+            value={habit.getTodaysProgress()}
             width={353} />
         </View>
 
