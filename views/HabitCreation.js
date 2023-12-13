@@ -64,7 +64,9 @@ function HabitCreation() {
     const [title, setTitle] = useState('');
     const [iconName, setIconName] = useState('archive-outline');
     const [frequency, setFrequency] = useState('1');
+    
     const [showIconDialog, setShowIconDialog] = useState(false);
+    const [showReminderDialog, setShowReminderDialog] = useState(false);
 
     const dataHandler = new DataHandler();
 

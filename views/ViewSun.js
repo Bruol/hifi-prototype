@@ -10,8 +10,8 @@ import Pog from '../assets/pog#2.png';
 
 import { DataHandler } from '../data/DataHandler';
 import ListHabitCard from '../components/ListHabitCard';
-import UncheckModal from '../modals/UncheckModal';
-import CheckModal from '../modals/CheckModal';
+import UncheckModal from '../modals/UncheckHabitModal';
+import CheckModal from '../modals/CheckHabitModal';
 import Footer from '../components/Footer';
 
 import { useNavigation } from '@react-navigation/native';
