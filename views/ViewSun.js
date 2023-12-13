@@ -238,17 +238,17 @@ const ViewSun = ({step , setStep:setStp}) => {
                 height={140}
                 />) 
         : step === 2  ? (
-       <> <CoachMark
+        <CoachMark
             shape="circle"
             x = {windowWidth/2 + 2}
             y={635}
             radius={50}
             /> 
-          </>)
+          )
 
         :null}
        
-        {step < 4 && (
+        {step < 3 && (
         <View style={themedStyles.instructionContainer}>
             <Image
                   style={themedStyles.stretch}
@@ -266,7 +266,7 @@ const ViewSun = ({step , setStep:setStp}) => {
 
           <TouchableOpacity
             style={themedStyles.button}
-            onPress={() => (step === 3)? (() => {navigation.navigate("Habit Creation"); (setStep(step + 1))})() : (setStep(step + 1))}
+            onPress={() => (step === 2)? (() => {navigation.navigate("Habit Creation"); (setStep(step + 1))})() : (setStep(step + 1))}
           >
             <Text style={themedStyles.buttonText}>      Got it!      </Text>
           </TouchableOpacity>
