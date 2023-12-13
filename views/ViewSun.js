@@ -1,9 +1,12 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, Card, useStyleSheet } from '@ui-kitten/components';
 import { useFocusEffect } from '@react-navigation/native';
 import PropTypes from 'prop-types';
 import ConfettiCannon from 'react-native-confetti-cannon';
+
+import { CoachMark } from '../components/CoachMark';
+import Pog from '../assets/pog#2.png';
 
 import { DataHandler } from '../data/DataHandler';
 import ListHabitCard from '../components/ListHabitCard';
@@ -11,12 +14,35 @@ import UncheckModal from '../modals/UncheckModal';
 import CheckModal from '../modals/CheckModal';
 import Footer from '../components/Footer';
 
+
 /**
  * This component renders the view for prototype A.
  * @param {object} confettiRef - Reference to confetti cannon component
  * @returns {JSX.Element}
  */
 const ViewSun = () => {
+    // its tutorial time baby
+    const [step, setStep] = useState(0);
+    const text =
+    step === 0
+    ? "Hi. I'm Pog. I can show you around"
+    : step === 1
+    ? "This is where your Habits will be displayd"
+    : step === 2
+    ? "Let's create our first Habit"
+    : step === 3
+    ? "This will be your Habit name"
+    : step === 4
+    ? "This will be your Habit name"
+    : step === 5
+    ? "Change your Habit icon here"
+    : "";
+
+    const x_coordinate = step === 0 ? 50 : (
+                         step === 1 ? 200: (
+                         step === 2 ? 80 : 100));
+
+
     // Reference to confetti cannon component
     const confettiRef = useRef();
 
@@ -96,7 +122,8 @@ const ViewSun = () => {
     const styles = useStyleSheet(themedStyles);
 
     return (
-        <View>
+        <>
+        <View>  
 
             <View style={styles.contentWrapper}>
                 {/* Page content */}
@@ -188,9 +215,55 @@ const ViewSun = () => {
                 <Footer />
             </View>
         </View>
+
+        {step === 0 ? (
+        <CoachMark
+            shape="circle"
+            x = {100}
+            y = {100}
+            radius={x_coordinate}
+            />
+        ) : step === 2  ? (
+        <CoachMark
+            shape="circle"
+            x={0}
+            y={0}
+            radius={x_coordinate}
+            />
+        ): step === 3  ? (
+            <CoachMark
+                shape="circle"
+                x={60}
+                y={300}
+                radius={x_coordinate}
+                />
+            )  
+        : step === 4  ? (
+            <CoachMark
+                shape="circle"
+                x={300}
+                y={60}
+                radius={70}
+                />
+            ) :null}
+       
+        {step < 5 && (
+        <View style={themedStyles.instructionContainer}>
+        
+          <Text style={themedStyles.text}>{text}</Text>
+          <TouchableOpacity
+            style={themedStyles.button}
+            onPress={() => setStep(step + 1)}
+          >
+            <Text style={themedStyles.buttonText}>Next</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+        
+        </>
     );
 };
-
+ // <img src={Pog} alt="Logo" />
 // Property types for this component
 ViewSun.propTypes = {
     confettiRef: PropTypes.object.isRequired
@@ -203,6 +276,39 @@ const horizontalFlex = {
     alignItems: 'center'
 }
 const themedStyles = StyleSheet.create({
+    //tutorial stuff
+    instructionContainer: {
+        position: "absolute",
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      },
+      text: {
+        color: "#fff",
+        fontSize: 36,
+        fontWeight: "bold",
+      },
+      button: {
+        paddingVertical: 16,
+        paddingHorizontal: 48,
+        borderRadius: 8,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#23a",
+        color: "#fff",
+        fontSize: 32,
+        margin: 16,
+      },
+      buttonText: {
+        color: "#fff",
+        fontSize: 24,
+        fontWeight: "bold",
+      },
+      //fabius stuff
     contentWrapper: {
         alignItems: 'stretch',
         justifyContent: 'center',
