@@ -30,7 +30,7 @@ const CalendarIcon = () => {
   );
 }
 
-const Navigator = () => {
+const Navigator = ({step, setStep}) => {
   // Get theme
   const theme = useTheme();
 
@@ -49,7 +49,7 @@ const Navigator = () => {
     >
       <Stack.Screen
         name="Dashboard Sun"
-        children={(props) => <ViewSun {...props} />}
+        children={(props) => <ViewSun {...props } step = {step} setStep = {setStep} />}
         options={{
           headerRight: () => (<CalendarIcon />),
         }}
@@ -69,6 +69,7 @@ const Navigator = () => {
 const App = () => {
   // Set dark mode for status bar
   StatusBar.setBarStyle(isDarkMode ? 'light-content' : 'dark-content');
+  const [step, setStep] = useState(0);
 
   return (
     <>
@@ -78,7 +79,7 @@ const App = () => {
       {/* Main component */}
       <ApplicationProvider {...eva} theme={isDarkMode ? eva.dark : eva.light}>
         <NavigationContainer initialRouteName="Dashboard Sun" theme={isDarkMode ? DarkTheme : DefaultTheme}>
-          <Navigator />
+          <Navigator step = {step} setStep = {setStep}/>
         </NavigationContainer>
       </ApplicationProvider >
     </>
