@@ -14,6 +14,7 @@ import UncheckModal from '../modals/UncheckModal';
 import CheckModal from '../modals/CheckModal';
 import Footer from '../components/Footer';
 
+import { useNavigation } from '@react-navigation/native';
 
 /**
  * This component renders the view for prototype A.
@@ -22,6 +23,8 @@ import Footer from '../components/Footer';
  */
 const ViewSun = () => {
     // its tutorial time baby
+    const navigation = useNavigation();
+
     const [step, setStep] = useState(0);
     const text =
     step === 0
@@ -230,6 +233,7 @@ const ViewSun = () => {
             y={0}
             radius={x_coordinate}
             />
+
         ): step === 3  ? (
             <CoachMark
                 shape="circle"
@@ -249,11 +253,11 @@ const ViewSun = () => {
        
         {step < 5 && (
         <View style={themedStyles.instructionContainer}>
-        
+
           <Text style={themedStyles.text}>{text}</Text>
           <TouchableOpacity
             style={themedStyles.button}
-            onPress={() => setStep(step + 1)}
+            onPress={() => (step === 4)? (navigation.navigate("Habit Creation")) : (setStep(step + 1))}
           >
             <Text style={themedStyles.buttonText}>Next</Text>
           </TouchableOpacity>
@@ -291,6 +295,15 @@ const themedStyles = StyleSheet.create({
         color: "#fff",
         fontSize: 36,
         fontWeight: "bold",
+      },
+      button: {
+        paddingVertical: 16,
+        paddingHorizontal: 48,
+        borderRadius: 8,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#23a",
+        margin: 16,
       },
       button: {
         paddingVertical: 16,
