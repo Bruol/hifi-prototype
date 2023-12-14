@@ -1,78 +1,18 @@
 import React, { useState } from 'react';
-import { StyleSheet, FlatList, Dimensions, View, Keyboard, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
-import CoachMark from '../components/CoachMark';
-
-import { Input, Icon, Button, Modal, Card, Text, useStyleSheet, Layout } from '@ui-kitten/components';
-import { useNavigation, useTheme } from '@react-navigation/native';
+import { StyleSheet, FlatList, View } from 'react-native';
+import { Input, Icon, Button, Modal, Card, Text, useStyleSheet } from '@ui-kitten/components';
+import { useNavigation } from '@react-navigation/native';
+import PropTypes from 'prop-types';
 
 import { DataHandler, Habit } from '../data/DataHandler';
 import ReminderSelector from '../components/ReminderSelector';
-
-
-const NumericInput = ({ value, setValue, isEdit = false, lowerLimit = 1, upperLimit = 100 }) => {
-
-    const theme = useTheme();
-
-    const increment = () => {
-        let intValue = parseInt(value, 10);
-        if (intValue < upperLimit) {
-            setValue(intValue + 1);
-        }
-    };
-
-    const decrement = () => {
-        let intValue = parseInt(value, 10);
-        if (intValue > lowerLimit) {
-            setValue(intValue - 1);
-        }
-    };
-
-    const handleInputChange = (text) => {
-        if (/^\d+$/.test(text)) {
-            let intValue = parseInt(text, 10);
-            if (intValue > upperLimit) {
-                intValue = upperLimit;
-            } else if (intValue < lowerLimit) {
-                intValue = lowerLimit;
-            }
-            setValue(intValue);
-        }
-    };
-
-    return (
-        <View>
-            <Text category="label" appearance="hint" style={{ marginBottom: 4 }}>Repititions</Text>
-            <View style={{ flexDirection: 'row', justifyContent: "space-around", alignItems: 'center' }}>
-                <Button
-                    status="basic"
-                    appearance='outline'
-                    onPress={decrement}
-                    accessoryLeft={<Icon name={"minus-outline"} />}
-                    style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0, height: 30 }} />
-                <Input
-                    value={value.toString()}
-                    onChangeText={handleInputChange}
-                    keyboardType='numeric'
-                    returnKeyType='done'
-                    style={{ flexGrow: 1, textAlign: 'center', borderRadius: 0 }}
-                    textStyle={{ textAlign: 'center' }}
-                />
-                <Button
-                    status="basic"
-                    appearance='outline'
-                    onPress={increment}
-                    accessoryLeft={<Icon name={"plus-outline"} />}
-                    style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0, height: 30 }} />
-            </View>
-        </View>
-    );
-};
+import NumericInput from '../components/NumericInput';
 
 function HabitCreation({ step, setStep }) {
     // States
     const [title, setTitle] = useState('');
     const [iconName, setIconName] = useState('archive-outline');
-    const [dailyReps, setDailyReps] = useState(1);
+    const [dailyReps, setDailyReps] = useState(10);
     const [reminders, setReminders] = useState([]);
     const [showIconDialog, setShowIconDialog] = useState(false);
 
@@ -91,24 +31,24 @@ function HabitCreation({ step, setStep }) {
     const styles = useStyleSheet(themedStyles);
 
     // Tutorial stuff
-    const getText = () => {
-        switch (step) {
-            case 4:
-                return "this shouldn't be visible";
-            case 5:
-                return "This is were you set you Habit name";
-            case 6:
-                return "Here you can set your Habit icon";
-            case 7:
-                return "This is how often you want to check your Habit per Day";
-            case 8:
-                return "And thats it's. you can confirm your habit here";
-            case 9:
-                return "Or discard it here";
-            default:
-                return "This text shouldn't be visible"
-        }
-    };
+    // const getText = () => {
+    //     switch (step) {
+    //         case 4:
+    //             return "this shouldn't be visible";
+    //         case 5:
+    //             return "This is were you set you Habit name";
+    //         case 6:
+    //             return "Here you can set your Habit icon";
+    //         case 7:
+    //             return "This is how often you want to check your Habit per Day";
+    //         case 8:
+    //             return "And thats it's. you can confirm your habit here";
+    //         case 9:
+    //             return "Or discard it here";
+    //         default:
+    //             return "This text shouldn't be visible"
+    //     }
+    // };
 
     return (
         <View style={styles.wrapper}>
@@ -199,6 +139,12 @@ function HabitCreation({ step, setStep }) {
     );
 }
 
+// Component properties
+HabitCreation.propTypes = {
+    step: PropTypes.number.isRequired,
+    setStep: PropTypes.func.isRequired,
+};
+
 const themedStyles = StyleSheet.create({
     //tutorial stuff
     instructionContainer: {
@@ -215,15 +161,6 @@ const themedStyles = StyleSheet.create({
         color: "#fff",
         fontSize: 36,
         fontWeight: "bold",
-    },
-    button: {
-        paddingVertical: 16,
-        paddingHorizontal: 48,
-        borderRadius: 8,
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#23a",
-        margin: 16,
     },
     button: {
         paddingVertical: 16,

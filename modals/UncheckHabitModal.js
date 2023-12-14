@@ -94,16 +94,11 @@ const UncheckModal = ({ habitId, isVisible, handleUncheck, handleClose, handleEd
 
 // Property types of ConfirmationModal
 UncheckModal.propTypes = {
-  habit: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    icon: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    streak: PropTypes.number.isRequired,
-    goal: PropTypes.number.isRequired,
-  }).isRequired,
   isVisible: PropTypes.bool.isRequired,
+  habitId: PropTypes.number.isRequired,
   handleUncheck: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
+  handleEdit: PropTypes.func.isRequired
 };
 
 // Component styling

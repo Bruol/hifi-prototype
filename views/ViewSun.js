@@ -35,9 +35,9 @@ const ViewSun = ({ step, setStep: setStp, onOpenEditHabit, onOpenCreateHabit }) 
                     ? "Let's create our first        Habit       "
                     : "";
 
-    const x_coordinate = step === 0 ? 50 : (
-        step === 1 ? 200 : (
-            step === 2 ? 80 : 100));
+    // const x_coordinate = step === 0 ? 50 : (
+    //     step === 1 ? 200 : (
+    //         step === 2 ? 80 : 100));
 
 
     // Reference to confetti cannon component
@@ -59,7 +59,7 @@ const ViewSun = ({ step, setStep: setStp, onOpenEditHabit, onOpenCreateHabit }) 
     const [focusHabitId, setFocusHabitId] = useState(1);
 
     // State for check modal visibility
-    const [isCheckModalVisible, setCheckModalVisible] = useState(false);
+    const [isCheckModalVisible, setIsCheckModalVisible] = useState(false);
 
     // Async function to complete a habit 
     const checkHabit = useCallback((id) => {
@@ -73,7 +73,7 @@ const ViewSun = ({ step, setStep: setStp, onOpenEditHabit, onOpenCreateHabit }) 
         });
 
         // Show confirmation modal
-        setCheckModalVisible(true);
+        setIsCheckModalVisible(true);
     });
     // Confirm button for checking habits 
     const handleCheck = () => {
@@ -81,11 +81,11 @@ const ViewSun = ({ step, setStep: setStp, onOpenEditHabit, onOpenCreateHabit }) 
             pendingAction();
             setPendingAction(null);
         }
-        setCheckModalVisible(false);
+        setIsCheckModalVisible(false);
     };
 
     // State for uncheck modal visibility 
-    const [isUncheckModalVisible, setUncheckModalVisible] = useState(false);
+    const [isUncheckModalVisible, setIsUncheckModalVisible] = useState(false);
     // Function to uncomplete a habit 
     const uncheckHabit = useCallback((id) => {
         // Set focus to the habit
@@ -98,7 +98,7 @@ const ViewSun = ({ step, setStep: setStp, onOpenEditHabit, onOpenCreateHabit }) 
         });
 
         // Show uncheck modal
-        setUncheckModalVisible(true);
+        setIsUncheckModalVisible(true);
     });
     // Confirm button for unchecking habits 
     const handleUncheck = () => {
@@ -106,14 +106,14 @@ const ViewSun = ({ step, setStep: setStp, onOpenEditHabit, onOpenCreateHabit }) 
             pendingAction();
             setPendingAction(null);
         }
-        setUncheckModalVisible(false);
+        setIsUncheckModalVisible(false);
     };
 
     const handleClose = () => {
         // Handle the cancellation of checking/unchecking habits here
         setPendingAction(null);
-        setCheckModalVisible(false);
-        setUncheckModalVisible(false);
+        setIsCheckModalVisible(false);
+        setIsUncheckModalVisible(false);
     };
 
     // Get themed styles
@@ -189,8 +189,7 @@ const ViewSun = ({ step, setStep: setStp, onOpenEditHabit, onOpenCreateHabit }) 
                             handleCheck={handleCheck}
                             handleClose={handleClose}
                             handleEdit={() => {
-                                // setOnReturn(null); // TODO: Fix this
-                                setCheckModalVisible(false);
+                                setIsCheckModalVisible(false);
                                 onOpenEditHabit(focusHabitId);
                             }}
                         />
@@ -201,8 +200,7 @@ const ViewSun = ({ step, setStep: setStp, onOpenEditHabit, onOpenCreateHabit }) 
                             handleUncheck={handleUncheck}
                             handleClose={handleClose}
                             handleEdit={() => {
-                                // setOnReturn(null); // TODO: Fix this
-                                setUncheckModalVisible(false);
+                                setIsUncheckModalVisible(false);
                                 onOpenEditHabit(focusHabitId);
                             }}
                         />
@@ -222,7 +220,7 @@ const ViewSun = ({ step, setStep: setStp, onOpenEditHabit, onOpenCreateHabit }) 
 
                 {/* Footer */}
                 <View style={styles.footerWrapper}>
-                    <Footer onOpenCreateHabit={onOpenCreateHabit}/>
+                    <Footer onOpenCreateHabit={onOpenCreateHabit} />
                 </View>
             </View>
 
@@ -286,10 +284,12 @@ const ViewSun = ({ step, setStep: setStp, onOpenEditHabit, onOpenCreateHabit }) 
         </>
     );
 };
-// <img src={Pog} alt="Logo" />
-// Property types for this component
+
 ViewSun.propTypes = {
-    confettiRef: PropTypes.object.isRequired
+    step: PropTypes.number.isRequired,
+    setStep: PropTypes.func.isRequired,
+    onOpenEditHabit: PropTypes.func.isRequired,
+    onOpenCreateHabit: PropTypes.func.isRequired,
 };
 
 // Component styling
@@ -342,7 +342,6 @@ const themedStyles = StyleSheet.create({
     stretch: {
         width: 180,
         height: 180,
-        resizeMode: 'scale',
     },
     //fabius stuff
     contentWrapper: {

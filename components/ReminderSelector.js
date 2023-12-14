@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, FlatList } from 'react-native';
 import { Button, Icon, Text } from '@ui-kitten/components';
+import PropTypes from 'prop-types';
 
 import ReminderModal from '../modals/ReminderModal';
 
@@ -48,7 +49,7 @@ const ReminderSelector = ({ reminders, setReminders }) => {
             <FlatList
                 data={reminders}
                 renderItem={({ item, index }) => (
-                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                    <View key={index} style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                         <Button
                             status="basic"
                             appearance='outline'
@@ -100,6 +101,11 @@ const ReminderSelector = ({ reminders, setReminders }) => {
             />
         </>
     );
+};
+// Component properties
+ReminderSelector.propTypes = {
+    reminders: PropTypes.array.isRequired,
+    setReminders: PropTypes.func.isRequired,
 };
 
 export default ReminderSelector;

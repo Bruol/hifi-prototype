@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Alert, TimePicker } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Button, Icon, Text, useStyleSheet, useTheme } from '@ui-kitten/components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Modal from 'react-native-modal';
-import DatePicker from 'react-native-datepicker';
+import PropTypes from 'prop-types';
 
-const ReminderModal = ({ isVisible, isEdit = false, handleCreate, handleEdit, handleClose, handleDelete }) => {
-    const [date, setDate] = useState(new Date());
+const ReminderModal = ({ isVisible, isEdit = false, lastDate = new Date(), handleCreate, handleEdit, handleClose, handleDelete }) => {
+    const [date, setDate] = useState(lastDate);
 
     // Get theme
     const theme = useTheme();
@@ -87,6 +87,17 @@ const ReminderModal = ({ isVisible, isEdit = false, handleCreate, handleEdit, ha
             </View>
         </Modal>
     );
+};
+
+// Component properties
+ReminderModal.propTypes = {
+    isVisible: PropTypes.bool.isRequired,
+    isEdit: PropTypes.bool,
+    lastDate: PropTypes.instanceOf(Date),
+    handleCreate: PropTypes.func.isRequired,
+    handleEdit: PropTypes.func.isRequired,
+    handleClose: PropTypes.func.isRequired,
+    handleDelete: PropTypes.func.isRequired,
 };
 
 // Component styling

@@ -159,7 +159,7 @@ class DataHandler {
     };
   }
 
-  // TODO: Bad implementeation but good enough for now...
+  // TODO: Bad implementation but good enough for now...
   _generateUniqueId() {
     // Generate random id
     let id = Math.floor(Math.random() * 1000000);
@@ -191,22 +191,34 @@ class Habit {
   }
 }
 
+function timeToDate(hours, minutes) {
+  // Verify that hours and minutes are valid
+  if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+    return null;
+  }
+
+  let date = new Date();
+  date.setHours(hours);
+  date.setMinutes(minutes);
+  return date;
+}
+
 /** Initial list of pending habit data */
 const pendingData = [
   {
     id: 0,
     title: "Drink Water",
     icon: "droplet-outline",
-    reminders: [],
-    dailyReps: 0,
-    completionsToday: 0
+    reminders: [timeToDate(8, 0), timeToDate(12, 15), timeToDate(16, 0), timeToDate(20, 0)],
+    dailyReps: 99,
+    completionsToday: 89
   },
   {
     id: 3,
     title: "Exercise",
     icon: "activity-outline",
-    reminders: [],
-    dailyReps: 0,
+    reminders: [timeToDate(8, 0), timeToDate(12, 0), timeToDate(16, 0), timeToDate(20, 0)],
+    dailyReps: 78,
     completionsToday: 0
   },
   {

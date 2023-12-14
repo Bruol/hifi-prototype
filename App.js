@@ -1,10 +1,11 @@
-import React, { useRef, useState } from "react";
-import { Alert, StatusBar, TouchableOpacity } from 'react-native';
+import React, { useState } from "react";
+import { StatusBar, TouchableOpacity } from 'react-native';
 import { DarkTheme, DefaultTheme, NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as eva from '@eva-design/eva';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
-import { ApplicationProvider, Text, IconRegistry, Icon, useTheme, View } from '@ui-kitten/components';
+import { ApplicationProvider, Text, IconRegistry, Icon, useTheme } from '@ui-kitten/components';
+import PropTypes from 'prop-types';
 
 import ViewSun from "./views/ViewSun";
 import HabitCreation from './views/HabitCreation';
@@ -30,6 +31,9 @@ const TutorialButton = ({ setStep }) => {
     </TouchableOpacity>
   );
 }
+TutorialButton.propTypes = {
+  setStep: PropTypes.func.isRequired,
+};
 
 const BackIcon = () => {
   // Get theme
@@ -53,7 +57,6 @@ const Navigator = ({ step, setStep }) => {
 
   // State for habit creation and editing
   const [focusedHabitId, setFocusedHabitId] = useState(null);
-  const [onReturn, setOnReturn] = useState(null);
   const navigation = useNavigation();
   const onOpenEditHabit = (habitId) => {
     setFocusedHabitId(habitId);
@@ -88,7 +91,6 @@ const Navigator = ({ step, setStep }) => {
             setFocusedHabitId={setFocusedHabitId}
             onOpenEditHabit={onOpenEditHabit}
             onOpenCreateHabit={onOpenCreateHabit}
-            // setOnReturn={setOnReturn} // TODO: Currently not used
           />}
         options={{
           headerRight: () => (<TutorialButton setStep={setStep} />),
@@ -96,20 +98,24 @@ const Navigator = ({ step, setStep }) => {
       />
       <Stack.Screen
         name="Habit Creation"
-        children={(props) => <HabitCreation {...props} />}
+        children={(props) => <HabitCreation {...props} step={step} setStep={setStep}/>}
         options={{
           headerLeft: () => (<BackIcon />)
         }}
       />
       <Stack.Screen
         name="Habit Editing"
-        children={(props) => <HabitEditing{...props} focusedHabitId={focusedHabitId} onReturn={onReturn} />}
+        children={(props) => <HabitEditing{...props} focusedHabitId={focusedHabitId} step={step} setStep={setStep} />}
         options={{
           headerLeft: () => (<BackIcon />)
         }}
       />
     </Stack.Navigator>
   );
+};
+Navigator.propTypes = {
+  step: PropTypes.number.isRequired,
+  setStep: PropTypes.func.isRequired,
 };
 
 /**

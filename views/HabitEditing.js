@@ -1,90 +1,14 @@
 import React, { useState } from 'react';
-import { StyleSheet, FlatList, Dimensions, View, Keyboard, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
-import CoachMark from '../components/CoachMark';
-
-import { Input, Icon, Button, Modal, Card, Text, useStyleSheet, Layout } from '@ui-kitten/components';
-import { useNavigation, useTheme } from '@react-navigation/native';
+import { StyleSheet, FlatList, View } from 'react-native';
+import { Input, Icon, Button, Modal, Card, Text, useStyleSheet } from '@ui-kitten/components';
+import { useNavigation } from '@react-navigation/native';
+import PropTypes from 'prop-types';
 
 import { DataHandler, Habit } from '../data/DataHandler';
 import ReminderSelector from '../components/ReminderSelector';
+import NumericInput from '../components/NumericInput';
 
-function getFormattedDate(date) {
-
-    // Extract day, month, and year
-    let day = date.getDate();
-    let month = date.getMonth() + 1; // Months are zero-based, so add 1
-    const year = date.getFullYear();
-
-    // Ensure two-digit format for day and month
-    day = (day < 10) ? '0' + day : day;
-    month = (month < 10) ? '0' + month : month;
-
-    // Format the date as dd.mm.YYYY
-    let formattedDate = day + '.' + month + '.' + year;
-
-    return formattedDate;
-}
-
-const NumericInput = ({ value, setValue, isEdit = false, lowerLimit = 60, upperLimit = 1000 }) => {
-
-    const theme = useTheme();
-
-    const increment = () => {
-        let intValue = parseInt(value, 10);
-        if (intValue < upperLimit) {
-            setValue(intValue + 1);
-        }
-    };
-
-    const decrement = () => {
-        let intValue = parseInt(value, 10);
-        if (intValue > lowerLimit) {
-            setValue(intValue - 1);
-        }
-    };
-
-    const handleInputChange = (text) => {
-        if (/^\d+$/.test(text)) {
-            let intValue = parseInt(text, 10);
-            if (intValue > upperLimit) {
-                intValue = upperLimit;
-            } else if (intValue < lowerLimit) {
-                intValue = lowerLimit;
-            }
-            setValue(intValue);
-        }
-    };
-
-    return (
-        <View>
-            <Text category="label" appearance="hint" style={{ marginBottom: 4 }}>Repititions</Text>
-            <View style={{ flexDirection: 'row', justifyContent: "space-around", alignItems: 'center' }}>
-                <Button
-                    status="basic"
-                    appearance='outline'
-                    onPress={decrement}
-                    accessoryLeft={<Icon name={"minus-outline"} />}
-                    style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0, height: 30 }} />
-                <Input
-                    value={value.toString()}
-                    onChangeText={handleInputChange}
-                    keyboardType='numeric'
-                    returnKeyType='done'
-                    style={{ flexGrow: 1, textAlign: 'center', borderRadius: 0 }}
-                    textStyle={{ textAlign: 'center' }}
-                />
-                <Button
-                    status="basic"
-                    appearance='outline'
-                    onPress={increment}
-                    accessoryLeft={<Icon name={"plus-outline"} />}
-                    style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0, height: 30 }} />
-            </View>
-        </View>
-    );
-};
-
-function HabitEditing({ step, setStep, focusedHabitId, onReturn }) {
+function HabitEditing({ step, setStep, focusedHabitId }) {
     // States
     const dataHandler = new DataHandler();
     const focusedHabit = dataHandler.getHabitById(focusedHabitId);
@@ -110,7 +34,6 @@ function HabitEditing({ step, setStep, focusedHabitId, onReturn }) {
 
     const navigation = useNavigation();
     const navigateBack = () => {
-        if (onReturn) onReturn();
         navigation.goBack();
     };
 
@@ -239,6 +162,13 @@ function HabitEditing({ step, setStep, focusedHabitId, onReturn }) {
         </View >
     );
 }
+
+// Component properties
+HabitEditing.propTypes = {
+    step: PropTypes.number.isRequired,
+    setStep: PropTypes.func.isRequired,
+    focusedHabitId: PropTypes.number.isRequired,
+};
 
 const themedStyles = StyleSheet.create({
     // tutorial stuff
