@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
-import { StyleSheet, FlatList, Dimensions, View, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, FlatList, Dimensions, View, Keyboard, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
+import CoachMark from '../components/CoachMark';
+
 import { Input, Icon, Button, Modal, Card, Text, useStyleSheet, Layout } from '@ui-kitten/components';
 import { useNavigation, useTheme } from '@react-navigation/native';
 
 import { DataHandler, Habit } from '../data/DataHandler';
+
+
 
 const NumericInput = ({ value, setValue, lowerLimit = 1, upperLimit = 100 }) => {
 
@@ -64,7 +68,7 @@ const NumericInput = ({ value, setValue, lowerLimit = 1, upperLimit = 100 }) => 
     );
 };
 
-function HabitCreation() {
+function HabitCreation({step, setStep}) {
     const [title, setTitle] = useState('');
     const [iconName, setIconName] = useState('archive-outline');
     const [dailyReps, setDailyReps] = useState(1);
@@ -79,7 +83,7 @@ function HabitCreation() {
 
     const navigation = useNavigation();
 
-    const createHabit = () => {
+    const createHabit = ({step, setStep}) => {
         // Create and add new habit
         const habit = new Habit(title, iconName, [], frequency, 0);
         dataHandler.addHabit(habit);
@@ -134,7 +138,25 @@ function HabitCreation() {
     // Get themed styles
     const styles = useStyleSheet(themedStyles);
 
+    //tutorial stuff
+    const text =
+    step === 4
+    ? "this shouldnt be visible"
+    : step === 5
+    ? "This is were you set you Habit name"
+    : step === 6
+    ? "Here you can set your Habit icon"
+    : step === 7
+    ? "This is how often you want to check your Habit per Day"
+    : step === 8
+    ? "And thats it's. you can confirm your habit here"
+    : step === 9
+    ? "Or discard it here"
+    : "filler text";
+
     return (
+        <>
+        
         <View style={styles.wrapper}>
 
             <Text category="h5" style={styles.sectionTitle}>Create A New Habit</Text>
@@ -259,10 +281,57 @@ function HabitCreation() {
                 </Button>
             </View>
         </View>
+        
+        </>
+       
+
+
     );
 }
 
 const themedStyles = StyleSheet.create({
+     //tutorial stuff
+     instructionContainer: {
+        position: "absolute",
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      },
+      text: {
+        color: "#fff",
+        fontSize: 36,
+        fontWeight: "bold",
+      },
+      button: {
+        paddingVertical: 16,
+        paddingHorizontal: 48,
+        borderRadius: 8,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#23a",
+        margin: 16,
+      },
+      button: {
+        paddingVertical: 16,
+        paddingHorizontal: 48,
+        borderRadius: 8,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#23a",
+        color: "#fff",
+        fontSize: 32,
+        margin: 16,
+      },
+      buttonText: {
+        color: "#fff",
+        fontSize: 24,
+        fontWeight: "bold",
+      },
+      //fabius stuff
     wrapper: {
         flex: 1,
         padding: 20,

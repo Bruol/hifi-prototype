@@ -1,12 +1,11 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, ScrollView, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native';
 import { Text, Card, useStyleSheet } from '@ui-kitten/components';
 import { useFocusEffect } from '@react-navigation/native';
 import PropTypes from 'prop-types';
 import ConfettiCannon from 'react-native-confetti-cannon';
 
 import { CoachMark } from '../components/CoachMark';
-import Pog from '../assets/pog#2.png';
 
 import { DataHandler } from '../data/DataHandler';
 import ListHabitCard from '../components/ListHabitCard';
@@ -16,29 +15,25 @@ import Footer from '../components/Footer';
 
 import { useNavigation } from '@react-navigation/native';
 
+const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
+
 /**
  * This component renders the view for prototype A.
  * @param {object} confettiRef - Reference to confetti cannon component
  * @returns {JSX.Element}
  */
-const ViewSun = () => {
+const ViewSun = ({step , setStep:setStp}) => {
     // its tutorial time baby
     const navigation = useNavigation();
-
-    const [step, setStep] = useState(0);
+    const setStep = (x) => {setStp(x); console.log("setStep to " + step)}
+   
     const text =
     step === 0
-    ? "Hi. I'm Pog. I can show you around"
+    ? "Hi!! I'm Pog. I can show you around"
     : step === 1
-    ? "This is where your Habits will be displayd"
+    ? "Great!! This is where your Habits will be displayd"
     : step === 2
-    ? "Let's create our first Habit"
-    : step === 3
-    ? "This will be your Habit name"
-    : step === 4
-    ? "This will be your Habit name"
-    : step === 5
-    ? "Change your Habit icon here"
+    ? "Let's create our first        Habit       "
     : "";
 
     const x_coordinate = step === 0 ? 50 : (
@@ -153,7 +148,8 @@ const ViewSun = () => {
                         <Card style={styles.finishedCard}>
                             <View style={styles.finishedContent}>
                                 <Text style={{ textAlign: "center" }} category='h3'>You have completed all habits for today!</Text>
-                                <Text category='h1'>🎉</Text>
+                                <Image style={themedStyles.stretch}
+                                 source={require('../assets/pog2.png')} />
                             </View>
                         </Card>
                     )}
@@ -200,6 +196,8 @@ const ViewSun = () => {
                         handleUncheck={handleUncheck}
                         handleClose={handleClose}
                     />
+                 
+
                 </ScrollView>
             </View>
 
@@ -222,45 +220,57 @@ const ViewSun = () => {
         {step === 0 ? (
         <CoachMark
             shape="circle"
-            x = {100}
-            y = {100}
-            radius={x_coordinate}
+            x = {windowWidth/2}
+            y = {277}
+            radius={110}
             />
-        ) : step === 2  ? (
+        ): step === 1  ? (
+            <CoachMark
+                x={10}
+                y={20}
+                shape="rect"
+                width={windowWidth - 20}
+                height={140}
+                />) 
+        : step === 2  ? (
         <CoachMark
             shape="circle"
-            x={0}
-            y={0}
-            radius={x_coordinate}
-            />
+            x = {windowWidth/2 + 2}
+            y={635}
+            radius={50}
+            /> 
+          )
 
-        ): step === 3  ? (
-            <CoachMark
-                shape="circle"
-                x={60}
-                y={300}
-                radius={x_coordinate}
-                />
-            )  
-        : step === 4  ? (
-            <CoachMark
-                shape="circle"
-                x={300}
-                y={60}
-                radius={70}
-                />
-            ) :null}
+        :null}
        
-        {step < 5 && (
+        {step < 3 && (
         <View style={themedStyles.instructionContainer}>
-
+            {(step === 0)? <Image style={themedStyles.stretch}
+                  source={require('../assets/pog_full_body.png')} />: (
+              (step === 1)? <Image style={themedStyles.stretch}
+                  source={require('../assets/pog_wink.png')} /> :
+                  <Image style={themedStyles.stretch}
+                  source={require('../assets/pog_tongue.png')} /> )
+            }
           <Text style={themedStyles.text}>{text}</Text>
+
+          <View style={styles.cardView}>
           <TouchableOpacity
             style={themedStyles.button}
-            onPress={() => (step === 4)? (navigation.navigate("Habit Creation")) : (setStep(step + 1))}
+            onPress={() => (step === 0)? (setStep(10)): setStep(step - 1)}
           >
-            <Text style={themedStyles.buttonText}>Next</Text>
+            {(step === 0)? <Text style={themedStyles.buttonText}>Skip Tutorial!</Text> :  <Text style={themedStyles.buttonText}>    Go Back!    </Text>  }
           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={themedStyles.button}
+            onPress={() => (step === 2)? (() => {navigation.navigate("Habit Creation"); (setStep(step + 1))})() : (setStep(step + 1))}
+          >
+            <Text style={themedStyles.buttonText}>      Got it!      </Text>
+          </TouchableOpacity>
+          
+          </View>
+
         </View>
       )}
         
@@ -293,33 +303,37 @@ const themedStyles = StyleSheet.create({
       },
       text: {
         color: "#fff",
-        fontSize: 36,
+        fontSize: 32,
         fontWeight: "bold",
       },
       button: {
-        paddingVertical: 16,
-        paddingHorizontal: 48,
-        borderRadius: 8,
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#23a",
-        margin: 16,
-      },
-      button: {
-        paddingVertical: 16,
-        paddingHorizontal: 48,
+        paddingVertical: 10,
+        paddingHorizontal: 15,
         borderRadius: 8,
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "#23a",
         color: "#fff",
         fontSize: 32,
-        margin: 16,
+        margin: 10,
+      },
+      invisiblebutton: {
+        borderRadius: 8,
+        justifyContent: "center",
+        backgroundColor: "#23a",
+        color: "#fff",
+        fontSize: 32,
+        margin: 10,
       },
       buttonText: {
         color: "#fff",
         fontSize: 24,
         fontWeight: "bold",
+      },
+      stretch: {
+        width: 180,
+        height: 180,
+        resizeMode: 'scale',
       },
       //fabius stuff
     contentWrapper: {
