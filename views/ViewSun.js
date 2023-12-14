@@ -29,17 +29,11 @@ const ViewSun = ({step , setStep:setStp}) => {
    
     const text =
     step === 0
-    ? "Hi. I'm Pog. I can show you around"
+    ? "Hi!! I'm Pog. I can show you around"
     : step === 1
-    ? "This is where your Habits will be displayd"
+    ? "Great!! This is where your Habits will be displayd"
     : step === 2
-    ? "Let's create our first Habit"
-    : step === 3
-    ? "This will be your Habit name"
-    : step === 4
-    ? "This will be your Habit icon"
-    : step === 5
-    ? "Change your Habit icon here"
+    ? "Let's create our first        Habit       "
     : "";
 
     const x_coordinate = step === 0 ? 50 : (
@@ -154,7 +148,8 @@ const ViewSun = ({step , setStep:setStp}) => {
                         <Card style={styles.finishedCard}>
                             <View style={styles.finishedContent}>
                                 <Text style={{ textAlign: "center" }} category='h3'>You have completed all habits for today!</Text>
-                                <Text category='h1'>🎉</Text>
+                                <Image style={themedStyles.stretch}
+                                 source={require('../assets/pog2.png')} />
                             </View>
                         </Card>
                     )}
@@ -226,8 +221,8 @@ const ViewSun = ({step , setStep:setStp}) => {
         <CoachMark
             shape="circle"
             x = {windowWidth/2}
-            y = {262}
-            radius={67}
+            y = {277}
+            radius={110}
             />
         ): step === 1  ? (
             <CoachMark
@@ -250,10 +245,13 @@ const ViewSun = ({step , setStep:setStp}) => {
        
         {step < 3 && (
         <View style={themedStyles.instructionContainer}>
-            <Image
-                  style={themedStyles.stretch}
-                  source={require('../assets/pog2.png')} />
-
+            {(step === 0)? <Image style={themedStyles.stretch}
+                  source={require('../assets/pog_full_body.png')} />: (
+              (step === 1)? <Image style={themedStyles.stretch}
+                  source={require('../assets/pog_wink.png')} /> :
+                  <Image style={themedStyles.stretch}
+                  source={require('../assets/pog_tongue.png')} /> )
+            }
           <Text style={themedStyles.text}>{text}</Text>
 
           <View style={styles.cardView}>
@@ -305,7 +303,7 @@ const themedStyles = StyleSheet.create({
       },
       text: {
         color: "#fff",
-        fontSize: 36,
+        fontSize: 32,
         fontWeight: "bold",
       },
       button: {
@@ -333,8 +331,8 @@ const themedStyles = StyleSheet.create({
         fontWeight: "bold",
       },
       stretch: {
-        width: 130,
-        height: 130,
+        width: 180,
+        height: 180,
         resizeMode: 'scale',
       },
       //fabius stuff

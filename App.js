@@ -15,14 +15,14 @@ const isDarkMode = false;
 const Stack = createStackNavigator();
 
 // Date selection icon
-const CalendarIcon = () => {
+const CalendarIcon = ({setStep}) => {
   // Get theme
   const theme = useTheme();
 
   return (
     <TouchableOpacity
       style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", marginRight: 10 }}
-      onPress={() => Alert.alert("Not Implemented", 'Date selection is not part of the prototype!')}
+      onPress={() => setStep(0)}
     >
       <Text style={{ marginRight: 5, color: theme["text-info-color"] }}>Today</Text>
       <Icon name='calendar-outline' fill={theme["text-info-color"]} style={{ width: 24, height: 24 }} />
@@ -51,7 +51,7 @@ const Navigator = ({step, setStep}) => {
         name="Dashboard Sun"
         children={(props) => <ViewSun {...props } step = {step} setStep = {setStep} />}
         options={{
-          headerRight: () => (<CalendarIcon />),
+          headerRight: () => (<CalendarIcon setStep={setStep} />),
         }}
       />
       <Stack.Screen

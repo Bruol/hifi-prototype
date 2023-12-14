@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { StyleSheet, FlatList, Dimensions, View, Keyboard, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
+import CoachMark from '../components/CoachMark';
+
 import { Input, Icon, Button, Modal, Card, Text, useStyleSheet, Layout } from '@ui-kitten/components';
 import { useNavigation } from '@react-navigation/native';
 
-import CoachMark from '../components/CoachMark';
-
 import { DataHandler, Habit } from '../data/DataHandler';
+
+
 
 const NumericInput = ({ value, setValue }) => {
     const increment = () => {
@@ -37,6 +39,9 @@ const NumericInput = ({ value, setValue }) => {
     return (
         <View>
             <Text category="label" style={{ marginBottom: 4 }}>Repititions</Text>
+
+            
+
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Button
                     status="basic"
@@ -142,8 +147,10 @@ function HabitCreation({step, setStep}) {
 
     return (
         <>
+        
         <View style={styles.wrapper}>
-
+            
+            
             <Text category="h5" style={styles.sectionTitle}>Basic Properties</Text>
 
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "stretch" }}>
@@ -209,69 +216,14 @@ function HabitCreation({step, setStep}) {
             <Button title="Create Habit" onPress={createHabit} >
                 Create Habit
             </Button>
+            
+           
         </View>
-
-        {step === 4 ? (
-        <CoachMark
-            shape="circle"
-            x = {100}
-            y = {100}
-            radius={50}
-            />
-        ) : step === 5  ? (
-        <CoachMark
-            shape="circle"
-            x={0}
-            y={0}
-            radius={100}
-            />
-
-        ): step === 6  ? (
-            <CoachMark
-                shape="circle"
-                x={60}
-                y={300}
-                radius={20}
-                />
-            )  
-        : step === 7  ? (
-            <CoachMark
-                shape="circle"
-                x={300}
-                y={60}
-                radius={5}
-                />
-        )  : step === 8  ? (
-                <CoachMark
-                    shape="circle"
-                    x={300}
-                    y={60}
-                    radius={70}
-                    />
-                )
-        : step === 9  ? (
-                    <CoachMark
-                        shape="circle"
-                        x={300}
-                        y={60}
-                        radius={70}
-                        />
-                    ) :null}
-
-        {step < 10 && (
-        <View style={themedStyles.instructionContainer}>
-
-          <Text style={themedStyles.text}>{text}</Text>
-          <TouchableOpacity
-            style={themedStyles.button}
-            onPress={() => (step === 10)? (() => {navigation.navigate("Dashboard Sun"); (setStep(step + 1))})() : (setStep(step + 1))}
-          >
-            <Text style={themedStyles.buttonText}>Next</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-      
+        
         </>
+       
+
+
     );
 }
 
