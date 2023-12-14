@@ -6,10 +6,11 @@ import { Input, Icon, Button, Modal, Card, Text, useStyleSheet, Layout } from '@
 import { useNavigation, useTheme } from '@react-navigation/native';
 
 import { DataHandler, Habit } from '../data/DataHandler';
+import ReminderModal from '../modals/ReminderModal';
 
 
 
-const NumericInput = ({ value, setValue, lowerLimit = 1, upperLimit = 100 }) => {
+const NumericInput = ({ value, setValue, isEdit = false, lowerLimit = 1, upperLimit = 100 }) => {
 
     const theme = useTheme();
 
@@ -68,7 +69,7 @@ const NumericInput = ({ value, setValue, lowerLimit = 1, upperLimit = 100 }) => 
     );
 };
 
-function HabitCreation({step, setStep}) {
+function HabitCreation({ step, setStep }) {
     const [title, setTitle] = useState('');
     const [iconName, setIconName] = useState('archive-outline');
     const [dailyReps, setDailyReps] = useState(1);
@@ -78,14 +79,15 @@ function HabitCreation({step, setStep}) {
 
     const [showIconDialog, setShowIconDialog] = useState(false);
     const [showReminderDialog, setShowReminderDialog] = useState(false);
+    const [isEdit, setEdit] = useState(false);
 
     const dataHandler = new DataHandler();
 
     const navigation = useNavigation();
 
-    const createHabit = ({step, setStep}) => {
+    const createHabit = ({ step, setStep }) => {
         // Create and add new habit
-        const habit = new Habit(title, iconName, [], frequency, 0);
+        const habit = new Habit(title, iconName, reminders, dailyReps, 0);
         dataHandler.addHabit(habit);
         // Navigate back to home screen
         navigation.goBack();
@@ -95,6 +97,12 @@ function HabitCreation({step, setStep}) {
         // Navigate back to home screen
         navigation.goBack();
     };
+
+    const openReminderDialog = (index) => {
+        setReminder(reminders[index]);
+        setEdit(true);
+        setShowReminderDialog(true);
+    }
 
     const iconNames = [
         'activity-outline',
@@ -139,24 +147,26 @@ function HabitCreation({step, setStep}) {
     const styles = useStyleSheet(themedStyles);
 
     //tutorial stuff
-    const text =
-    step === 4
-    ? "this shouldnt be visible"
-    : step === 5
-    ? "This is were you set you Habit name"
-    : step === 6
-    ? "Here you can set your Habit icon"
-    : step === 7
-    ? "This is how often you want to check your Habit per Day"
-    : step === 8
-    ? "And thats it's. you can confirm your habit here"
-    : step === 9
-    ? "Or discard it here"
-    : "filler text";
+    const getText = () => {
+        switch (step) {
+            case 4:
+                return "this shouldnt be visible";
+            case 5:
+                return "This is were you set you Habit name";
+            case 6:
+                return "Here you can set your Habit icon";
+            case 7:
+                return "This is how often you want to check your Habit per Day";
+            case 8:
+                return "And thats it's. you can confirm your habit here";
+            case 9:
+                return "Or discard it here";
+            default:
+                return "This text shouldnt be visible"
+        }
+    };
 
     return (
-        <>
-        
         <View style={styles.wrapper}>
 
             <Text category="h5" style={styles.sectionTitle}>Create A New Habit</Text>
@@ -220,17 +230,22 @@ function HabitCreation({step, setStep}) {
             {/* Reminder list */}
             <FlatList
                 data={reminders}
-                renderItem={({ item }) => (
+                renderItem={({ item, index }) => (
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                        <Text>{item}</Text>
                         <Button
-                            appearance="ghost"
-                            status="danger"
-                            accessoryLeft={<Icon name='close-circle-outline' />}
+                            status="basic"
+                            appearance='outline'
                             onPress={() => {
-                                setReminders(reminders.filter((value) => value !== item));
+                                openReminderDialog(index);
                             }}
-                        />
+                            style={[
+                                { width: "100%", borderRadius: 0, borderTopWidth: 0 },
+                                (index === 0) ? { borderTopWidth: 1, borderTopLeftRadius: 4, borderTopRightRadius: 4 } : {},
+                                (index === reminders.length - 1) ? { borderBottomLeftRadius: 4, borderBottomRightRadius: 4 } : {}
+                            ]}
+                        >
+                            {index}: {item.toString()}
+                        </Button>
                     </View>
                 )}
                 keyExtractor={(item) => item.id}
@@ -246,52 +261,51 @@ function HabitCreation({step, setStep}) {
             </Button>
 
             {/* Reminder dialog */}
-            <Modal
-                visible={showReminderDialog}
-                
-                onBackdropPress={() => setShowReminderDialog(false)}
-            >
-                <Card disabled={true}>
-                    <Text category="s1">Add a reminder</Text>
-                    <Input
-                        placeholder="Insert reminder here..."
-                        value={reminder}
-                        onChangeText={setReminder}
-                    />
-                    <Button
-                        onPress={() => {
-                            setReminders([...reminders, reminder]);
-                            setShowReminderDialog(false);
-                        }}
-                    >
-                        Add Reminder
-                    </Button>
-                </Card>
-            </Modal>
+            <ReminderModal
+                isVisible={showReminderDialog}
+                isEdit={isEdit}
+                handleConfirm={(timeStamp) => {
+                    setShowReminderDialog(false);
+                    setReminders([...reminders, timeStamp]);
+                    setEdit(false);
+                }}
+                handleClose={() => {
+                    setShowReminderDialog(false);
+                    setEdit(false);
+                }}
+                handleDelete={() => {
+                    setShowReminderDialog(false);
+                    setReminders(reminders.filter((item) => item !== reminder));
+                    setEdit(false);
+                }}
+            />
 
             {/* Divider */}
             <View style={styles.divider} />
 
             <View style={{ flexDirection: "row", width: "100%", justifyContent: "flex-end" }}>
-                <Button appearance='ghost' onPress={abort} style={{ marginRight: 20 }}>
+                <Button
+                    appearance='ghost'
+                    onPress={abort}
+                    accessoryLeft={<Icon name="undo-outline" />}
+                    style={{ marginRight: 20 }}
+                >
                     Back
                 </Button>
-                <Button onPress={createHabit} >
+                <Button
+                    onPress={createHabit}
+                    accessoryLeft={<Icon name='checkmark-outline' />}
+                >
                     Create Habit
                 </Button>
             </View>
         </View>
-        
-        </>
-       
-
-
     );
 }
 
 const themedStyles = StyleSheet.create({
-     //tutorial stuff
-     instructionContainer: {
+    //tutorial stuff
+    instructionContainer: {
         position: "absolute",
         top: 0,
         bottom: 0,
@@ -300,13 +314,13 @@ const themedStyles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-      },
-      text: {
+    },
+    text: {
         color: "#fff",
         fontSize: 36,
         fontWeight: "bold",
-      },
-      button: {
+    },
+    button: {
         paddingVertical: 16,
         paddingHorizontal: 48,
         borderRadius: 8,
@@ -314,8 +328,8 @@ const themedStyles = StyleSheet.create({
         justifyContent: "center",
         backgroundColor: "#23a",
         margin: 16,
-      },
-      button: {
+    },
+    button: {
         paddingVertical: 16,
         paddingHorizontal: 48,
         borderRadius: 8,
@@ -325,13 +339,13 @@ const themedStyles = StyleSheet.create({
         color: "#fff",
         fontSize: 32,
         margin: 16,
-      },
-      buttonText: {
+    },
+    buttonText: {
         color: "#fff",
         fontSize: 24,
         fontWeight: "bold",
-      },
-      //fabius stuff
+    },
+    //fabius stuff
     wrapper: {
         flex: 1,
         padding: 20,
