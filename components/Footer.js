@@ -10,7 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 const Footer = ({onOpenCreateHabit}) => {
   // Get theme colors
   const theme = useTheme();
-  const iconColorDark = theme['text-hint-color'];
+  const iconColorDark = theme['background-basic-color-1'];
   const iconColorLight = theme['text-control-color'];
 
   const navigation = useNavigation();
@@ -20,26 +20,12 @@ const Footer = ({onOpenCreateHabit}) => {
 
   return (
     <View style={styles.wrapper}>
-
-      {/* Button to view the statistics */}
-      <TouchableOpacity style={styles.buttonWrapper} onPress={() => Alert.alert("Not Implemented", "Viewing statistics is not part of the prototype!")}>
-        <Icon style={styles.icon} name="bar-chart-outline" fill={iconColorDark} />
-        <Text appearance="hint" category="s2">Statistics</Text>
-      </TouchableOpacity>
-
       {/* Button to add a new habit */}
       <TouchableOpacity style={styles.buttonWrapper} onPress={onOpenCreateHabit}>
         <View style={styles.centralButton}>
           <Icon style={styles.icon} name="plus-outline" fill={iconColorLight} />
         </View>
         <Text style={{ marginTop: 5 }} status="primary" category="s1">New Habit</Text>
-      </TouchableOpacity>
-
-      {/* Button to view the settings */}
-      <TouchableOpacity style={styles.buttonWrapper} onPress={() => Alert.alert("Not Implemented", "Viewing settings is not part of the prototype!")}>
-
-        <Icon style={styles.icon} name="settings-outline" fill={iconColorDark} />
-        <Text appearance="hint" category="s2">Settings</Text>
       </TouchableOpacity>
     </View>
   );

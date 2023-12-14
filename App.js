@@ -16,7 +16,7 @@ const isDarkMode = false;
 const Stack = createStackNavigator();
 
 // Date selection icon
-const CalendarIcon = ({ setStep }) => {
+const TutorialButton = ({ setStep }) => {
   // Get theme
   const theme = useTheme();
 
@@ -25,8 +25,8 @@ const CalendarIcon = ({ setStep }) => {
       style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", marginRight: 10 }}
       onPress={() => setStep(0)}
     >
-      <Text style={{ marginRight: 5, color: theme["text-info-color"] }}>Today</Text>
-      <Icon name='calendar-outline' fill={theme["text-info-color"]} style={{ width: 24, height: 24 }} />
+      <Text style={{ marginRight: 5, color: theme["text-info-color"] }}>Help</Text>
+      <Icon name='info-outline' fill={theme["text-info-color"]} style={{ width: 24, height: 24 }} />
     </TouchableOpacity>
   );
 }
@@ -91,7 +91,7 @@ const Navigator = ({ step, setStep }) => {
             // setOnReturn={setOnReturn} // TODO: Currently not used
           />}
         options={{
-          headerRight: () => (<CalendarIcon setStep={setStep} />),
+          headerRight: () => (<TutorialButton setStep={setStep} />),
         }}
       />
       <Stack.Screen
