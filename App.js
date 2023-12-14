@@ -57,6 +57,9 @@ const Navigator = () => {
       <Stack.Screen
         name="Habit Creation"
         children={(props) => <HabitCreation {...props} />}
+        options={{
+          headerLeft: () => (<Icon name='arrow-back-outline' fill={theme["text-basic-color"]} style={{ width: 24, height: 24 }} />)
+        }}
       />
     </Stack.Navigator>
   );

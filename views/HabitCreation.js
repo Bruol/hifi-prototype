@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
 import { StyleSheet, FlatList, Dimensions, View, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { Input, Icon, Button, Modal, Card, Text, useStyleSheet, Layout } from '@ui-kitten/components';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
 
 import { DataHandler, Habit } from '../data/DataHandler';
 
-const NumericInput = ({ value, setValue }) => {
+const NumericInput = ({ value, setValue, lowerLimit = 1, upperLimit = 100 }) => {
+
+    const theme = useTheme();
+
     const increment = () => {
         let intValue = parseInt(value, 10);
-        if (intValue < 1440) {
+        if (intValue < upperLimit) {
             setValue(intValue + 1);
         }
     };
 
     const decrement = () => {
         let intValue = parseInt(value, 10);
-        if (intValue > 1) {
+        if (intValue > lowerLimit) {
             setValue(intValue - 1);
         }
     };
@@ -23,10 +26,10 @@ const NumericInput = ({ value, setValue }) => {
     const handleInputChange = (text) => {
         if (/^\d+$/.test(text)) {
             let intValue = parseInt(text, 10);
-            if (intValue > 1440) {
-                intValue = 1440;
-            } else if (intValue < 1) {
-                intValue = 1;
+            if (intValue > upperLimit) {
+                intValue = upperLimit;
+            } else if (intValue < lowerLimit) {
+                intValue = lowerLimit;
             }
             setValue(intValue);
         }
@@ -34,19 +37,20 @@ const NumericInput = ({ value, setValue }) => {
 
     return (
         <View>
-            <Text category="label" style={{ marginBottom: 4 }}>Repititions</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text category="label" appearance="hint" style={{ marginBottom: 4 }}>Repititions</Text>
+            <View style={{ flexDirection: 'row', justifyContent: "space-around", alignItems: 'center' }}>
                 <Button
                     status="basic"
                     appearance='outline'
                     onPress={decrement}
                     accessoryLeft={<Icon name={"minus-outline"} />}
-                    style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0, height: 30, width: 30 }} />
+                    style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0, height: 30 }} />
                 <Input
                     value={value.toString()}
                     onChangeText={handleInputChange}
                     keyboardType='numeric'
-                    style={{ width: 100, textAlign: 'center', borderRadius: 0 }}
+                    returnKeyType='done'
+                    style={{ flexGrow: 1, textAlign: 'center', borderRadius: 0 }}
                     textStyle={{ textAlign: 'center' }}
                 />
                 <Button
@@ -54,7 +58,7 @@ const NumericInput = ({ value, setValue }) => {
                     appearance='outline'
                     onPress={increment}
                     accessoryLeft={<Icon name={"plus-outline"} />}
-                    style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0, height: 30, width: 30 }} />
+                    style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0, height: 30 }} />
             </View>
         </View>
     );
@@ -63,8 +67,11 @@ const NumericInput = ({ value, setValue }) => {
 function HabitCreation() {
     const [title, setTitle] = useState('');
     const [iconName, setIconName] = useState('archive-outline');
-    const [frequency, setFrequency] = useState('1');
-    
+    const [dailyReps, setDailyReps] = useState(1);
+    const [reminders, setReminders] = useState([]);
+
+    const [reminder, setReminder] = useState('');
+
     const [showIconDialog, setShowIconDialog] = useState(false);
     const [showReminderDialog, setShowReminderDialog] = useState(false);
 
@@ -76,6 +83,11 @@ function HabitCreation() {
         // Create and add new habit
         const habit = new Habit(title, iconName, [], frequency, 0);
         dataHandler.addHabit(habit);
+        // Navigate back to home screen
+        navigation.goBack();
+    };
+
+    const abort = () => {
         // Navigate back to home screen
         navigation.goBack();
     };
@@ -125,11 +137,11 @@ function HabitCreation() {
     return (
         <View style={styles.wrapper}>
 
-            <Text category="h5" style={styles.sectionTitle}>Basic Properties</Text>
+            <Text category="h5" style={styles.sectionTitle}>Create A New Habit</Text>
 
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "stretch" }}>
                 <Input
-                    style={{ flex: 1, borderTopRightRadius: 0, borderBottomRightRadius: 0}}
+                    style={{ flex: 1, borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
                     label="Title"
                     placeholder="Insert title here..."
                     value={title}
@@ -176,20 +188,76 @@ function HabitCreation() {
             {/* Spacer */}
             <View style={{ height: 20 }} />
 
-            <NumericInput value={frequency} setValue={setFrequency} />
+            <NumericInput value={dailyReps} setValue={setDailyReps} />
 
-            {/* Divider */}
-            <View style={styles.divider} />
+            {/* Spacer */}
+            <View style={{ height: 20 }} />
 
-            <Text category="h5" style={styles.sectionTitle}>Reminders</Text>
+            <Text category="label" appearance="hint" style={styles.sectionTitle}>Reminders</Text>
 
+            {/* Reminder list */}
+            <FlatList
+                data={reminders}
+                renderItem={({ item }) => (
+                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                        <Text>{item}</Text>
+                        <Button
+                            appearance="ghost"
+                            status="danger"
+                            accessoryLeft={<Icon name='close-circle-outline' />}
+                            onPress={() => {
+                                setReminders(reminders.filter((value) => value !== item));
+                            }}
+                        />
+                    </View>
+                )}
+                keyExtractor={(item) => item.id}
+            />
 
-            {/* Divider */}
-            <View style={styles.divider} />
-
-            <Button title="Create Habit" onPress={createHabit} >
-                Create Habit
+            {/* Add reminder button */}
+            <Button
+                appearance="ghost"
+                accessoryLeft={<Icon name='plus-outline' />}
+                onPress={() => setShowReminderDialog(true)}
+            >
+                Add Reminder
             </Button>
+
+            {/* Reminder dialog */}
+            <Modal
+                visible={showReminderDialog}
+                
+                onBackdropPress={() => setShowReminderDialog(false)}
+            >
+                <Card disabled={true}>
+                    <Text category="s1">Add a reminder</Text>
+                    <Input
+                        placeholder="Insert reminder here..."
+                        value={reminder}
+                        onChangeText={setReminder}
+                    />
+                    <Button
+                        onPress={() => {
+                            setReminders([...reminders, reminder]);
+                            setShowReminderDialog(false);
+                        }}
+                    >
+                        Add Reminder
+                    </Button>
+                </Card>
+            </Modal>
+
+            {/* Divider */}
+            <View style={styles.divider} />
+
+            <View style={{ flexDirection: "row", width: "100%", justifyContent: "flex-end" }}>
+                <Button appearance='ghost' onPress={abort} style={{ marginRight: 20 }}>
+                    Back
+                </Button>
+                <Button onPress={createHabit} >
+                    Create Habit
+                </Button>
+            </View>
         </View>
     );
 }
