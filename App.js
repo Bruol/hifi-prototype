@@ -7,7 +7,7 @@ import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { ApplicationProvider, Text, IconRegistry, Icon, useTheme } from '@ui-kitten/components';
 import PropTypes from 'prop-types';
 
-import ViewSun from "./views/ViewSun";
+import ViewSun from "./views/Dashboard";
 import HabitCreation from './views/HabitCreation';
 import HabitEditing from './views/HabitEditing';
 

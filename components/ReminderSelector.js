@@ -66,7 +66,6 @@ const ReminderSelector = ({ reminders, setReminders }) => {
                         </Button>
                     </View>
                 )}
-                keyExtractor={(item) => item.id}
             />
 
             {/* Add reminder button */}

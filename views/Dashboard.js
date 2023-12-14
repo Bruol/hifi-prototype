@@ -21,10 +21,9 @@ const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
  * @param {object} confettiRef - Reference to confetti cannon component
  * @returns {JSX.Element}
  */
-const ViewSun = ({ step, setStep: setStp, onOpenEditHabit, onOpenCreateHabit }) => {
+const ViewSun = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
     // its tutorial time baby
     const navigation = useNavigation();
-    const setStep = (x) => { setStp(x); console.log("setStep to " + step) }
 
     const text =
         step === 0
