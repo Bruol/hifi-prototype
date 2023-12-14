@@ -9,21 +9,21 @@ import { DataHandler, Habit } from '../data/DataHandler';
 import ReminderModal from '../modals/ReminderModal';
 
 function getFormattedDate(date) {
-  
+
     // Extract day, month, and year
     let day = date.getDate();
     let month = date.getMonth() + 1; // Months are zero-based, so add 1
     const year = date.getFullYear();
-  
+
     // Ensure two-digit format for day and month
     day = (day < 10) ? '0' + day : day;
     month = (month < 10) ? '0' + month : month;
-  
+
     // Format the date as dd.mm.YYYY
     let formattedDate = day + '.' + month + '.' + year;
-  
+
     return formattedDate;
-  }
+}
 
 const NumericInput = ({ value, setValue, isEdit = false, lowerLimit = 1, upperLimit = 100 }) => {
 
@@ -84,14 +84,18 @@ const NumericInput = ({ value, setValue, isEdit = false, lowerLimit = 1, upperLi
     );
 };
 
-function HabitCreation({ step, setStep }) {
-
+function HabitEditing({ step, setStep, focusedHabitId, onReturn }) {
+    const dataHandler = new DataHandler();
 
     // States used for new habit instance
-    const [title, setTitle] = useState('');
-    const [iconName, setIconName] = useState('archive-outline');
-    const [dailyReps, setDailyReps] = useState(1);
-    const [reminders, setReminders] = useState([]);
+    const focusedHabit = dataHandler.getHabitById(focusedHabitId);
+    if (!focusedHabit) {
+        console.error("HabitEditing: Habit with id " + focusedHabitId + " not found!");
+    }
+    const [title, setTitle] = useState(focusedHabit.title);
+    const [iconName, setIconName] = useState(focusedHabit.iconName);
+    const [dailyReps, setDailyReps] = useState(focusedHabit.dailyReps);
+    const [reminders, setReminders] = useState(focusedHabit.reminders);
 
     // States used for Reminder Modal
     const [focusedReminderIndex, setFocusedReminderIndex] = useState('');
@@ -99,14 +103,20 @@ function HabitCreation({ step, setStep }) {
     const [showReminderDialog, setShowReminderDialog] = useState(false);
     const [isReminderEdit, setIsReminderEdit] = useState(false);
 
-    const createHabit = () => {
-        const habit = new Habit(title, iconName, reminders, dailyReps, 0);
-        new DataHandler().addHabit(habit);
+    const editHabit = () => {
+        const newHabit = new Habit(title, iconName, reminders, dailyReps, 0);
+        dataHandler.replaceHabit(focusedHabitId, newHabit);
+        navigateBack();
+    };
+
+    const deleteHabit = () => {
+        dataHandler.removeHabit(focusedHabitId);
         navigateBack();
     };
 
     const navigation = useNavigation();
     const navigateBack = () => {
+        if (onReturn) onReturn();
         navigation.goBack();
     };
 
@@ -126,30 +136,30 @@ function HabitCreation({ step, setStep }) {
     const styles = useStyleSheet(themedStyles);
 
     // Tutorial stuff
-    const getText = () => {
-        switch (step) {
-            case 4:
-                return "this shouldn't be visible";
-            case 5:
-                return "This is were you set you Habit name";
-            case 6:
-                return "Here you can set your Habit icon";
-            case 7:
-                return "This is how often you want to check your Habit per Day";
-            case 8:
-                return "And thats it's. you can confirm your habit here";
-            case 9:
-                return "Or discard it here";
-            default:
-                return "This text shouldn't be visible"
-        }
-    };
+    // const getText = () => {
+    //     switch (step) {
+    //         case 4:
+    //             return "this shouldn't be visible";
+    //         case 5:
+    //             return "This is were you set you Habit name";
+    //         case 6:
+    //             return "Here you can set your Habit icon";
+    //         case 7:
+    //             return "This is how often you want to check your Habit per Day";
+    //         case 8:
+    //             return "And thats it's. you can confirm your habit here";
+    //         case 9:
+    //             return "Or discard it here";
+    //         default:
+    //             return "This text shouldn't be visible"
+    //     }
+    // };
 
     return (
         <View style={styles.wrapper}>
 
             <Text category="h5" style={styles.sectionTitle}>
-                Create A New Habit
+                Edit Existing Habit
             </Text>
 
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "stretch" }}>
@@ -265,7 +275,7 @@ function HabitCreation({ step, setStep }) {
             {/* Divider */}
             <View style={styles.divider} />
 
-            <View style={{ flexDirection: "row", width: "100%", justifyContent: "space-between", marginBottom: 40 }}>
+            <View style={{ flexDirection: "row", width: "100%", justifyContent: "space-between" }}>
                 <Button
                     appearance='ghost'
                     status="danger"
@@ -273,22 +283,36 @@ function HabitCreation({ step, setStep }) {
                     accessoryLeft={<Icon name="arrow-back" />}
                     style={{ marginRight: 20 }}
                 >
-                    Discard Habit
+                    Discard
                 </Button>
                 <Button
                     status='success'
-                    onPress={createHabit}
+                    onPress={editHabit}
                     accessoryLeft={<Icon name='checkmark-outline' />}
                 >
-                    Create Habit
+                    Save Changes
                 </Button>
             </View>
-        </View>
+
+            {/* Divider */}
+            <View style={styles.divider} />
+
+            {/* Delete habit button */}
+            <Button
+                appearance='ghost'
+                status="danger"
+                onPress={deleteHabit}
+                accessoryLeft={<Icon name="trash-2-outline" />}
+                style={{ marginBottom: 40 }}
+            >
+                Delete Habit
+            </Button>
+        </View >
     );
 }
 
 const themedStyles = StyleSheet.create({
-    //tutorial stuff
+    // tutorial stuff
     instructionContainer: {
         position: "absolute",
         top: 0,
@@ -313,23 +337,12 @@ const themedStyles = StyleSheet.create({
         backgroundColor: "#23a",
         margin: 16,
     },
-    button: {
-        paddingVertical: 16,
-        paddingHorizontal: 48,
-        borderRadius: 8,
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#23a",
-        color: "#fff",
-        fontSize: 32,
-        margin: 16,
-    },
     buttonText: {
         color: "#fff",
         fontSize: 24,
         fontWeight: "bold",
     },
-    //fabius stuff
+    // Fabius stuff
     wrapper: {
         flex: 1,
         padding: 20,
@@ -392,4 +405,4 @@ const iconNames = [
     'bluetooth-outline',
 ];
 
-export default HabitCreation;
+export default HabitEditing;

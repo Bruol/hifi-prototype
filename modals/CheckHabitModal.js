@@ -15,7 +15,7 @@ import ProgressBar from '../components/ProgressBar';
  * @param {Function} handleClose - The function to execute when the modal is closed
  * @returns {JSX.Element}
  */
-const CheckModal = ({ habitId, isVisible, handleCheck, handleClose }) => {
+const CheckModal = ({ habitId, isVisible, handleCheck, handleClose, handleEdit }) => {
     // Get themed styles
     const styles = useStyleSheet(themedStyles);
 
@@ -27,7 +27,7 @@ const CheckModal = ({ habitId, isVisible, handleCheck, handleClose }) => {
     const dataHandler = new DataHandler();
     const habit = dataHandler.getHabitById(habitId);
 
-    return (
+    return habit ? (
         <Modal
             isVisible={isVisible}
             style={{ justifyContent: 'flex-end', margin: 0 }}
@@ -71,7 +71,7 @@ const CheckModal = ({ habitId, isVisible, handleCheck, handleClose }) => {
                         appearance="ghost"
                         status="info"
                         accessoryLeft={<Icon name='settings-outline' />}
-                        onPress={() => Alert.alert("Not Implemented", "Editing habits is not part of the prototype.")}
+                        onPress={handleEdit}
                     >
                         Edit Habit
                     </Button>
@@ -98,7 +98,7 @@ const CheckModal = ({ habitId, isVisible, handleCheck, handleClose }) => {
 
             </View>
         </Modal>
-    );
+    ) : <></>;
 };
 
 // Property types of ConfirmationModal

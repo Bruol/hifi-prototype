@@ -8,6 +8,7 @@ import { ApplicationProvider, Text, IconRegistry, Icon, useTheme, View } from '@
 
 import ViewSun from "./views/ViewSun";
 import HabitCreation from './views/HabitCreation';
+import HabitEditing from './views/HabitEditing';
 
 // TODO: Currently only used for consistency testing, remove later... :)
 const isDarkMode = false;
@@ -15,7 +16,7 @@ const isDarkMode = false;
 const Stack = createStackNavigator();
 
 // Date selection icon
-const CalendarIcon = ({setStep}) => {
+const CalendarIcon = ({ setStep }) => {
   // Get theme
   const theme = useTheme();
 
@@ -30,10 +31,41 @@ const CalendarIcon = ({setStep}) => {
   );
 }
 
-const Navigator = ({step, setStep}) => {
+const BackIcon = () => {
   // Get theme
   const theme = useTheme();
 
+  // Get navigation
+  const navigation = useNavigation();
+
+  return (
+    <TouchableOpacity
+      style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", marginLeft: 10 }}
+      onPress={() => navigation.goBack()}
+    >
+      <Icon name='arrow-back-outline' fill={theme["text-info-color"]} style={{ width: 24, height: 24 }} />
+      <Text style={{ marginLeft: 5, color: theme["text-info-color"] }}>Back</Text>
+    </TouchableOpacity>
+  );
+}
+
+const Navigator = ({ step, setStep }) => {
+
+  // State for habit creation and editing
+  const [focusedHabitId, setFocusedHabitId] = useState(null);
+  const [onReturn, setOnReturn] = useState(null);
+  const navigation = useNavigation();
+  const onOpenEditHabit = (habitId) => {
+    setFocusedHabitId(habitId);
+    navigation.navigate("Habit Editing");
+  }
+  const onOpenCreateHabit = () => {
+    setFocusedHabitId(null);
+    navigation.navigate("Habit Creation");
+  }
+
+  // Get theme
+  const theme = useTheme();
   const screenOptions = {
     headerStyle: {
       backgroundColor: theme["background-basic-color-1"],
@@ -49,7 +81,15 @@ const Navigator = ({step, setStep}) => {
     >
       <Stack.Screen
         name="Dashboard Sun"
-        children={(props) => <ViewSun {...props } step = {step} setStep = {setStep} />}
+        children={(props) =>
+          <ViewSun {...props}
+            step={step}
+            setStep={setStep}
+            setFocusedHabitId={setFocusedHabitId}
+            onOpenEditHabit={onOpenEditHabit}
+            onOpenCreateHabit={onOpenCreateHabit}
+            // setOnReturn={setOnReturn} // TODO: Currently not used
+          />}
         options={{
           headerRight: () => (<CalendarIcon setStep={setStep} />),
         }}
@@ -58,7 +98,14 @@ const Navigator = ({step, setStep}) => {
         name="Habit Creation"
         children={(props) => <HabitCreation {...props} />}
         options={{
-          headerLeft: () => (<Icon name='arrow-back-outline' fill={theme["text-basic-color"]} style={{ width: 24, height: 24 }} />)
+          headerLeft: () => (<BackIcon />)
+        }}
+      />
+      <Stack.Screen
+        name="Habit Editing"
+        children={(props) => <HabitEditing{...props} focusedHabitId={focusedHabitId} onReturn={onReturn} />}
+        options={{
+          headerLeft: () => (<BackIcon />)
         }}
       />
     </Stack.Navigator>
@@ -82,7 +129,7 @@ const App = () => {
       {/* Main component */}
       <ApplicationProvider {...eva} theme={isDarkMode ? eva.dark : eva.light}>
         <NavigationContainer initialRouteName="Dashboard Sun" theme={isDarkMode ? DarkTheme : DefaultTheme}>
-          <Navigator step = {step} setStep = {setStep}/>
+          <Navigator step={step} setStep={setStep} />
         </NavigationContainer>
       </ApplicationProvider >
     </>

@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
  * This component renders the footer of the dashboards.
  * @returns {JSX.Element}
  */
-const Footer = () => {
+const Footer = ({onOpenCreateHabit}) => {
   // Get theme colors
   const theme = useTheme();
   const iconColorDark = theme['text-hint-color'];
@@ -28,16 +28,16 @@ const Footer = () => {
       </TouchableOpacity>
 
       {/* Button to add a new habit */}
-      <TouchableOpacity style={styles.buttonWrapper} onPress={() => navigation.navigate("Habit Creation")}>
+      <TouchableOpacity style={styles.buttonWrapper} onPress={onOpenCreateHabit}>
         <View style={styles.centralButton}>
           <Icon style={styles.icon} name="plus-outline" fill={iconColorLight} />
         </View>
-        <Text style={{marginTop: 5}} status="primary" category="s1">New Habit</Text>
+        <Text style={{ marginTop: 5 }} status="primary" category="s1">New Habit</Text>
       </TouchableOpacity>
 
       {/* Button to view the settings */}
       <TouchableOpacity style={styles.buttonWrapper} onPress={() => Alert.alert("Not Implemented", "Viewing settings is not part of the prototype!")}>
-        
+
         <Icon style={styles.icon} name="settings-outline" fill={iconColorDark} />
         <Text appearance="hint" category="s2">Settings</Text>
       </TouchableOpacity>

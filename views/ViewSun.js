@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { View, ScrollView, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native';
 import { Text, Card, useStyleSheet } from '@ui-kitten/components';
-import { useFocusEffect } from '@react-navigation/native';
 import PropTypes from 'prop-types';
 import ConfettiCannon from 'react-native-confetti-cannon';
 
@@ -22,23 +21,23 @@ const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
  * @param {object} confettiRef - Reference to confetti cannon component
  * @returns {JSX.Element}
  */
-const ViewSun = ({step , setStep:setStp}) => {
+const ViewSun = ({ step, setStep: setStp, onOpenEditHabit, onOpenCreateHabit }) => {
     // its tutorial time baby
     const navigation = useNavigation();
-    const setStep = (x) => {setStp(x); console.log("setStep to " + step)}
-   
+    const setStep = (x) => { setStp(x); console.log("setStep to " + step) }
+
     const text =
-    step === 0
-    ? "Hi!! I'm Pog. I can show you around"
-    : step === 1
-    ? "Great!! This is where your Habits will be displayd"
-    : step === 2
-    ? "Let's create our first        Habit       "
-    : "";
+        step === 0
+            ? "Hi!! I'm Pog. I can show you around"
+            : step === 1
+                ? "Great!! This is where your Habits will be displayd"
+                : step === 2
+                    ? "Let's create our first        Habit       "
+                    : "";
 
     const x_coordinate = step === 0 ? 50 : (
-                         step === 1 ? 200: (
-                         step === 2 ? 80 : 100));
+        step === 1 ? 200 : (
+            step === 2 ? 80 : 100));
 
 
     // Reference to confetti cannon component
@@ -61,6 +60,7 @@ const ViewSun = ({step , setStep:setStp}) => {
 
     // State for check modal visibility
     const [isCheckModalVisible, setCheckModalVisible] = useState(false);
+
     // Async function to complete a habit 
     const checkHabit = useCallback((id) => {
         // Set states for confirmation modal
@@ -121,163 +121,172 @@ const ViewSun = ({step , setStep:setStp}) => {
 
     return (
         <>
-        <View>  
+            <View>
 
-            <View style={styles.contentWrapper}>
-                {/* Page content */}
-                <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'spread', paddingHorizontal: 20, paddingTop: 20 }}>
-                    {/* Subheader for pending habits */}
-                    <View style={styles.cardView}>
-                        <Text category="h5">Pending Habits</Text>
-                        {/* Text to explain checking */}
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Text category="c1">Tap to view</Text>
-                        </View>
-                    </View>
-                    {(pendingHabitIds.length > 0) ? (
-                        // List of pending habits
-                        pendingHabitIds.map(
-                            (habitId) => <ListHabitCard
-                                key={habitId}
-                                habit={dataHandler.getHabitById(habitId)}
-                                status="warning"
-                                onPress={() => checkHabit(habitId)}
-                            />
-                        )
-                    ) : (
-                        <Card style={styles.finishedCard}>
-                            <View style={styles.finishedContent}>
-                                <Text style={{ textAlign: "center" }} category='h3'>You have completed all habits for today!</Text>
-                                <Image style={themedStyles.stretch}
-                                 source={require('../assets/pog2.png')} />
+                <View style={styles.contentWrapper}>
+                    {/* Page content */}
+                    <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'spread', paddingHorizontal: 20, paddingTop: 20 }}>
+                        {/* Subheader for pending habits */}
+                        <View style={styles.cardView}>
+                            <Text category="h5">Pending Habits</Text>
+                            {/* Text to explain checking */}
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Text category="c1">Tap to view</Text>
                             </View>
-                        </Card>
-                    )}
-                    {/* Divider */}
-                    <View style={styles.divider} />
-                    {/* Subheader for complete habits */}
-                    <View style={styles.cardView}>
-                        <Text category="h5">Completed Habits</Text>
-                        {/* Text to explain unchecking */}
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Text category="c1">Tap to view</Text>
                         </View>
-                    </View>
-                    {/* List of completed habits */}
-                    {(completedHabitIds.length > 0) ? (
-                        completedHabitIds.map(
-                            (habitId) =>
-                                <ListHabitCard
+                        {(pendingHabitIds.length > 0) ? (
+                            // List of pending habits
+                            pendingHabitIds.map(
+                                (habitId) => <ListHabitCard
                                     key={habitId}
                                     habit={dataHandler.getHabitById(habitId)}
-                                    status="success"
-                                    onPress={() => uncheckHabit(habitId)}
+                                    status="warning"
+                                    onPress={() => checkHabit(habitId)}
                                 />
-                        )
-                    ) : (
-                        <Card style={styles.finishedCard}>
-                            <View style={styles.finishedContent}>
-                                <Text style={{ textAlign: "center" }} category='h3'>You have not completed any habits yet!</Text>
-                                <Text category='h1'>🥹</Text>
+                            )
+                        ) : (
+                            <Card style={styles.finishedCard}>
+                                <View style={styles.finishedContent}>
+                                    <Text style={{ textAlign: "center" }} category='h3'>You have completed all habits for today!</Text>
+                                    <Image style={themedStyles.stretch}
+                                        source={require('../assets/pog2.png')} />
+                                </View>
+                            </Card>
+                        )}
+                        {/* Divider */}
+                        <View style={styles.divider} />
+                        {/* Subheader for complete habits */}
+                        <View style={styles.cardView}>
+                            <Text category="h5">Completed Habits</Text>
+                            {/* Text to explain unchecking */}
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Text category="c1">Tap to view</Text>
                             </View>
-                        </Card>
-                    )}
-                    {/* Modal for confirming checking habits */}
-                    <CheckModal
-                        isVisible={isCheckModalVisible}
-                        habitId={focusHabitId}
-                        handleCheck={handleCheck}
-                        handleClose={handleClose}
-                    />
-                    {/* Modal for confirming unchecking habits */}
-                    <UncheckModal
-                        isVisible={isUncheckModalVisible}
-                        habitId={focusHabitId}
-                        handleUncheck={handleUncheck}
-                        handleClose={handleClose}
-                    />
-                 
+                        </View>
+                        {/* List of completed habits */}
+                        {(completedHabitIds.length > 0) ? (
+                            completedHabitIds.map(
+                                (habitId) =>
+                                    <ListHabitCard
+                                        key={habitId}
+                                        habit={dataHandler.getHabitById(habitId)}
+                                        status="success"
+                                        onPress={() => uncheckHabit(habitId)}
+                                    />
+                            )
+                        ) : (
+                            <Card style={styles.finishedCard}>
+                                <View style={styles.finishedContent}>
+                                    <Text style={{ textAlign: "center" }} category='h3'>You have not completed any habits yet!</Text>
+                                    <Text category='h1'>🥹</Text>
+                                </View>
+                            </Card>
+                        )}
+                        {/* Modal for confirming checking habits */}
+                        <CheckModal
+                            isVisible={isCheckModalVisible}
+                            habitId={focusHabitId}
+                            handleCheck={handleCheck}
+                            handleClose={handleClose}
+                            handleEdit={() => {
+                                // setOnReturn(null); // TODO: Fix this
+                                setCheckModalVisible(false);
+                                onOpenEditHabit(focusHabitId);
+                            }}
+                        />
+                        {/* Modal for confirming unchecking habits */}
+                        <UncheckModal
+                            isVisible={isUncheckModalVisible}
+                            habitId={focusHabitId}
+                            handleUncheck={handleUncheck}
+                            handleClose={handleClose}
+                            handleEdit={() => {
+                                // setOnReturn(null); // TODO: Fix this
+                                setUncheckModalVisible(false);
+                                onOpenEditHabit(focusHabitId);
+                            }}
+                        />
 
-                </ScrollView>
+                    </ScrollView>
+                </View>
+
+                {/* Confetti cannon */}
+                <ConfettiCannon
+                    count={200}
+                    origin={{ x: 207, y: -20 }}
+                    colors={confettiColors}
+                    autoStart={false}
+                    fadeOut={true}
+                    ref={confettiRef}
+                />
+
+                {/* Footer */}
+                <View style={styles.footerWrapper}>
+                    <Footer onOpenCreateHabit={onOpenCreateHabit}/>
+                </View>
             </View>
 
-            {/* Confetti cannon */}
-            <ConfettiCannon
-                count={200}
-                origin={{ x: 207, y: -20 }}
-                colors={confettiColors}
-                autoStart={false}
-                fadeOut={true}
-                ref={confettiRef}
-            />
+            {step === 0 ? (
+                <CoachMark
+                    shape="circle"
+                    x={windowWidth / 2}
+                    y={277}
+                    radius={110}
+                />
+            ) : step === 1 ? (
+                <CoachMark
+                    x={10}
+                    y={20}
+                    shape="rect"
+                    width={windowWidth - 20}
+                    height={140}
+                />)
+                : step === 2 ? (
+                    <CoachMark
+                        shape="circle"
+                        x={windowWidth / 2 + 2}
+                        y={635}
+                        radius={50}
+                    />
+                )
 
-            {/* Footer */}
-            <View style={styles.footerWrapper}>
-                <Footer />
-            </View>
-        </View>
+                    : null}
 
-        {step === 0 ? (
-        <CoachMark
-            shape="circle"
-            x = {windowWidth/2}
-            y = {277}
-            radius={110}
-            />
-        ): step === 1  ? (
-            <CoachMark
-                x={10}
-                y={20}
-                shape="rect"
-                width={windowWidth - 20}
-                height={140}
-                />) 
-        : step === 2  ? (
-        <CoachMark
-            shape="circle"
-            x = {windowWidth/2 + 2}
-            y={635}
-            radius={50}
-            /> 
-          )
+            {step < 3 && (
+                <View style={themedStyles.instructionContainer}>
+                    {(step === 0) ? <Image style={themedStyles.stretch}
+                        source={require('../assets/pog_full_body.png')} /> : (
+                        (step === 1) ? <Image style={themedStyles.stretch}
+                            source={require('../assets/pog_wink.png')} /> :
+                            <Image style={themedStyles.stretch}
+                                source={require('../assets/pog_tongue.png')} />)
+                    }
+                    <Text style={themedStyles.text}>{text}</Text>
 
-        :null}
-       
-        {step < 3 && (
-        <View style={themedStyles.instructionContainer}>
-            {(step === 0)? <Image style={themedStyles.stretch}
-                  source={require('../assets/pog_full_body.png')} />: (
-              (step === 1)? <Image style={themedStyles.stretch}
-                  source={require('../assets/pog_wink.png')} /> :
-                  <Image style={themedStyles.stretch}
-                  source={require('../assets/pog_tongue.png')} /> )
-            }
-          <Text style={themedStyles.text}>{text}</Text>
+                    <View style={styles.cardView}>
+                        <TouchableOpacity
+                            style={themedStyles.button}
+                            onPress={() => (step === 0) ? (setStep(10)) : setStep(step - 1)}
+                        >
+                            {(step === 0) ? <Text style={themedStyles.buttonText}>Skip Tutorial!</Text> : <Text style={themedStyles.buttonText}>    Go Back!    </Text>}
+                        </TouchableOpacity>
 
-          <View style={styles.cardView}>
-          <TouchableOpacity
-            style={themedStyles.button}
-            onPress={() => (step === 0)? (setStep(10)): setStep(step - 1)}
-          >
-            {(step === 0)? <Text style={themedStyles.buttonText}>Skip Tutorial!</Text> :  <Text style={themedStyles.buttonText}>    Go Back!    </Text>  }
-          </TouchableOpacity>
+                        <TouchableOpacity
+                            style={themedStyles.button}
+                            onPress={() => (step === 2) ? (() => { navigation.navigate("Habit Creation"); (setStep(step + 1)) })() : (setStep(step + 1))}
+                        >
+                            <Text style={themedStyles.buttonText}>      Got it!      </Text>
+                        </TouchableOpacity>
 
-          <TouchableOpacity
-            style={themedStyles.button}
-            onPress={() => (step === 2)? (() => {navigation.navigate("Habit Creation"); (setStep(step + 1))})() : (setStep(step + 1))}
-          >
-            <Text style={themedStyles.buttonText}>      Got it!      </Text>
-          </TouchableOpacity>
-          
-          </View>
+                    </View>
 
-        </View>
-      )}
-        
+                </View>
+            )}
+
         </>
     );
 };
- // <img src={Pog} alt="Logo" />
+// <img src={Pog} alt="Logo" />
 // Property types for this component
 ViewSun.propTypes = {
     confettiRef: PropTypes.object.isRequired
@@ -300,13 +309,13 @@ const themedStyles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-      },
-      text: {
+    },
+    text: {
         color: "#fff",
         fontSize: 32,
         fontWeight: "bold",
-      },
-      button: {
+    },
+    button: {
         paddingVertical: 10,
         paddingHorizontal: 15,
         borderRadius: 8,
@@ -316,26 +325,26 @@ const themedStyles = StyleSheet.create({
         color: "#fff",
         fontSize: 32,
         margin: 10,
-      },
-      invisiblebutton: {
+    },
+    invisiblebutton: {
         borderRadius: 8,
         justifyContent: "center",
         backgroundColor: "#23a",
         color: "#fff",
         fontSize: 32,
         margin: 10,
-      },
-      buttonText: {
+    },
+    buttonText: {
         color: "#fff",
         fontSize: 24,
         fontWeight: "bold",
-      },
-      stretch: {
+    },
+    stretch: {
         width: 180,
         height: 180,
         resizeMode: 'scale',
-      },
-      //fabius stuff
+    },
+    //fabius stuff
     contentWrapper: {
         alignItems: 'stretch',
         justifyContent: 'center',

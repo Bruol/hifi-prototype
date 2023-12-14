@@ -54,6 +54,8 @@ class DataHandler {
     }
 
     this._notifyOnAddHabitListeners(habitData.id);
+
+    return habitData.id;
   }
 
   removeHabit(id) {
@@ -71,6 +73,26 @@ class DataHandler {
     }
 
     this._notifyOnRemoveHabitListeners(id);
+  }
+
+  replaceHabit(oldHabitId, newHabit) {
+    const isCompleted = this.isHabitCompleted(oldHabitId);
+    this.removeHabit(oldHabitId);
+
+    // Check if habit is valid (not null and instance of Habit)
+    if (!(newHabit instanceof Habit)) {
+      return;
+    }
+
+    let habitData = this._convertHabitToData(newHabit);
+    habitData.id = oldHabitId;
+    if (isCompleted) {
+      this.completedData.push(habitData);
+    } else {
+      this.pendingData.push(habitData);
+    }
+
+    this._notifyOnAddHabitListeners(oldHabitId);
   }
 
   isHabitCompleted(id) {
@@ -122,7 +144,8 @@ class DataHandler {
   }
 
   _convertDataToHabit(data) {
-    return new Habit(data.title, data.icon, data.reminders, data.dailyReps, data.completionsToday);
+    let habit = new Habit(data.title, data.icon, data.reminders, data.dailyReps, data.completionsToday);
+    return habit;
   }
 
   _convertHabitToData(habit) {
