@@ -27,7 +27,8 @@
     "react-native-linear-gradient": "^2.8.3",
     "react-native-modal": "^13.0.1",
     "react-native-redash": "^18.1.1",
-    "react-native-svg": "13.9.0"
+    "react-native-svg": "13.9.0",
+    "@react-native-community/datetimepicker": "7.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

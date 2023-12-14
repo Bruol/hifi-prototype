@@ -6,24 +6,8 @@ import { Input, Icon, Button, Modal, Card, Text, useStyleSheet, Layout } from '@
 import { useNavigation, useTheme } from '@react-navigation/native';
 
 import { DataHandler, Habit } from '../data/DataHandler';
-import ReminderModal from '../modals/ReminderModal';
+import ReminderSelector from '../components/ReminderSelector';
 
-function getFormattedDate(date) {
-  
-    // Extract day, month, and year
-    let day = date.getDate();
-    let month = date.getMonth() + 1; // Months are zero-based, so add 1
-    const year = date.getFullYear();
-  
-    // Ensure two-digit format for day and month
-    day = (day < 10) ? '0' + day : day;
-    month = (month < 10) ? '0' + month : month;
-  
-    // Format the date as dd.mm.YYYY
-    let formattedDate = day + '.' + month + '.' + year;
-  
-    return formattedDate;
-  }
 
 const NumericInput = ({ value, setValue, isEdit = false, lowerLimit = 1, upperLimit = 100 }) => {
 
@@ -85,19 +69,12 @@ const NumericInput = ({ value, setValue, isEdit = false, lowerLimit = 1, upperLi
 };
 
 function HabitCreation({ step, setStep }) {
-
-
-    // States used for new habit instance
+    // States
     const [title, setTitle] = useState('');
     const [iconName, setIconName] = useState('archive-outline');
     const [dailyReps, setDailyReps] = useState(1);
     const [reminders, setReminders] = useState([]);
-
-    // States used for Reminder Modal
-    const [focusedReminderIndex, setFocusedReminderIndex] = useState('');
     const [showIconDialog, setShowIconDialog] = useState(false);
-    const [showReminderDialog, setShowReminderDialog] = useState(false);
-    const [isReminderEdit, setIsReminderEdit] = useState(false);
 
     const createHabit = () => {
         const habit = new Habit(title, iconName, reminders, dailyReps, 0);
@@ -109,18 +86,6 @@ function HabitCreation({ step, setStep }) {
     const navigateBack = () => {
         navigation.goBack();
     };
-
-    const openEditReminderModal = (index) => {
-        setFocusedReminderIndex(index);
-        setIsReminderEdit(true);
-        setShowReminderDialog(true);
-    }
-
-    const openCreateReminderModal = () => {
-        setFocusedReminderIndex(null);
-        setIsReminderEdit(false);
-        setShowReminderDialog(true);
-    }
 
     // Get themed styles
     const styles = useStyleSheet(themedStyles);
@@ -206,61 +171,8 @@ function HabitCreation({ step, setStep }) {
             {/* Spacer */}
             <View style={{ height: 20 }} />
 
-            <Text category="label" appearance="hint" style={styles.sectionTitle}>Reminders</Text>
-
-            {/* Reminder list */}
-            <FlatList
-                data={reminders}
-                renderItem={({ item, index }) => (
-                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                        <Button
-                            status="basic"
-                            appearance='outline'
-                            onPress={() => {
-                                openEditReminderModal(index);
-                            }}
-                            style={[
-                                { width: "100%", borderRadius: 0, borderTopWidth: 0 },
-                                (index === 0) ? { borderTopWidth: 1, borderTopLeftRadius: 4, borderTopRightRadius: 4 } : {},
-                                (index === reminders.length - 1) ? { borderBottomLeftRadius: 4, borderBottomRightRadius: 4 } : {}
-                            ]}
-                        >
-                            {getFormattedDate(item)}
-                        </Button>
-                    </View>
-                )}
-                keyExtractor={(item) => item.id}
-            />
-
-            {/* Add reminder button */}
-            <Button
-                appearance='ghost'
-                status='basic'
-                accessoryLeft={<Icon name='plus-outline' />}
-                onPress={openCreateReminderModal}
-            >
-                Add New Reminder
-            </Button>
-
-            {/* Reminder dialog */}
-            <ReminderModal
-                isVisible={showReminderDialog}
-                isEdit={isReminderEdit}
-                handleConfirm={(timeStamp) => {
-                    setShowReminderDialog(false);
-                    setReminders([...reminders, timeStamp]);
-                    setIsReminderEdit(false);
-                }}
-                handleClose={() => {
-                    setShowReminderDialog(false);
-                    setIsReminderEdit(false);
-                }}
-                handleDelete={() => {
-                    setShowReminderDialog(false);
-                    setReminders(reminders.filter((item, index) => index !== focusedReminderIndex));
-                    setIsReminderEdit(false);
-                }}
-            />
+            {/* Reminder selector */}
+            <ReminderSelector reminders={reminders} setReminders={setReminders} />
 
             {/* Divider */}
             <View style={styles.divider} />

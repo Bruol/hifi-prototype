@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Alert, TimePicker } from 'react-native';
-import { Button, Icon, Text, useStyleSheet, useTheme, Datepicker } from '@ui-kitten/components';
+import { Button, Icon, Text, useStyleSheet, useTheme } from '@ui-kitten/components';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import Modal from 'react-native-modal';
 import DatePicker from 'react-native-datepicker';
 
-const ReminderModal = ({ isVisible, isEdit = false, handleConfirm, handleClose, handleDelete }) => {
+const ReminderModal = ({ isVisible, isEdit = false, handleCreate, handleEdit, handleClose, handleDelete }) => {
     const [date, setDate] = useState(new Date());
 
     // Get theme
@@ -33,9 +34,14 @@ const ReminderModal = ({ isVisible, isEdit = false, handleConfirm, handleClose, 
 
                 {/* Time picker */}
                 <View style={styles.timePickerWrapper}>
-                    <Datepicker
-                        date={date}
-                        onSelect={nextDate => setDate(nextDate)}
+                    <DateTimePicker
+                        value={date}
+                        mode="time"
+                        is24Hour={true}
+                        display='spinner'
+                        onChange={(event, selectedDate) => setDate(selectedDate)}
+                        style={{ width: "100%", color: theme["text-basic-color"] }}
+                        textColor={theme["text-basic-color"]}
                     />
 
                 </View>
@@ -56,7 +62,7 @@ const ReminderModal = ({ isVisible, isEdit = false, handleConfirm, handleClose, 
                     <Button
                         status="success"
                         accessoryLeft={<Icon name="checkmark-outline" />}
-                        onPress={() => handleConfirm(date)}
+                        onPress={() => isEdit ? handleEdit(date) : handleCreate(date)}
                     >
                         {isEdit ? "Save Changes" : "Create Reminder"}
                     </Button>
