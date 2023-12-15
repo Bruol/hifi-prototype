@@ -32,7 +32,14 @@ const Dashboard = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
                 ? "Great!! This is where your Habits will be displayed"
                 : step === 2
                     ? "Let's create our first        Habit       "
-                    : "";
+                    : step === 7
+                        ? "interact with your Habits by clicking on them" :
+                        step === 8
+                            ? "You can Check or Uncheck them here!" :
+                            step === 9
+                                ? "But you can also edit them here!" :
+                                step === 20
+                                    ? "You can always find me here, when you miss me!" : "";
 
     // const x_coordinate = step === 0 ? 50 : (
     //     step === 1 ? 200 : (
@@ -179,8 +186,8 @@ const Dashboard = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
                         )}
                         {/* Modal for confirming checking habits */}
                         <CheckModal
-                            isVisible={isCheckModalVisible}
-                            habitId={focusHabitId}
+                            isVisible={(step === 8 || step === 9) ? true : isCheckModalVisible}
+                            habitId={(step === 8 || step === 9) ? 0 : focusHabitId}
                             handleCheck={handleCheck}
                             handleClose={handleClose}
                             handleEdit={() => {
@@ -188,6 +195,7 @@ const Dashboard = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
                                 onOpenEditHabit(focusHabitId);
                             }}
                         />
+
                         {/* Modal for confirming unchecking habits */}
                         <UncheckModal
                             isVisible={isUncheckModalVisible}
@@ -240,12 +248,43 @@ const Dashboard = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
                         x={windowWidth / 2 + 2}
                         y={635}
                         radius={50}
-                    />
-                )
+                    />)
+                    : step === 7 ? (
+                        <CoachMark
+                            x={10}
+                            y={20}
+                            shape="rect"
+                            width={windowWidth - 20}
+                            height={140} />
 
-                    : null}
+                    ) : step === 8 ? (
+                        <CoachMark
+                            x={10}
+                            y={20}
+                            shape="rect"
+                            width={windowWidth - 20}
+                            height={140} />
 
-            {step < 3 && (
+                    ) : step === 9 ? (
+                        <CoachMark
+                            x={10}
+                            y={20}
+                            shape="rect"
+                            width={windowWidth - 20}
+                            height={140} />
+
+                    )
+                        : step === 20 ? (
+                            <CoachMark
+                                shape="circle"
+                                x={windowWidth - 20}
+                                y={-50}
+                                radius={100}
+                            />
+                        )
+                            : null}
+
+            {step < 21 && (
                 <View style={themedStyles.instructionContainer}>
                     {(step === 0) ? <Image style={themedStyles.stretch}
                         source={require('../assets/pog_full_body.png')} /> : (
@@ -259,14 +298,14 @@ const Dashboard = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
                     <View style={styles.cardView}>
                         <TouchableOpacity
                             style={themedStyles.button}
-                            onPress={() => (step === 0) ? (setStep(10)) : setStep(step - 1)}
+                            onPress={() => (step === 0) ? (setStep(20)) : (step === 20) ? (setStep(0)) : (step === 7) ? (() => { navigation.navigate("Create Habit"); (setStep(step - 1)) })() : setStep(step - 1)}
                         >
-                            {(step === 0) ? <Text style={themedStyles.buttonText}>Skip Tutorial!</Text> : <Text style={themedStyles.buttonText}>    Go Back!    </Text>}
+                            {(step === 0) ? <Text style={themedStyles.buttonText}>Skip Tutorial!</Text> : (step === 20) ? <Text style={themedStyles.buttonText}>   Restart!   </Text> : <Text style={themedStyles.buttonText}>    Go Back!    </Text>}
                         </TouchableOpacity>
 
                         <TouchableOpacity
                             style={themedStyles.button}
-                            onPress={() => (step === 2) ? (() => { navigation.navigate("Create Habit"); (setStep(step + 1)) })() : (setStep(step + 1))}
+                            onPress={() => (step === 2) ? (() => { navigation.navigate("Create Habit"); (setStep(step + 1)) })() : (step === 9) ? (() => { onOpenEditHabit(0); (setStep(step + 1)) })() : (setStep(step + 1))}
                         >
                             <Text style={themedStyles.buttonText}>      Got it!      </Text>
                         </TouchableOpacity>

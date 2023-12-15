@@ -155,7 +155,7 @@ function HabitCreation({ step, setStep }) {
                     width={windowWidth - 20}
                     height={80}
                 />)
-                : step === 2 ? (
+                : step === 5 ? (
                     <CoachMark
                         x={70}
                         y={windowHeight - 240}
