@@ -4,15 +4,11 @@ import { Input, Icon, Button, Modal, Card, Text, useStyleSheet } from '@ui-kitte
 import { useNavigation } from '@react-navigation/native';
 import PropTypes from 'prop-types';
 
-import { CoachMark } from '../components/CoachMark';
-
 import { DataHandler, Habit } from '../data/DataHandler';
 import ReminderSelector from '../components/ReminderSelector';
 import NumericInput from '../components/NumericInput';
 
-const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
-
-function HabitCreation({ step, setStep }) {
+function HabitCreation() {
     // States
     const [title, setTitle] = useState('');
     const [iconName, setIconName] = useState('archive-outline');
@@ -34,183 +30,94 @@ function HabitCreation({ step, setStep }) {
     // Get themed styles
     const styles = useStyleSheet(themedStyles);
 
-     //Tutorial stuff
-     const getText = () => {
-         switch (step) {
-             case 3:
-                 return "You can tipe in a Habit name and choose an Icon here!!";
-             case 4:
-                 return "You do some Habit more than once a day: Like Teeth brushing!";
-             case 5:
-                 return "You can add as lots of reminders here. Just need to pick a time.";
-             case 6:
-                 return "If you are Happy with your habit press here to confirm it";
-             default:
-                 return "This text shouldn't be visible"
-         }
-     };
-
     return (
-        <>
-            <View style={styles.wrapper}>
+        <View style={styles.wrapper}>
 
-                <Text category="h5" style={styles.sectionTitle}>
-                    Create A New Habit
-                </Text>
+            <Text category="h5" style={styles.sectionTitle}>
+                Create A New Habit
+            </Text>
 
-                <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "stretch" }}>
-                    <Input
-                        style={{ flex: 1, borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
-                        label="Title"
-                        placeholder="Insert title here..."
-                        value={title}
-                        onChangeText={setTitle}
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "stretch" }}>
+                <Input
+                    style={{ flex: 1, borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
+                    label="Title"
+                    placeholder="Insert title here..."
+                    value={title}
+                    onChangeText={setTitle}
+                />
+
+                {/* Icon selection */}
+                <View>
+                    <Text category="label" style={styles.label}>Icon</Text>
+                    <Button
+                        style={{ height: 30, borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                        status='basic'
+                        appearance='outline'
+                        accessoryLeft={(props) => <Icon {...props} name={iconName} />}
+                        onPress={() => setShowIconDialog(true)}
                     />
-
-                    {/* Icon selection */}
-                    <View>
-                        <Text category="label" style={styles.label}>Icon</Text>
-                        <Button
-                            style={{ height: 30, borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-                            status='basic'
-                            appearance='outline'
-                            accessoryLeft={(props) => <Icon {...props} name={iconName} />}
-                            onPress={() => setShowIconDialog(true)}
-                        />
-                    </View>
                 </View>
-                <Modal
-                    visible={showIconDialog}
-                    backdropStyle={{ backgroundColor: 'transparent' }}
-                    onBackdropPress={() => setShowIconDialog(false)}
-                >
-                    <Card disabled={true}>
-                        <Text category="s1">Select an icon</Text>
-                        <FlatList
-                            data={iconNames}
-                            numColumns={4} // adjust this as needed
-                            renderItem={({ item }) => (
-                                <Button
-                                    appearance={iconName === item ? 'outline' : 'ghost'}
-                                    accessoryLeft={(props) => <Icon {...props} name={item} />}
-                                    onPress={() => {
-                                        setIconName(item);
-                                        setShowIconDialog(false);
-                                    }}
-                                />
-                            )}
-                            keyExtractor={(item) => item}
-                        />
-                    </Card>
-                </Modal>
+            </View>
+            <Modal
+                visible={showIconDialog}
+                backdropStyle={{ backgroundColor: 'transparent' }}
+                onBackdropPress={() => setShowIconDialog(false)}
+            >
+                <Card disabled={true}>
+                    <Text category="s1">Select an icon</Text>
+                    <FlatList
+                        data={iconNames}
+                        numColumns={4} // adjust this as needed
+                        renderItem={({ item }) => (
+                            <Button
+                                appearance={iconName === item ? 'outline' : 'ghost'}
+                                accessoryLeft={(props) => <Icon {...props} name={item} />}
+                                onPress={() => {
+                                    setIconName(item);
+                                    setShowIconDialog(false);
+                                }}
+                            />
+                        )}
+                        keyExtractor={(item) => item}
+                    />
+                </Card>
+            </Modal>
 
-                {/* Spacer */}
-                <View style={{ height: 20 }} />
+            {/* Spacer */}
+            <View style={{ height: 20 }} />
 
             <NumericInput value={repetitions} setValue={setRepetitions} />
 
-                {/* Spacer */}
-                <View style={{ height: 20 }} />
+            {/* Spacer */}
+            <View style={{ height: 20 }} />
 
-                {/* Reminder selector */}
-                <ReminderSelector reminders={reminders} setReminders={setReminders} />
+            {/* Reminder selector */}
+            <ReminderSelector reminders={reminders} setReminders={setReminders} />
 
-                {/* Divider */}
-                <View style={styles.divider} />
+            {/* Divider */}
+            <View style={styles.divider} />
 
-                <View style={{ flexDirection: "row", width: "100%", justifyContent: "space-between", marginBottom: 40 }}>
-                    <Button
-                        appearance='ghost'
-                        status="danger"
-                        onPress={navigateBack}
-                        accessoryLeft={<Icon name="arrow-back" />}
-                        style={{ marginRight: 20 }}
-                    >
-                        Discard Habit
-                    </Button>
-                    <Button
-                        status='success'
-                        onPress={createHabit}
-                        accessoryLeft={<Icon name='checkmark-outline' />}
-                    >
-                        Create Habit
-                    </Button>
-                </View>
+            <View style={{ flexDirection: "row", width: "100%", justifyContent: "space-between", marginBottom: 40 }}>
+                <Button
+                    appearance='ghost'
+                    status="danger"
+                    onPress={navigateBack}
+                    accessoryLeft={<Icon name="arrow-back" />}
+                    style={{ marginRight: 20 }}
+                >
+                    Discard Habit
+                </Button>
+                <Button
+                    status='success'
+                    onPress={createHabit}
+                    accessoryLeft={<Icon name='checkmark-outline' />}
+                >
+                    Create Habit
+                </Button>
             </View>
-
-
-            {step === 2 ? (
-                <CoachMark
-                x={10}
-                y={20}
-                shape="rect"
-                width={windowWidth - 20}
-                height={120}
-                />
-            ) : step === 4 ? (
-                <CoachMark
-                    x={10}
-                    y={140}
-                    shape="rect"
-                    width={windowWidth - 20}
-                    height={120}
-                />)
-                : step === 5 ? (
-                    <CoachMark
-                        shape="circle"
-                        x={windowWidth / 2 + 2}
-                        y={635}
-                        radius={50}
-                    />
-                ) : step === 6 ? (
-                    <CoachMark
-                        shape="circle"
-                        x={windowWidth / 2 + 2}
-                        y={635}
-                        radius={50}
-                    />
-                )
-                    : null}
-
-            {step < 7 && (
-                <View style={themedStyles.instructionContainer}>
-                    {(step === 0) ? <Image style={themedStyles.stretch}
-                        source={require('../assets/pog_full_body.png')} /> : (
-                        (step === 1) ? <Image style={themedStyles.stretch}
-                            source={require('../assets/pog_wink.png')} /> :
-                            <Image style={themedStyles.stretch}
-                                source={require('../assets/pog_tongue.png')} />)
-                    }
-                    <Text style={themedStyles.text}>{getText()}</Text>
-
-                    <View style={styles.cardView}>
-                        <TouchableOpacity
-                            style={themedStyles.button}
-                            onPress={() => (step === 3) ? (() => { navigation.navigate("Dashboard"); (setStep(step - 1)) })()  : setStep(step - 1)}
-                        >
-                            <Text style={themedStyles.buttonText}>    Go Back!    </Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            style={themedStyles.button}
-                            onPress={() => (step === 6) ? (() => { navigation.navigate("Dashboard"); (setStep(step + 1)) })() : (setStep(step + 1))}
-                        >
-                            <Text style={themedStyles.buttonText}>      Got it!      </Text>
-                        </TouchableOpacity>
-
-                    </View>
-
-                </View>
-            )}
-        </>
+        </View>
     );
 }
-
-// Component properties
-HabitCreation.propTypes = {
-    step: PropTypes.number.isRequired,
-    setStep: PropTypes.func.isRequired,
-};
 
 const horizontalFlex = {
     flexDirection: 'row',

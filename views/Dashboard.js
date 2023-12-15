@@ -1,10 +1,8 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { View, ScrollView, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native';
+import { View, ScrollView, StyleSheet, Image } from 'react-native';
 import { Text, Card, useStyleSheet } from '@ui-kitten/components';
 import PropTypes from 'prop-types';
 import ConfettiCannon from 'react-native-confetti-cannon';
-
-import { CoachMark } from '../components/CoachMark';
 
 import { DataHandler } from '../data/DataHandler';
 import ListHabitCard from '../components/ListHabitCard';
@@ -14,30 +12,14 @@ import Footer from '../components/Footer';
 
 import { useNavigation } from '@react-navigation/native';
 
-const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
-
 /**
  * This component renders the view for prototype A.
  * @param {object} confettiRef - Reference to confetti cannon component
  * @returns {JSX.Element}
  */
-const Dashboard = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
+const Dashboard = ({ onOpenEditHabit, onOpenCreateHabit }) => {
     // its tutorial time baby
     const navigation = useNavigation();
-
-    const text =
-        step === 0
-            ? "Hi!! I'm Pog. I can show you around"
-            : step === 1
-                ? "Great!! This is where your Habits will be displayed"
-                : step === 2
-                    ? "Let's create our first        Habit       "
-                    : "";
-
-    // const x_coordinate = step === 0 ? 50 : (
-    //     step === 1 ? 200 : (
-    //         step === 2 ? 80 : 100));
-
 
     // Reference to confetti cannon component
     const confettiRef = useRef();
@@ -115,174 +97,112 @@ const Dashboard = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
     const styles = useStyleSheet(themedStyles);
 
     return (
-        <>
-            <View>
+        <View>
 
-                <View style={styles.contentWrapper}>
-                    {/* Page content */}
-                    <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'spread', paddingHorizontal: 20, paddingTop: 20 }}>
-                        {/* Subheader for pending habits */}
-                        <View style={styles.cardView}>
-                            <Text category="h5">Pending Habits</Text>
-                            {/* Text to explain checking */}
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Text category="c1">Tap to view</Text>
-                            </View>
+            <View style={styles.contentWrapper}>
+                {/* Page content */}
+                <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'spread', paddingHorizontal: 20, paddingTop: 20 }}>
+                    {/* Subheader for pending habits */}
+                    <View style={styles.cardView}>
+                        <Text category="h5">Pending Habits</Text>
+                        {/* Text to explain checking */}
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Text category="c1">Tap to view</Text>
                         </View>
-                        {(pendingHabitIds.length > 0) ? (
-                            // List of pending habits
-                            pendingHabitIds.map(
-                                (habitId) => <ListHabitCard
+                    </View>
+                    {(pendingHabitIds.length > 0) ? (
+                        // List of pending habits
+                        pendingHabitIds.map(
+                            (habitId) => <ListHabitCard
+                                key={habitId}
+                                habit={dataHandler.getHabitById(habitId)}
+                                status="warning"
+                                onPress={() => checkHabit(habitId)}
+                            />
+                        )
+                    ) : (
+                        <Card style={styles.finishedCard}>
+                            <View style={styles.finishedContent}>
+                                <Text style={{ textAlign: "center" }} category='h3'>You have completed all habits for today!</Text>
+                                <Image style={themedStyles.stretch}
+                                    source={require('../assets/pog2.png')} />
+                            </View>
+                        </Card>
+                    )}
+                    {/* Divider */}
+                    <View style={styles.divider} />
+                    {/* Subheader for complete habits */}
+                    <View style={styles.cardView}>
+                        <Text category="h5">Completed Habits</Text>
+                        {/* Text to explain unchecking */}
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Text category="c1">Tap to view</Text>
+                        </View>
+                    </View>
+                    {/* List of completed habits */}
+                    {(completedHabitIds.length > 0) ? (
+                        completedHabitIds.map(
+                            (habitId) =>
+                                <ListHabitCard
                                     key={habitId}
                                     habit={dataHandler.getHabitById(habitId)}
-                                    status="warning"
-                                    onPress={() => checkHabit(habitId)}
+                                    status="success"
+                                    onPress={() => uncheckHabit(habitId)}
                                 />
-                            )
-                        ) : (
-                            <Card style={styles.finishedCard}>
-                                <View style={styles.finishedContent}>
-                                    <Text style={{ textAlign: "center" }} category='h3'>You have completed all habits for today!</Text>
-                                    <Image style={themedStyles.stretch}
-                                        source={require('../assets/pog2.png')} />
-                                </View>
-                            </Card>
-                        )}
-                        {/* Divider */}
-                        <View style={styles.divider} />
-                        {/* Subheader for complete habits */}
-                        <View style={styles.cardView}>
-                            <Text category="h5">Completed Habits</Text>
-                            {/* Text to explain unchecking */}
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Text category="c1">Tap to view</Text>
+                        )
+                    ) : (
+                        <Card style={styles.finishedCard}>
+                            <View style={styles.finishedContent}>
+                                <Text style={{ textAlign: "center" }} category='h3'>You have not completed any habits yet!</Text>
+                                <Text category='h1'>🥹</Text>
                             </View>
-                        </View>
-                        {/* List of completed habits */}
-                        {(completedHabitIds.length > 0) ? (
-                            completedHabitIds.map(
-                                (habitId) =>
-                                    <ListHabitCard
-                                        key={habitId}
-                                        habit={dataHandler.getHabitById(habitId)}
-                                        status="success"
-                                        onPress={() => uncheckHabit(habitId)}
-                                    />
-                            )
-                        ) : (
-                            <Card style={styles.finishedCard}>
-                                <View style={styles.finishedContent}>
-                                    <Text style={{ textAlign: "center" }} category='h3'>You have not completed any habits yet!</Text>
-                                    <Text category='h1'>🥹</Text>
-                                </View>
-                            </Card>
-                        )}
-                        {/* Modal for confirming checking habits */}
-                        <CheckModal
-                            isVisible={isCheckModalVisible}
-                            habitId={focusHabitId}
-                            handleCheck={handleCheck}
-                            handleClose={handleClose}
-                            handleEdit={() => {
-                                setIsCheckModalVisible(false);
-                                onOpenEditHabit(focusHabitId);
-                            }}
-                        />
-                        {/* Modal for confirming unchecking habits */}
-                        <UncheckModal
-                            isVisible={isUncheckModalVisible}
-                            habitId={focusHabitId}
-                            handleUncheck={handleUncheck}
-                            handleClose={handleClose}
-                            handleEdit={() => {
-                                setIsUncheckModalVisible(false);
-                                onOpenEditHabit(focusHabitId);
-                            }}
-                        />
+                        </Card>
+                    )}
+                    {/* Modal for confirming checking habits */}
+                    <CheckModal
+                        isVisible={isCheckModalVisible}
+                        habitId={focusHabitId}
+                        handleCheck={handleCheck}
+                        handleClose={handleClose}
+                        handleEdit={() => {
+                            setIsCheckModalVisible(false);
+                            onOpenEditHabit(focusHabitId);
+                        }}
+                    />
+                    {/* Modal for confirming unchecking habits */}
+                    <UncheckModal
+                        isVisible={isUncheckModalVisible}
+                        habitId={focusHabitId}
+                        handleUncheck={handleUncheck}
+                        handleClose={handleClose}
+                        handleEdit={() => {
+                            setIsUncheckModalVisible(false);
+                            onOpenEditHabit(focusHabitId);
+                        }}
+                    />
 
-                    </ScrollView>
-                </View>
-
-                {/* Confetti cannon */}
-                <ConfettiCannon
-                    count={200}
-                    origin={{ x: 207, y: -20 }}
-                    colors={confettiColors}
-                    autoStart={false}
-                    fadeOut={true}
-                    ref={confettiRef}
-                />
-
-                {/* Footer */}
-                <View style={styles.footerWrapper}>
-                    <Footer onOpenCreateHabit={onOpenCreateHabit} />
-                </View>
+                </ScrollView>
             </View>
 
-            {step === 0 ? (
-                <CoachMark
-                    shape="circle"
-                    x={windowWidth / 2}
-                    y={277}
-                    radius={110}
-                />
-            ) : step === 1 ? (
-                <CoachMark
-                    x={10}
-                    y={20}
-                    shape="rect"
-                    width={windowWidth - 20}
-                    height={140}
-                />)
-                : step === 2 ? (
-                    <CoachMark
-                        shape="circle"
-                        x={windowWidth / 2 + 2}
-                        y={635}
-                        radius={50}
-                    />
-                )
+            {/* Confetti cannon */}
+            <ConfettiCannon
+                count={200}
+                origin={{ x: 207, y: -20 }}
+                colors={confettiColors}
+                autoStart={false}
+                fadeOut={true}
+                ref={confettiRef}
+            />
 
-                    : null}
-
-            {step < 3 && (
-                <View style={themedStyles.instructionContainer}>
-                    {(step === 0) ? <Image style={themedStyles.stretch}
-                        source={require('../assets/pog_full_body.png')} /> : (
-                        (step === 1) ? <Image style={themedStyles.stretch}
-                            source={require('../assets/pog_wink.png')} /> :
-                            <Image style={themedStyles.stretch}
-                                source={require('../assets/pog_tongue.png')} />)
-                    }
-                    <Text style={themedStyles.text}>{text}</Text>
-
-                    <View style={styles.cardView}>
-                        <TouchableOpacity
-                            style={themedStyles.button}
-                            onPress={() => (step === 0) ? (setStep(10)) : setStep(step - 1)}
-                        >
-                            {(step === 0) ? <Text style={themedStyles.buttonText}>Skip Tutorial!</Text> : <Text style={themedStyles.buttonText}>    Go Back!    </Text>}
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            style={themedStyles.button}
-                            onPress={() => (step === 2) ? (() => { navigation.navigate("Create Habit"); (setStep(step + 1)) })() : (setStep(step + 1))}
-                        >
-                            <Text style={themedStyles.buttonText}>      Got it!      </Text>
-                        </TouchableOpacity>
-
-                    </View>
-
-                </View>
-            )}
-
-        </>
+            {/* Footer */}
+            <View style={styles.footerWrapper}>
+                <Footer onOpenCreateHabit={onOpenCreateHabit} />
+            </View>
+        </View>
     );
 };
 
 Dashboard.propTypes = {
-    step: PropTypes.number.isRequired,
-    setStep: PropTypes.func.isRequired,
     onOpenEditHabit: PropTypes.func.isRequired,
     onOpenCreateHabit: PropTypes.func.isRequired,
 };
