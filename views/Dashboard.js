@@ -35,7 +35,7 @@ const Dashboard = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
                     : step === 7
                         ? "And now you are ready to explore on your own!" :
                                 step === 20
-                                    ? "You can always find me here, when you miss me!" : "";
+                                    ? "You can always find me here, once you miss me!" : "";
 
     // const x_coordinate = step === 0 ? 50 : (
     //     step === 1 ? 200 : (

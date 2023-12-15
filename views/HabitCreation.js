@@ -38,15 +38,15 @@ function HabitCreation({ step, setStep }) {
     const getText = () => {
         switch (step) {
             case 3:
-                return "You can type in a Habit name and choose an icon here!!";
+                return "You can type in a habit name and choose an icon here!!";
             case 4:
-                return "You can set yourself a Stretchgoal here. you can do it!";
+                return "Set a stretch goal for yourself here. you can do it!";
             case 5:
                 return "You can add as lots of reminders here. Just pick a time.";
             case 6:
-                return "If you are happy with your Habit press here to confirm it";
+                return "If you are happy with your habit press here to confirm it";
             default:
-                return "This text shouldn't be visible"
+                return ""
         }
     };
 
