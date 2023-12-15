@@ -186,14 +186,14 @@ function HabitCreation({ step, setStep }) {
                     <View style={styles.cardView}>
                         <TouchableOpacity
                             style={themedStyles.button}
-                            onPress={() => (step === 3) ? (() => { navigation.navigate("Dashboard Sun"); (setStep(step - 1)) })()  : setStep(step - 1)}
+                            onPress={() => (step === 3) ? (() => { navigation.navigate("Dashboard"); (setStep(step - 1)) })()  : setStep(step - 1)}
                         >
                             <Text style={themedStyles.buttonText}>    Go Back!    </Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
                             style={themedStyles.button}
-                            onPress={() => (step === 6) ? (() => { navigation.navigate("Dashboard Sun"); (setStep(step + 1)) })() : (setStep(step + 1))}
+                            onPress={() => (step === 6) ? (() => { navigation.navigate("Dashboard"); (setStep(step + 1)) })() : (setStep(step + 1))}
                         >
                             <Text style={themedStyles.buttonText}>      Got it!      </Text>
                         </TouchableOpacity>

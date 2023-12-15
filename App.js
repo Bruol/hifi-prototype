@@ -7,7 +7,7 @@ import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { ApplicationProvider, Text, IconRegistry, Icon, useTheme } from '@ui-kitten/components';
 import PropTypes from 'prop-types';
 
-import ViewSun from "./views/Dashboard";
+import Dashboard from "./views/Dashboard";
 import HabitCreation from './views/HabitCreation';
 import HabitEditing from './views/HabitEditing';
 
@@ -35,7 +35,7 @@ TutorialButton.propTypes = {
   setStep: PropTypes.func.isRequired,
 };
 
-const BackIcon = () => {
+const CancelIcon = () => {
   // Get theme
   const theme = useTheme();
 
@@ -48,7 +48,7 @@ const BackIcon = () => {
       onPress={() => navigation.goBack()}
     >
       <Icon name='arrow-back-outline' fill={theme["text-info-color"]} style={{ width: 24, height: 24 }} />
-      <Text style={{ marginLeft: 5, color: theme["text-info-color"] }}>Back</Text>
+      <Text style={{ marginLeft: 5, color: theme["text-info-color"] }}>Cancel</Text>
     </TouchableOpacity>
   );
 }
@@ -60,11 +60,11 @@ const Navigator = ({ step, setStep }) => {
   const navigation = useNavigation();
   const onOpenEditHabit = (habitId) => {
     setFocusedHabitId(habitId);
-    navigation.navigate("Habit Editing");
+    navigation.navigate("Edit Habit");
   }
   const onOpenCreateHabit = () => {
     setFocusedHabitId(null);
-    navigation.navigate("Habit Creation");
+    navigation.navigate("Create Habit");
   }
 
   // Get theme
@@ -83,9 +83,9 @@ const Navigator = ({ step, setStep }) => {
       screenOptions={screenOptions}
     >
       <Stack.Screen
-        name="Dashboard Sun"
+        name="Dashboard"
         children={(props) =>
-          <ViewSun {...props}
+          <Dashboard {...props}
             step={step}
             setStep={setStep}
             setFocusedHabitId={setFocusedHabitId}
@@ -97,17 +97,17 @@ const Navigator = ({ step, setStep }) => {
         }}
       />
       <Stack.Screen
-        name="Habit Creation"
+        name="Create Habit"
         children={(props) => <HabitCreation {...props} step={step} setStep={setStep}/>}
         options={{
-          headerLeft: () => (<BackIcon />)
+          headerLeft: () => (<CancelIcon />)
         }}
       />
       <Stack.Screen
-        name="Habit Editing"
+        name="Edit Habit"
         children={(props) => <HabitEditing{...props} focusedHabitId={focusedHabitId} step={step} setStep={setStep} />}
         options={{
-          headerLeft: () => (<BackIcon />)
+          headerLeft: () => (<CancelIcon />)
         }}
       />
     </Stack.Navigator>
@@ -134,7 +134,7 @@ const App = () => {
 
       {/* Main component */}
       <ApplicationProvider {...eva} theme={isDarkMode ? eva.dark : eva.light}>
-        <NavigationContainer initialRouteName="Dashboard Sun" theme={isDarkMode ? DarkTheme : DefaultTheme}>
+        <NavigationContainer initialRouteName="Dashboard" theme={isDarkMode ? DarkTheme : DefaultTheme}>
           <Navigator step={step} setStep={setStep} />
         </NavigationContainer>
       </ApplicationProvider >

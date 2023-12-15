@@ -21,7 +21,7 @@ const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
  * @param {object} confettiRef - Reference to confetti cannon component
  * @returns {JSX.Element}
  */
-const ViewSun = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
+const Dashboard = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
     // its tutorial time baby
     const navigation = useNavigation();
 
@@ -266,7 +266,7 @@ const ViewSun = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
 
                         <TouchableOpacity
                             style={themedStyles.button}
-                            onPress={() => (step === 2) ? (() => { navigation.navigate("Habit Creation"); (setStep(step + 1)) })() : (setStep(step + 1))}
+                            onPress={() => (step === 2) ? (() => { navigation.navigate("Create Habit"); (setStep(step + 1)) })() : (setStep(step + 1))}
                         >
                             <Text style={themedStyles.buttonText}>      Got it!      </Text>
                         </TouchableOpacity>
@@ -280,7 +280,7 @@ const ViewSun = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
     );
 };
 
-ViewSun.propTypes = {
+Dashboard.propTypes = {
     step: PropTypes.number.isRequired,
     setStep: PropTypes.func.isRequired,
     onOpenEditHabit: PropTypes.func.isRequired,
@@ -374,4 +374,4 @@ const themedStyles = StyleSheet.create({
 // Colors for confetti cannon
 const confettiColors = ["#3366FF", "#4CAF50", "#FFC107", "#FF5722", "#9C27B0"];
 
-export default ViewSun;
+export default Dashboard;

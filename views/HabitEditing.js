@@ -130,12 +130,10 @@ function HabitEditing({ step, setStep, focusedHabitId }) {
                 <Button
                     appearance='ghost'
                     status="danger"
-                    size='small'
                     onPress={navigateBack}
                     accessoryLeft={<Icon name="arrow-back" />}
-                    style={{ marginRight: 20 }}
                 >
-                    Discard Changes
+                    Cancel Changes
                 </Button>
                 <Button
                     status='success'
