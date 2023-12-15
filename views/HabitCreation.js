@@ -34,21 +34,21 @@ function HabitCreation({ step, setStep }) {
     // Get themed styles
     const styles = useStyleSheet(themedStyles);
 
-     //Tutorial stuff
-     const getText = () => {
-         switch (step) {
-             case 3:
-                 return "You can tipe in a Habit name and choose an Icon here!!";
-             case 4:
-                 return "You do some Habit more than once a day: Like Teeth brushing!";
-             case 5:
-                 return "You can add as lots of reminders here. Just need to pick a time.";
-             case 6:
-                 return "If you are Happy with your habit press here to confirm it";
-             default:
-                 return "This text shouldn't be visible"
-         }
-     };
+    //Tutorial stuff
+    const getText = () => {
+        switch (step) {
+            case 3:
+                return "You can type in a Habit name and choose an Icon here!!";
+            case 4:
+                return "You do some Habit more than once a day: Like Teeth brushing!";
+            case 5:
+                return "You can add as lots of reminders here. Just pick a time.";
+            case 6:
+                return "If you are Happy with your habit press here to confirm it";
+            default:
+                return "This text shouldn't be visible"
+        }
+    };
 
     return (
         <>
@@ -107,7 +107,7 @@ function HabitCreation({ step, setStep }) {
                 {/* Spacer */}
                 <View style={{ height: 20 }} />
 
-            <NumericInput value={repetitions} setValue={setRepetitions} />
+                <NumericInput value={repetitions} setValue={setRepetitions} />
 
                 {/* Spacer */}
                 <View style={{ height: 20 }} />
@@ -139,13 +139,13 @@ function HabitCreation({ step, setStep }) {
             </View>
 
 
-            {step === 2 ? (
+            {step === 3 ? (
                 <CoachMark
-                x={10}
-                y={20}
-                shape="rect"
-                width={windowWidth - 20}
-                height={120}
+                    x={10}
+                    y={20}
+                    shape="rect"
+                    width={windowWidth - 20}
+                    height={120}
                 />
             ) : step === 4 ? (
                 <CoachMark
@@ -153,40 +153,41 @@ function HabitCreation({ step, setStep }) {
                     y={140}
                     shape="rect"
                     width={windowWidth - 20}
-                    height={120}
+                    height={80}
                 />)
-                : step === 5 ? (
+                : step === 2 ? (
                     <CoachMark
-                        shape="circle"
-                        x={windowWidth / 2 + 2}
-                        y={635}
-                        radius={50}
-                    />
-                ) : step === 6 ? (
-                    <CoachMark
-                        shape="circle"
-                        x={windowWidth / 2 + 2}
-                        y={635}
-                        radius={50}
-                    />
-                )
-                    : null}
+                        x={70}
+                        y={windowHeight - 240}
+                        shape="rect"
+                        width={windowWidth - 140}
+                        height={40}
+                    />)
+                    : step === 6 ? (
+                        <CoachMark
+                            x={windowWidth/2 + 5 }
+                            y={windowHeight - 180}
+                            shape="rect"
+                            width={windowWidth/2 - 10}
+                            height={90}
+                        />)
+                        : null}
 
             {step < 7 && (
                 <View style={themedStyles.instructionContainer}>
-                    {(step === 0) ? <Image style={themedStyles.stretch}
-                        source={require('../assets/pog_full_body.png')} /> : (
-                        (step === 1) ? <Image style={themedStyles.stretch}
-                            source={require('../assets/pog_wink.png')} /> :
+                    {(step === 5) ? <Image style={themedStyles.cropped}
+                        source={require('../assets/pog_head_cropped.png')} />
+                        : (step === 4) ? <Image style={themedStyles.stretch}
+                            source={require('../assets/pog_head.png')} /> :
                             <Image style={themedStyles.stretch}
-                                source={require('../assets/pog_tongue.png')} />)
+                                source={require('../assets/pog_full_body.png')} />
                     }
                     <Text style={themedStyles.text}>{getText()}</Text>
 
                     <View style={styles.cardView}>
                         <TouchableOpacity
                             style={themedStyles.button}
-                            onPress={() => (step === 3) ? (() => { navigation.navigate("Dashboard"); (setStep(step - 1)) })()  : setStep(step - 1)}
+                            onPress={() => (step === 3) ? (() => { navigation.navigate("Dashboard"); (setStep(step - 1)) })() : setStep(step - 1)}
                         >
                             <Text style={themedStyles.buttonText}>    Go Back!    </Text>
                         </TouchableOpacity>
@@ -258,6 +259,10 @@ const themedStyles = StyleSheet.create({
     stretch: {
         width: 180,
         height: 180,
+    },
+    cropped: {
+        width: 135,
+        height: 110,
     },
     //fabius stuff
     wrapper: {
