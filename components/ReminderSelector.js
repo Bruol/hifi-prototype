@@ -72,6 +72,7 @@ const ReminderSelector = ({ reminders, setReminders }) => {
             <Button
                 appearance='ghost'
                 status='basic'
+                size="small"
                 accessoryLeft={<Icon name='plus-outline' />}
                 onPress={openCreateReminderModal}
             >

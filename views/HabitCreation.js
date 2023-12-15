@@ -12,12 +12,12 @@ function HabitCreation({ step, setStep }) {
     // States
     const [title, setTitle] = useState('');
     const [iconName, setIconName] = useState('archive-outline');
-    const [dailyReps, setDailyReps] = useState(10);
+    const [repetitions, setRepetitions] = useState(10);
     const [reminders, setReminders] = useState([]);
     const [showIconDialog, setShowIconDialog] = useState(false);
 
     const createHabit = () => {
-        const habit = new Habit(title, iconName, reminders, dailyReps, 0);
+        const habit = new Habit(title, iconName, reminders, repetitions, 0);
         new DataHandler().addHabit(habit);
         navigateBack();
     };
@@ -106,7 +106,7 @@ function HabitCreation({ step, setStep }) {
             {/* Spacer */}
             <View style={{ height: 20 }} />
 
-            <NumericInput value={dailyReps} setValue={setDailyReps} />
+            <NumericInput value={repetitions} setValue={setRepetitions} />
 
             {/* Spacer */}
             <View style={{ height: 20 }} />
@@ -178,7 +178,7 @@ const themedStyles = StyleSheet.create({
         fontSize: 24,
         fontWeight: "bold",
     },
-    //fabius stuff
+    // Fabius stuff
     wrapper: {
         flex: 1,
         padding: 20,

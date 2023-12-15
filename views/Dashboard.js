@@ -29,7 +29,7 @@ const ViewSun = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
         step === 0
             ? "Hi!! I'm Pog. I can show you around"
             : step === 1
-                ? "Great!! This is where your Habits will be displayd"
+                ? "Great!! This is where your Habits will be displayed"
                 : step === 2
                     ? "Let's create our first        Habit       "
                     : "";
@@ -45,12 +45,8 @@ const ViewSun = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
     const dataHandler = new DataHandler();
     const [pendingHabitIds, setPendingHabitIds] = useState(dataHandler.getPendingDataIds());
     const [completedHabitIds, setCompletedHabitIds] = useState(dataHandler.getCompletedDataIds());
-    const updateHabitIds = () => {
-        setPendingHabitIds(dataHandler.getPendingDataIds());
-        setCompletedHabitIds(dataHandler.getCompletedDataIds());
-    }
-    dataHandler.addOnAddHabitListener(updateHabitIds);
-    dataHandler.addOnRemoveHabitListener(updateHabitIds);
+    dataHandler.addOnPendingDataChangeListener(() => setPendingHabitIds(dataHandler.getPendingDataIds()));
+    dataHandler.addOnCompletedDataChangeListener(() => setCompletedHabitIds(dataHandler.getCompletedDataIds()));
 
     // State for pending action 
     const [pendingAction, setPendingAction] = useState(null);
@@ -85,7 +81,7 @@ const ViewSun = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
 
     // State for uncheck modal visibility 
     const [isUncheckModalVisible, setIsUncheckModalVisible] = useState(false);
-    // Function to uncomplete a habit 
+    // Function to uncheck a habit 
     const uncheckHabit = useCallback((id) => {
         // Set focus to the habit
         setFocusHabitId(id);
@@ -325,7 +321,7 @@ const themedStyles = StyleSheet.create({
         fontSize: 32,
         margin: 10,
     },
-    invisiblebutton: {
+    invisibleButton: {
         borderRadius: 8,
         justifyContent: "center",
         backgroundColor: "#23a",
@@ -342,7 +338,7 @@ const themedStyles = StyleSheet.create({
         width: 180,
         height: 180,
     },
-    //fabius stuff
+    // Fabius stuff
     contentWrapper: {
         alignItems: 'stretch',
         justifyContent: 'center',

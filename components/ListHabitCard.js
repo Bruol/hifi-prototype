@@ -1,6 +1,3 @@
-// Code by Fabius Grünhagen
-// fabiusg@student.ethz.ch
-
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Card, Icon, Text, useTheme } from "@ui-kitten/components";
@@ -25,8 +22,8 @@ const ListHabitCard = ({ habit, status, onPress }) => {
   // console.log("> habit: {");
   // console.log(">   title: " + habit.title);
   // console.log(">   iconName: " + habit.iconName);
-  // console.log(">   goal: " + habit.getTodaysGoal());
-  // console.log(">   progress: " + habit.getTodaysProgress());
+  // console.log(">   repetitions: " + habit.repetitions);
+  // console.log(">   completions: " + habit.completions);
   // console.log("> }");
   // console.log("> status: " + status);
   // console.log("> onPress: " + onPress);
@@ -43,8 +40,8 @@ const ListHabitCard = ({ habit, status, onPress }) => {
 
         {/* Progress */}
         <ProgressBar
-          range={[0, habit.getTodaysGoal()]}
-          value={habit.getTodaysProgress()}
+          range={[0, habit.repetitions]}
+          value={habit.completions}
           isShowingNumbers={true}
         />
 

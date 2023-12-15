@@ -17,12 +17,12 @@ function HabitEditing({ step, setStep, focusedHabitId }) {
     }
     const [title, setTitle] = useState(focusedHabit.title);
     const [iconName, setIconName] = useState(focusedHabit.iconName);
-    const [dailyReps, setDailyReps] = useState(focusedHabit.dailyReps);
+    const [repetitions, setRepetitions] = useState(focusedHabit.repetitions);
     const [reminders, setReminders] = useState(focusedHabit.reminders);
     const [showIconDialog, setShowIconDialog] = useState(false);
 
     const editHabit = () => {
-        const newHabit = new Habit(title, iconName, reminders, dailyReps, 0);
+        const newHabit = new Habit(title, iconName, reminders, repetitions, focusedHabit.completions);
         dataHandler.replaceHabit(focusedHabitId, newHabit);
         navigateBack();
     };
@@ -116,7 +116,7 @@ function HabitEditing({ step, setStep, focusedHabitId }) {
             {/* Spacer */}
             <View style={{ height: 20 }} />
 
-            <NumericInput value={dailyReps} setValue={setDailyReps} />
+            <NumericInput lowerLimit={focusedHabit.completions + 1} value={repetitions} setValue={setRepetitions} />
 
             {/* Spacer */}
             <View style={{ height: 20 }} />
@@ -131,11 +131,12 @@ function HabitEditing({ step, setStep, focusedHabitId }) {
                 <Button
                     appearance='ghost'
                     status="danger"
+                    size='small'
                     onPress={navigateBack}
                     accessoryLeft={<Icon name="arrow-back" />}
                     style={{ marginRight: 20 }}
                 >
-                    Discard
+                    Discard Changes
                 </Button>
                 <Button
                     status='success'

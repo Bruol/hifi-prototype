@@ -1,6 +1,3 @@
-// Code by Fabius Grünhagen
-// fabiusg@student.ethz.ch
-
 import React from "react";
 import { View } from "react-native";
 import { Text, useTheme } from "@ui-kitten/components";
@@ -32,11 +29,11 @@ function lerpHexColors(color1, color2, factor) {
 const ProgressBar = ({ range, value, isShowingNumbers = true, width = 50 }) => {
 
     // TODO: Remove debug logs
-    // console.log("ProgressBar:");
-    // console.log("> range: " + range);
-    // console.log("> value: " + value);
-    // console.log("> isShowingNumbers: " + isShowingNumbers);
-    // console.log("> width: " + width);
+    console.log("ProgressBar:");
+    console.log("> range: " + range);
+    console.log("> value: " + value);
+    console.log("> isShowingNumbers: " + isShowingNumbers);
+    console.log("> width: " + width);
 
     // Get theme colors
     const theme = useTheme();

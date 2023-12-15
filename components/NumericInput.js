@@ -32,7 +32,10 @@ const NumericInput = ({ value, setValue, lowerLimit = 1, upperLimit = 99 }) => {
 
     return (
         <View>
-            <Text category="label" appearance="hint" style={{ marginBottom: 4 }}>Repititions</Text>
+        <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'baseline' }}>
+            <Text category="label" appearance="hint" style={{ marginBottom: 4 }}>Repetitions</Text>
+            <Text category="c1" appearance='hint'>Days until completion</Text>
+        </View>
             <View style={{ flexDirection: 'row', justifyContent: "space-around", alignItems: 'center' }}>
                 <Button
                     status="basic"

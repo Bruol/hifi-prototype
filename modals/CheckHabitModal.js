@@ -49,8 +49,8 @@ const CheckModal = ({ habitId, isVisible, handleCheck, handleClose, handleEdit }
                 {/* Progress bar */}
                 <View style={{ marginTop: 10, marginBottom: 20 }}>
                     <ProgressBar
-                        range={[0, habit.getTodaysGoal()]}
-                        value={habit.getTodaysProgress()}
+                        range={[0, habit.repetitions]}
+                        value={habit.completions}
                         width={353}
                     />
                 </View>

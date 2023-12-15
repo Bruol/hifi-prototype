@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, View, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Button, Icon, Text, useStyleSheet, useTheme } from '@ui-kitten/components';
 import Modal from 'react-native-modal';
 import PropTypes from 'prop-types';
@@ -49,8 +49,8 @@ const UncheckModal = ({ habitId, isVisible, handleUncheck, handleClose, handleEd
         {/* Progress bar */}
         <View style={styles.progressBarWrapper}>
           <ProgressBar
-            range={[0, habit.getTodaysGoal()]}
-            value={habit.getTodaysProgress()}
+            range={[0, habit.repetitions]}
+            value={habit.completions}
             width={353} />
         </View>
 
