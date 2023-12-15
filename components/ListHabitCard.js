@@ -36,7 +36,13 @@ const ListHabitCard = ({ habit, status, onPress }) => {
         <Icon name={habit.iconName} fill={iconColor} style={styles.icon} />
 
         {/* Habit title */}
-        <Text category="h6">{habit.title}</Text>
+        <Text
+          category="h6"
+          numberOfLines={1}
+          ellipsizeMode="middle"
+          style={{ maxWidth: "60%" }}>
+          {habit.title}
+        </Text>
 
         {/* Progress */}
         <ProgressBar

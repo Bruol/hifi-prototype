@@ -4,8 +4,6 @@ import { Text, Card, useStyleSheet } from '@ui-kitten/components';
 import PropTypes from 'prop-types';
 import ConfettiCannon from 'react-native-confetti-cannon';
 
-import { CoachMark } from '../components/CoachMark';
-
 import { DataHandler } from '../data/DataHandler';
 import ListHabitCard from '../components/ListHabitCard';
 import UncheckModal from '../modals/UncheckHabitModal';
@@ -14,14 +12,12 @@ import Footer from '../components/Footer';
 
 import { useNavigation } from '@react-navigation/native';
 
-const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
-
 /**
  * This component renders the view for prototype A.
  * @param {object} confettiRef - Reference to confetti cannon component
  * @returns {JSX.Element}
  */
-const Dashboard = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
+const Dashboard = ({ onOpenEditHabit, onOpenCreateHabit }) => {
     // its tutorial time baby
     const navigation = useNavigation();
     console.log(step);
@@ -205,18 +201,18 @@ const Dashboard = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
                             }}
                         />
 
-                    </ScrollView>
-                </View>
+                </ScrollView>
+            </View>
 
-                {/* Confetti cannon */}
-                <ConfettiCannon
-                    count={200}
-                    origin={{ x: 207, y: -20 }}
-                    colors={confettiColors}
-                    autoStart={false}
-                    fadeOut={true}
-                    ref={confettiRef}
-                />
+            {/* Confetti cannon */}
+            <ConfettiCannon
+                count={200}
+                origin={{ x: 207, y: -20 }}
+                colors={confettiColors}
+                autoStart={false}
+                fadeOut={true}
+                ref={confettiRef}
+            />
 
                 {/* Footer */}
                 <View style={styles.footerWrapper}>
@@ -305,8 +301,6 @@ const Dashboard = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
 };
 
 Dashboard.propTypes = {
-    step: PropTypes.number.isRequired,
-    setStep: PropTypes.func.isRequired,
     onOpenEditHabit: PropTypes.func.isRequired,
     onOpenCreateHabit: PropTypes.func.isRequired,
 };

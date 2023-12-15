@@ -222,8 +222,6 @@ function HabitEditing({ step, setStep, focusedHabitId }) {
 
 // Component properties
 HabitEditing.propTypes = {
-    step: PropTypes.number.isRequired,
-    setStep: PropTypes.func.isRequired,
     focusedHabitId: PropTypes.number.isRequired,
 };
 
