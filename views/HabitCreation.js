@@ -34,15 +34,15 @@ function HabitCreation() {
     const getText = () => {
         switch (step) {
             case 3:
-                return "You can type in a Habit name and choose an Icon here!!";
+                return "You can type in a habit name and choose an icon here!!";
             case 4:
-                return "You do some Habit more than once a day: Like Teeth brushing!";
+                return "Set a stretch goal for yourself here. you can do it!";
             case 5:
                 return "You can add as lots of reminders here. Just pick a time.";
             case 6:
-                return "If you are Happy with your habit press here to confirm it";
+                return "If you are happy with your habit press here to confirm it";
             default:
-                return "This text shouldn't be visible"
+                return ""
         }
     };
 
@@ -161,7 +161,6 @@ function HabitCreation() {
                     : step === 6 ? (
                         <CoachMark
                             x={windowWidth/2 + 5 }
-                            y={windowHeight - 220}
                             shape="rect"
                             width={windowWidth/2 - 10}
                             height={90}
