@@ -40,25 +40,24 @@ function HabitEditing({ step, setStep, focusedHabitId }) {
     // Get themed styles
     const styles = useStyleSheet(themedStyles);
 
-    // Tutorial stuff
-    // const getText = () => {
-    //     switch (step) {
-    //         case 4:
-    //             return "this shouldn't be visible";
-    //         case 5:
-    //             return "This is were you set you Habit name";
-    //         case 6:
-    //             return "Here you can set your Habit icon";
-    //         case 7:
-    //             return "This is how often you want to check your Habit per Day";
-    //         case 8:
-    //             return "And thats it's. you can confirm your habit here";
-    //         case 9:
-    //             return "Or discard it here";
-    //         default:
-    //             return "This text shouldn't be visible"
-    //     }
-    // };
+     const getText = () => {
+         switch (step) {
+             case 4:
+                 return "this shouldn't be visible";
+             case 5:
+                 return "This is were you set you Habit name";
+             case 6:
+                 return "Here you can set your Habit icon";
+             case 7:
+                 return "This is how often you want to check your Habit per Day";
+             case 8:
+                 return "And thats it's. you can confirm your habit here";
+             case 9:
+                 return "Or discard it here";
+             default:
+                 return "This text shouldn't be visible"
+         }
+     };
 
     return (
         <View style={styles.wrapper}>
