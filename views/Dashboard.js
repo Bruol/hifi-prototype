@@ -27,13 +27,13 @@ const Dashboard = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
     console.log(step);
     const text =
         step === 0
-            ? "Hi!! I'm Pog. I can show you around"
+            ? "Hi!! I'm Pog. I can show you around!"
             : step === 1
                 ? "Great!! This is where your Habits will be displayed"
                 : step === 2
                     ? "Let's create our first        Habit       "
                     : step === 7
-                        ? "And now you are ready to explore on your own" :
+                        ? "And now you are ready to explore on your own!" :
                                 step === 20
                                     ? "You can always find me here, when you miss me!" : "";
 
