@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { View, ScrollView, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native';
+import { View, ScrollView, StyleSheet, TouchableOpacity, Image, Dimensions, Modal } from 'react-native';
 import { Text, Card, useStyleSheet } from '@ui-kitten/components';
 import PropTypes from 'prop-types';
 import ConfettiCannon from 'react-native-confetti-cannon';
@@ -24,7 +24,7 @@ const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
 const Dashboard = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
     // its tutorial time baby
     const navigation = useNavigation();
-
+    console.log(step);
     const text =
         step === 0
             ? "Hi!! I'm Pog. I can show you around"
@@ -33,11 +33,7 @@ const Dashboard = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
                 : step === 2
                     ? "Let's create our first        Habit       "
                     : step === 7
-                        ? "interact with your Habits by clicking on them" :
-                        step === 8
-                            ? "You can Check or Uncheck them here!" :
-                            step === 9
-                                ? "But you can also edit them here!" :
+                        ? "And now you are ready to explore on your own" :
                                 step === 20
                                     ? "You can always find me here, when you miss me!" : "";
 
@@ -124,6 +120,7 @@ const Dashboard = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
     return (
         <>
             <View>
+           
 
                 <View style={styles.contentWrapper}>
                     {/* Page content */}
@@ -186,8 +183,8 @@ const Dashboard = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
                         )}
                         {/* Modal for confirming checking habits */}
                         <CheckModal
-                            isVisible={(step === 8 || step === 9) ? true : isCheckModalVisible}
-                            habitId={(step === 8 || step === 9) ? 0 : focusHabitId}
+                            isVisible={ isCheckModalVisible}
+                            habitId={ focusHabitId}
                             handleCheck={handleCheck}
                             handleClose={handleClose}
                             handleEdit={() => {
@@ -227,11 +224,12 @@ const Dashboard = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
                 </View>
             </View>
 
+            
             {step === 0 ? (
                 <CoachMark
                     shape="circle"
                     x={windowWidth / 2}
-                    y={277}
+                    y={317}
                     radius={110}
                 />
             ) : step === 1 ? (
@@ -240,40 +238,24 @@ const Dashboard = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
                     y={20}
                     shape="rect"
                     width={windowWidth - 20}
-                    height={140}
+                    height={115}
                 />)
                 : step === 2 ? (
                     <CoachMark
                         shape="circle"
-                        x={windowWidth / 2 + 2}
-                        y={635}
+                        x={windowWidth / 2 }
+                        y={721}
                         radius={50}
                     />)
                     : step === 7 ? (
                         <CoachMark
-                            x={10}
-                            y={20}
+                            x={0}
+                            y={0}
                             shape="rect"
-                            width={windowWidth - 20}
-                            height={140} />
+                            width={0}
+                            height={0} />
 
-                    ) : step === 8 ? (
-                        <CoachMark
-                            x={10}
-                            y={20}
-                            shape="rect"
-                            width={windowWidth - 20}
-                            height={140} />
-
-                    ) : step === 9 ? (
-                        <CoachMark
-                            x={10}
-                            y={20}
-                            shape="rect"
-                            width={windowWidth - 20}
-                            height={140} />
-
-                    )
+                    ) 
                         : step === 20 ? (
                             <CoachMark
                                 shape="circle"
@@ -290,6 +272,8 @@ const Dashboard = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
                         source={require('../assets/pog_full_body.png')} /> : (
                         (step === 1) ? <Image style={themedStyles.stretch}
                             source={require('../assets/pog_wink.png')} /> :
+                            (step === 7) ? <Image style={themedStyles.stretch}
+                            source={require('../assets/pog2.png')} /> :
                             <Image style={themedStyles.stretch}
                                 source={require('../assets/pog_tongue.png')} />)
                     }
@@ -305,7 +289,7 @@ const Dashboard = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
 
                         <TouchableOpacity
                             style={themedStyles.button}
-                            onPress={() => (step === 2) ? (() => { navigation.navigate("Create Habit"); (setStep(step + 1)) })() : (step === 9) ? (() => { onOpenEditHabit(0); (setStep(step + 1)) })() : (setStep(step + 1))}
+                            onPress={() => (step === 2) ? (() => { navigation.navigate("Create Habit"); (setStep(step + 1)) })() : (step === 7) ? (() => {(setStep(20)) })() : (setStep(step + 1))}
                         >
                             <Text style={themedStyles.buttonText}>      Got it!      </Text>
                         </TouchableOpacity>
@@ -314,6 +298,7 @@ const Dashboard = ({ step, setStep, onOpenEditHabit, onOpenCreateHabit }) => {
 
                 </View>
             )}
+           
 
         </>
     );
