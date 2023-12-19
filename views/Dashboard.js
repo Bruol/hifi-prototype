@@ -1,8 +1,10 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { View, ScrollView, StyleSheet, Image } from 'react-native';
+import { View, ScrollView, StyleSheet,TouchableOpacity, Dimensions, Image } from 'react-native';
 import { Text, Card, useStyleSheet } from '@ui-kitten/components';
 import PropTypes from 'prop-types';
 import ConfettiCannon from 'react-native-confetti-cannon';
+
+import { CoachMark } from '../components/CoachMark';
 
 import { DataHandler } from '../data/DataHandler';
 import ListHabitCard from '../components/ListHabitCard';
@@ -12,14 +14,29 @@ import Footer from '../components/Footer';
 
 import { useNavigation } from '@react-navigation/native';
 
+const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
+
 /**
  * This component renders the view for prototype A.
  * @param {object} confettiRef - Reference to confetti cannon component
  * @returns {JSX.Element}
  */
-const Dashboard = ({ onOpenEditHabit, onOpenCreateHabit }) => {
+const Dashboard = ({step, setStep,  onOpenEditHabit, onOpenCreateHabit }) => {
     // its tutorial time baby
     const navigation = useNavigation();
+
+    console.log(step);
+    const text =
+        step === 0
+            ? "Hi!! I'm Pog. I can show you around!"
+            : step === 1
+                ? "Great!! This is where your habits will be displayed"
+                : step === 2
+                    ? "Let's create our first        habit       "
+                    : step === 7
+                        ? "And now you are ready to explore on your own!" :
+                                step === 20
+                                    ? "You can always find me here, once you miss me!" : "";
 
     // Reference to confetti cannon component
     const confettiRef = useRef();
@@ -97,6 +114,7 @@ const Dashboard = ({ onOpenEditHabit, onOpenCreateHabit }) => {
     const styles = useStyleSheet(themedStyles);
 
     return (
+        <>
         <View>
 
             <View style={styles.contentWrapper}>
@@ -199,6 +217,83 @@ const Dashboard = ({ onOpenEditHabit, onOpenCreateHabit }) => {
                 <Footer onOpenCreateHabit={onOpenCreateHabit} />
             </View>
         </View>
+
+        {step === 0 ? (
+                <CoachMark
+                    shape="circle"
+                    x={windowWidth / 2}
+                    y={317}
+                    radius={110}
+                />
+            ) : step === 1 ? (
+                <CoachMark
+                    x={10}
+                    y={20}
+                    shape="rect"
+                    width={windowWidth - 20}
+                    height={115}
+                />)
+                : step === 2 ? (
+                    <CoachMark
+                        shape="circle"
+                        x={windowWidth / 2 }
+                        y={721}
+                        radius={50}
+                    />)
+                    : step === 7 ? (
+                        <CoachMark
+                            x={0}
+                            y={0}
+                            shape="rect"
+                            width={0}
+                            height={0} />
+
+                    ) 
+                        : step === 20 ? (
+                            <CoachMark
+                                shape="circle"
+                                x={windowWidth - 20}
+                                y={-50}
+                                radius={100}
+                            />
+                        )
+                            : null}
+
+            {step < 21 && (
+                <View style={themedStyles.instructionContainer}>
+                    {(step === 0) ? <Image style={themedStyles.stretch}
+                        source={require('../assets/pog_full_body.png')} /> : (
+                        (step === 1) ? <Image style={themedStyles.stretch}
+                            source={require('../assets/pog_wink.png')} /> :
+                            (step === 7) ? <Image style={themedStyles.stretch}
+                            source={require('../assets/pog2.png')} /> :
+                            <Image style={themedStyles.stretch}
+                                source={require('../assets/pog_tongue.png')} />)
+                    }
+                    <Text style={themedStyles.text}>{text}</Text>
+
+                    <View style={styles.cardView}>
+                        <TouchableOpacity
+                            style={themedStyles.button}
+                            onPress={() => (step === 0) ? (setStep(20)) : (step === 20) ? (setStep(0)) : (step === 7) ? (() => { navigation.navigate("Create Habit"); (setStep(step - 1)) })() : setStep(step - 1)}
+                        >
+                            {(step === 0) ? <Text style={themedStyles.buttonText}>Skip Tutorial!</Text> : (step === 20) ? <Text style={themedStyles.buttonText}>   Restart!   </Text> : <Text style={themedStyles.buttonText}>    Go Back!    </Text>}
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={themedStyles.button}
+                            onPress={() => (step === 2) ? (() => { navigation.navigate("Create Habit"); (setStep(step + 1)) })() : (step === 7) ? (() => {(setStep(20)) })() : (setStep(step + 1))}
+                        >
+                            <Text style={themedStyles.buttonText}>      Got it!      </Text>
+                        </TouchableOpacity>
+
+                    </View>
+
+                </View>
+            )}
+           
+
+        </>
     );
 };
 

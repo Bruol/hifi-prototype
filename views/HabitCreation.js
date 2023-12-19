@@ -2,13 +2,17 @@ import React, { useState } from 'react';
 import { StyleSheet, FlatList, View, TouchableOpacity, Image, Dimensions } from 'react-native';
 import { Input, Icon, Button, Modal, Card, Text, useStyleSheet } from '@ui-kitten/components';
 import { useNavigation } from '@react-navigation/native';
+
 import PropTypes from 'prop-types';
+import { CoachMark } from '../components/CoachMark';
 
 import { DataHandler, Habit } from '../data/DataHandler';
 import ReminderSelector from '../components/ReminderSelector';
 import NumericInput from '../components/NumericInput';
 
-function HabitCreation() {
+const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
+
+function HabitCreation({ step, setStep }) {
     // States
     const [title, setTitle] = useState('');
     const [iconName, setIconName] = useState('archive-outline');
@@ -30,7 +34,24 @@ function HabitCreation() {
     // Get themed styles
     const styles = useStyleSheet(themedStyles);
 
+      //Tutorial stuff
+      const getText = () => {
+        switch (step) {
+            case 3:
+                return "You can type in a habit name and choose an icon here!!";
+            case 4:
+                return "Set a stretch goal for yourself here. you can do it!";
+            case 5:
+                return "You can add as lots of reminders here. Just pick a time.";
+            case 6:
+                return "If you are happy with your habit press here to confirm it";
+            default:
+                return ""
+        }
+    };
+
     return (
+        <>
         <View style={styles.wrapper}>
 
             <Text category="h5" style={styles.sectionTitle}>
@@ -116,6 +137,72 @@ function HabitCreation() {
                 </Button>
             </View>
         </View>
+
+
+        {step === 3 ? (
+                <CoachMark
+                    x={10}
+                    y={20}
+                    shape="rect"
+                    width={windowWidth - 20}
+                    height={120}
+                />
+            ) : step === 4 ? (
+                <CoachMark
+                    x={10}
+                    y={140}
+                    shape="rect"
+                    width={windowWidth - 20}
+                    height={80}
+                />)
+                : step === 5 ? (
+                    <CoachMark
+                        x={70}
+                        y={windowHeight - 275}
+                        shape="rect"
+                        width={windowWidth - 140}
+                        height={40}
+                    />)
+                    : step === 6 ? (
+                        <CoachMark
+                            x={windowWidth/2 + 5 }
+                            shape="rect"
+                            width={windowWidth/2 - 10}
+                            height={90}
+                        />)
+                        : null}
+
+            {step < 7 && (
+                <View style={themedStyles.instructionContainer}>
+                    {(step === 5) ? <Image style={themedStyles.cropped}
+                        source={require('../assets/pog_head_cropped.png')} />
+                        : (step === 4) ? <Image style={themedStyles.stretch}
+                            source={require('../assets/pog_head.png')} /> :
+                            <Image style={themedStyles.stretch}
+                                source={require('../assets/pog_full_body.png')} />
+                    }
+                    <Text style={themedStyles.text}>{getText()}</Text>
+
+                    <View style={styles.cardView}>
+                        <TouchableOpacity
+                            style={themedStyles.button}
+                            onPress={() => (step === 3) ? (() => { navigation.navigate("Dashboard"); (setStep(step - 1)) })() : setStep(step - 1)}
+                        >
+                            <Text style={themedStyles.buttonText}>    Go Back!    </Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={themedStyles.button}
+                            onPress={() => (step === 6) ? (() => { navigation.navigate("Dashboard"); (setStep(step + 1)) })() : (setStep(step + 1))}
+                        >
+                            <Text style={themedStyles.buttonText}>      Got it!      </Text>
+                        </TouchableOpacity>
+
+                    </View>
+
+                </View>
+            )}
+        </>
     );
 }
 
@@ -165,6 +252,10 @@ const themedStyles = StyleSheet.create({
     stretch: {
         width: 180,
         height: 180,
+    },
+    cropped: {
+        width: 135,
+        height: 110,
     },
     //fabius stuff
     wrapper: {
