@@ -16,13 +16,32 @@ const isDarkMode = false;
 
 const Stack = createStackNavigator();
 
+// Date selection icon
+const TutorialButton = ({ setStep }) => {
+  // Get theme
+  const theme = useTheme();
+
+  return (
+    <TouchableOpacity
+      style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", marginRight: 10 }}
+      onPress={() => setStep(0)}
+    >
+      <Text style={{ marginRight: 5, color: theme["text-info-color"] }}>Help</Text>
+      <Icon name='info-outline' fill={theme["text-info-color"]} style={{ width: 24, height: 24 }} />
+    </TouchableOpacity>
+  );
+}
+TutorialButton.propTypes = {
+  setStep: PropTypes.func.isRequired,
+};
+
 const CancelIcon = () => {
   // Get theme
   const theme = useTheme();
 
   // Get navigation
   const navigation = useNavigation();
-
+  
   return (
     <TouchableOpacity
       style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", marginLeft: 10 }}
@@ -34,7 +53,7 @@ const CancelIcon = () => {
   );
 }
 
-const Navigator = () => {
+const Navigator = ({ step, setStep }) => {
 
   // State for habit creation and editing
   const [focusedHabitId, setFocusedHabitId] = useState(null);
@@ -67,14 +86,19 @@ const Navigator = () => {
         name="Dashboard"
         children={(props) =>
           <Dashboard {...props}
+            step={step}
+            setStep={setStep}
             setFocusedHabitId={setFocusedHabitId}
             onOpenEditHabit={onOpenEditHabit}
             onOpenCreateHabit={onOpenCreateHabit}
           />}
+          options={{
+            headerRight: () => (<TutorialButton setStep={setStep} />),
+          }}
       />
       <Stack.Screen
         name="Create Habit"
-        children={(props) => <HabitCreation {...props} />}
+        children={(props) => <HabitCreation {...props} step={step} setStep={setStep} />}
         options={{
           headerLeft: () => (<CancelIcon />)
         }}
@@ -89,6 +113,10 @@ const Navigator = () => {
     </Stack.Navigator>
   );
 };
+Navigator.propTypes = {
+  step: PropTypes.number.isRequired,
+  setStep: PropTypes.func.isRequired,
+};
 
 /**
  * This is the main component of the app. It contains the navigation, the header, the footer and the confetti cannon component.
@@ -97,6 +125,7 @@ const Navigator = () => {
 const App = () => {
   // Set dark mode for status bar
   StatusBar.setBarStyle(isDarkMode ? 'light-content' : 'dark-content');
+  const [step, setStep] = useState(0);
 
   return (
     <>
@@ -106,7 +135,7 @@ const App = () => {
       {/* Main component */}
       <ApplicationProvider {...eva} theme={isDarkMode ? eva.dark : eva.light}>
         <NavigationContainer initialRouteName="Dashboard" theme={isDarkMode ? DarkTheme : DefaultTheme}>
-          <Navigator />
+          <Navigator step={step} setStep={setStep} />
         </NavigationContainer>
       </ApplicationProvider >
     </>
